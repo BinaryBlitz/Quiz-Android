@@ -18,6 +18,8 @@ public class Session {
 
     private ArrayList<SessionQuestion> mSessionQuestions;
 
+    private int mNumber = 0;
+
 
     public static Session newInstance(){
         Session s = new Session(UUID.randomUUID(), UUID.randomUUID());
@@ -26,7 +28,11 @@ public class Session {
 
 
     public SessionQuestion getSessionQuestion(){
-        return mSessionQuestions.get(0);
+        if(mNumber < 6){
+            mNumber++;
+            return mSessionQuestions.get(mNumber);
+        }
+        return null;
     }
 
 

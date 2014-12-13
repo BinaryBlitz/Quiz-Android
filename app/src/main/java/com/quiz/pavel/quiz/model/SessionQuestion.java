@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.model;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -34,7 +35,13 @@ public class SessionQuestion {
     }
 
     public SessionQuestion(){
-        mQuestion = new Question("what is your name?", 2);
+        Random generator = new Random();
+        int count = generator.nextInt(6);
+        if( count % 2 == 0){
+            mQuestion = new Question("what is your name?", 2);
+        } else {
+            mQuestion = new Question("how are you?", 2);
+        }
 
     }
 
