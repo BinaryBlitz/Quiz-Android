@@ -11,10 +11,13 @@ import android.widget.TextView;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
+import com.quiz.pavel.quiz.model.SessionQuestion;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.quiz.pavel.quiz.R.id.variant_a_button;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
@@ -22,7 +25,7 @@ import butterknife.OnClick;
 public class TestFragment extends Fragment {
 
 
-    @InjectView(R.id.variant_a_button) Button mVariantA;
+    @InjectView(variant_a_button) Button mVariantA;
     @InjectView(R.id.variant_b_button) Button mVariantB;
     @InjectView(R.id.variant_c_button) Button mVariantC;
     @InjectView(R.id.variant_d_button) Button mVariantD;
@@ -33,7 +36,7 @@ public class TestFragment extends Fragment {
 
 
     public Session mSession;
-
+    private SessionQuestion mSessionQuestion;
 
 
 
@@ -65,23 +68,36 @@ public class TestFragment extends Fragment {
 
         mSession = Session.newInstance();
 
-
-        mQuestionTextView.setText(mSession.getSessionQuestion().getText());
-        String[] vars = mSession.getSessionQuestion().getQuestion().getVariants();
+        mSessionQuestion = mSession.getSessionQuestion();
+        mQuestionTextView.setText(mSessionQuestion.getText());
+        String[] vars = mSessionQuestion.getQuestion().getVariants();
 
         mVariantA.setText(vars[0]);
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
 
+        mVariantA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSessionQuestion = mSession.getSessionQuestion();
+                if(mSessionQuestion != null) {
+                    mQuestionTextView.setText(mSessionQuestion.getText());
+                }
+                String[] vars = mSessionQuestion.getQuestion().getVariants();
 
+                mVariantA.setText(vars[0]);
+                mVariantB.setText(vars[1]);
+                mVariantC.setText(vars[2]);
+                mVariantD.setText(vars[3]);
+            }
+        });
 
 
 
 
         return v;
     }
-
 
 
 
