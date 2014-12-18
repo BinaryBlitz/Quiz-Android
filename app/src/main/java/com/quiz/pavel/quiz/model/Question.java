@@ -7,42 +7,51 @@ import java.util.UUID;
  */
 public class Question {
 
+    private UUID mId;
     private String mText;
-
-    private UUID mIdQuestion;
-
-    private String[] mVariants;
-
+    private String[] mAnswers;
     private int mCorrectAnswer;
 
     public Question(){
+
         mText = "What is your Name?";
+        for (int i = 0; i < 4; i++) {
+            mAnswers[i] = "name No: " + i + 1;
+        }
         mCorrectAnswer = 3;
     }
 
+    public Question(String text){
 
-    public Question(String text, int answer){
         mText = text;
-        mCorrectAnswer = answer;
-        mVariants = new String[4];
-        mVariants[0] = "aaa";
-        mVariants[1] = "bbb";
-        mVariants[2] = "ccc";
-        mVariants[3] = "ddd";
+        mAnswers = new String[4];
+        for (int i = 0; i < 4; i++) {
+            mAnswers[i] = "name No: " + (i + 1);
+        }
+        mCorrectAnswer = 3;
     }
 
-    public String[] getVariants(){
-        return mVariants;
+    public String[] getAnswers() {
+        return mAnswers;
     }
-
 
     public String getText() {
         return mText;
     }
 
-    public void setText(String text) {
-        mText = text;
-    }
+//
+//    public Question(String text, int answer){
+//        mText = text;
+//        mCorrectAnswer = answer;
+//        mVariants = new String[4];
+//        mVariants[0] = "aaa";
+//        mVariants[1] = "bbb";
+//        mVariants[2] = "ccc";
+//        mVariants[3] = "ddd";
+//    }
+
+
+
 
 
 }

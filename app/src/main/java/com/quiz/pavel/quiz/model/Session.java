@@ -1,5 +1,7 @@
 package com.quiz.pavel.quiz.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -16,16 +18,19 @@ public class Session {
 
      private Date mDate;
 
-    private ArrayList<SessionQuestion> mSessionQuestions;
+    public ArrayList<SessionQuestion> mSessionQuestions;
 
     private int mNumber = 0;
 
 
     public static Session newInstance(){
-        Session s = new Session(UUID.randomUUID(), UUID.randomUUID());
+        Session s = new Session();
         return s;
     }
 
+    public Session(){
+        mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
+    }
 
     public SessionQuestion getSessionQuestion(){
         if(mNumber < 6){
@@ -36,36 +41,7 @@ public class Session {
     }
 
 
-    public UUID getmMyPlayer() {
-        return mMyPlayer;
-    }
 
-    public void setmMyPlayer(UUID mMyPlayer) {
-        this.mMyPlayer = mMyPlayer;
-    }
-
-    public UUID getmOpponentPlayer() {
-        return mOpponentPlayer;
-    }
-
-    public void setmOpponentPlayer(UUID mOpponentPlayer) {
-        this.mOpponentPlayer = mOpponentPlayer;
-    }
-
-    public Date getmDate() {
-        return mDate;
-    }
-
-    public void setmDate(Date mExpireDate) {
-        this.mDate = mExpireDate;
-    }
-
-    public Session(UUID player1, UUID player2){
-        mMyPlayer = player1;
-        mOpponentPlayer = player2;
-//        mDate = date;
-        mSessionQuestions = SessionQuestion.generateSessionQuestions();
-    }
 
 
 
