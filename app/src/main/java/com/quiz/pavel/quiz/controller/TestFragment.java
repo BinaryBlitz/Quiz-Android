@@ -42,8 +42,6 @@ public class TestFragment extends Fragment {
 
 
     public SessionManager mSessionManager;
-    private SessionQuestion mSessionQuestion;
-
 
 
 
@@ -87,6 +85,9 @@ public class TestFragment extends Fragment {
         return v;
     }
 
+
+
+
     private int i;
     Handler myHandler = new Handler();
     Timer myTimer;
@@ -116,7 +117,11 @@ public class TestFragment extends Fragment {
         try {
             newQuestion = mSessionManager.getCurrentQuestion();
         }catch(Exception ex){
-            getActivity().finish();
+            if(getActivity() != null) {
+                getActivity().finish();
+            }
+            myTimer.cancel();
+
             return;
         }
 

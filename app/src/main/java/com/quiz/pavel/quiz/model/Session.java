@@ -34,8 +34,7 @@ public class Session {
 
     public SessionQuestion getSessionQuestion(){
         if(mNumber < 6){
-            mNumber++;
-            return mSessionQuestions.get(mNumber);
+            return mSessionQuestions.get(mNumber++);
         }
         return null;
     }

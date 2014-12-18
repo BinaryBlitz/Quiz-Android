@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:text="Text"
             android:id="@+id/timer_textView" />
     </LinearLayout>
 
@@ -35,7 +35,8 @@
                 android:padding="24dp"
                 android:id="@+id/question_text_view"
                 android:layout_weight="2"
-                />
+            android:gravity="center"
+            android:text="example" />
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
