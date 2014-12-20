@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.model;
 
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -7,12 +8,23 @@ import java.util.UUID;
  */
 public class SessionManager {
 
-    private Session mSession;
+    public Session mSession;
+
+    private SessionQuestion mCurrentSessionQuestion;
 
 
     public SessionManager(){
         mSession = new Session();
+
     }
+
+    public boolean amIWinner(){
+        if(mSession.pointsMine > mSession.pointsOpponent){
+            return true;                                                                                //BULLSHIT
+        }
+        return false;
+    }
+
 
     public static SessionManager newInstance(){
         SessionManager ob = new SessionManager();
@@ -21,8 +33,25 @@ public class SessionManager {
 
 
 
+    public void answerMine(int answer, int time){
+        if(answer == mCurrentSessionQuestion.mCorrectAnswer){
+            mSession.addPointsMe(150 - 10 * time);
+        }
+
+
+    }
+    public void answerOpponent(int answer, int time){
+
+        if(answer == mCurrentSessionQuestion.mCorrectAnswer){
+            mSession.addPointsOpponent(150 - 10 * time);
+        }
+    }
+
+
+
     public Question getCurrentQuestion(){
-        return mSession.getSessionQuestion().getQuestion();
+        mCurrentSessionQuestion = mSession.getSessionQuestion();
+        return mCurrentSessionQuestion.getQuestion();
     }
 
 

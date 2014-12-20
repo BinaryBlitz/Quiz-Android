@@ -13,20 +13,35 @@ public class Session {
 
 
     private UUID mMyPlayer;
-
      private UUID mOpponentPlayer;
 
      private Date mDate;
+
+    public int pointsMine;
+    public int pointsOpponent;
+
+
+    public void addPointsMe(int points){
+        pointsMine += points;
+        callback.callbackCallMine(pointsMine);                                                                  //CALLBACK
+
+
+
+    }
+    public void addPointsOpponent(int points){
+        pointsOpponent += points;
+        callback.callbackCallOpponent(pointsOpponent);                                                                  //CALLBACK
+
+
+
+    }
+
 
     public ArrayList<SessionQuestion> mSessionQuestions;
 
     private int mNumber = 0;
 
 
-    public static Session newInstance(){
-        Session s = new Session();
-        return s;
-    }
 
     public Session(){
         mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
@@ -39,6 +54,17 @@ public class Session {
         return null;
     }
 
+
+
+    // The callback interface
+    public interface MyCallback {
+        void callbackCallMine(int i);
+        void callbackCallOpponent(int i);
+
+    }                                                                                                           //CALLBACK
+
+    // The class that takes the callback
+        public MyCallback callback;
 
 
 

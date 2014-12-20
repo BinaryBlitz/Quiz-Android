@@ -16,6 +16,7 @@ import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
 import com.quiz.pavel.quiz.model.SessionQuestion;
 
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,9 +40,15 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.question_text_view) TextView mQuestionTextView;
     @InjectView(R.id.timer_textView) TextView mTimerTextView;
 
+    @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
+    @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
+
+
 
 
     public SessionManager mSessionManager;
+
+
 
 
 
@@ -65,6 +72,22 @@ public class TestFragment extends Fragment {
 
         mSessionManager = SessionManager.newInstance();
 
+
+
+
+        mSessionManager.mSession.callback = new Session.MyCallback() {
+            @Override
+            public void callbackCallMine(int i) {                                                               //CALLBACK
+                mMyPointsTextView.setText(String.valueOf(i));
+            }
+            @Override
+            public void callbackCallOpponent(int i) {                                                               //CALLBACK
+                mOpponentsPointsTextView.setText(String.valueOf(i));
+            }
+        };
+
+
+
         update();
 
 
@@ -73,12 +96,10 @@ public class TestFragment extends Fragment {
         myTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                i++;
+                timer++;
                 myHandler.post(myRunnable);
             }
         }, 0, 1000);
-
-
 
 
 
@@ -88,10 +109,10 @@ public class TestFragment extends Fragment {
 
 
 
-    private int i;
+    private int timer;
     Handler myHandler = new Handler();
     Timer myTimer;
-
+    private  int timeOfOpponentAnswer;
 
 
 
@@ -99,21 +120,37 @@ public class TestFragment extends Fragment {
 
     final Runnable myRunnable = new Runnable() {
         public void run() {
-            if(i >= 10){
+            if(timer >= 10){
+                mSessionManager.answerMine(-1, timer);
                 update();
             }
-            mTimerTextView.setText(String.valueOf(10 - i));
+
+
+            Random r = new Random();
+
+
+            if(timer == timeOfOpponentAnswer) {
+                mSessionManager.answerOpponent(3 - r.nextInt(1), timeOfOpponentAnswer);
+            }
+            mTimerTextView.setText(String.valueOf(10 - timer));
         }
     };
 
 
     /**
-    * Update question and variants of answer
+    * Update question and variants of answer (new round)
      */
     private void update(){
-        i = 0;
+        Random r = new Random();
+
+        timeOfOpponentAnswer = r.nextInt(10);
+
+        timer = 0;
         myHandler.post(myRunnable);
+
         Question newQuestion = null;
+
+
         try {
             newQuestion = mSessionManager.getCurrentQuestion();
         }catch(Exception ex){
@@ -127,33 +164,48 @@ public class TestFragment extends Fragment {
 
         mQuestionTextView.setText(newQuestion.getText());
 
-        String[] vars = newQuestion.getAnswers();
+        String[] vars = newQuestion.getAnswersText();
         mVariantA.setText(vars[0]);
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        String str = "you are loser";
+        if(mSessionManager.amIWinner())
+        {
+            str = "you are winner";
+        }
+        Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
+
+    }
 
 
 
     @OnClick(R.id.variant_a_button)
     public void onButtonAClick() {
+        mSessionManager.answerMine(0,timer);
         update();
     }
 
     @OnClick(R.id.variant_b_button)
     public void onButtonBClick() {
+        mSessionManager.answerMine(1, timer);
         update();
     }
 
     @OnClick(R.id.variant_c_button)
     public void onButtonCClick() {
+        mSessionManager.answerMine(2, timer);
         update();
     }
 
     @OnClick(R.id.variant_d_button)
     public void onButtonDClick() {
+        mSessionManager.answerMine(3, timer);
         update();
     }
 

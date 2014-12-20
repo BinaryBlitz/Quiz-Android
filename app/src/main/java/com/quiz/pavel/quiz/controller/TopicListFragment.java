@@ -35,25 +35,18 @@ public class TopicListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-//        mItem = (ClipData.Item).findViewById(R.id.menu_item_show_subtitle);
-
-        getActivity().setTitle(R.string.topics_title);
+        //getActivity().setTitle(R.string.topics_title);
         mTopics = new ArrayList<Topic>();
-        mTopics.add(new Topic("tbrtb0"));
-        mTopics.add(new Topic("tbrtb1"));
-        mTopics.add(new Topic("tbrtb2"));
+        mTopics.add(new Topic());
+        mTopics.add(new Topic());
+        mTopics.add(new Topic());
 
 
 
-//        mTopics = CrimeLab.get(getActivity()).getCrimes();
-
-
-//        ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(), android.R.layout.simple_list_item_1, mCrimes);
         TopicAdapter adapter = new TopicAdapter(mTopics);
         setListAdapter(adapter);
 
         setRetainInstance(true);
-//        mIconNumber = android.R.drawable.ic_menu_help;
 
     }
 

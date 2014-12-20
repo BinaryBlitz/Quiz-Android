@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 import com.quiz.pavel.quiz.R;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide

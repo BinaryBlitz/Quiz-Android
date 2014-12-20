@@ -9,29 +9,29 @@ public class Question {
 
     private UUID mId;
     private String mText;
-    private String[] mAnswers;
+    private Answer[] mAnswers;
     private int mCorrectAnswer;
 
-    public Question(){
-
-        mText = "What is your Name?";
-        for (int i = 0; i < 4; i++) {
-            mAnswers[i] = "name No: " + i + 1;
-        }
-        mCorrectAnswer = 3;
-    }
 
     public Question(String text){
 
         mText = text;
-        mAnswers = new String[4];
+        mAnswers = new Answer[4];
         for (int i = 0; i < 4; i++) {
-            mAnswers[i] = "name No: " + (i + 1);
+            mAnswers[i] = new Answer("answer"+(i+1),false);
         }
-        mCorrectAnswer = 3;
+        mAnswers[3].mIsCorrect = true;
     }
 
-    public String[] getAnswers() {
+    public String[] getAnswersText() {
+        String[] ar = new String[4];
+        for (int i = 0; i < 4; i++) {
+            ar[i] = mAnswers[i].mText;
+        }
+        return ar;
+    }
+
+    public Answer[] getAnswers(){
         return mAnswers;
     }
 

@@ -1,21 +1,14 @@
 package com.quiz.pavel.quiz.model;
 
 /**
- * Created by pavelkozemirov on 11.12.14.
+ * Created by pavelkozemirov on 20.12.14.
  */
 public class Topic {
 
-    private CharSequence mTitle;
+    static int i = 0;
 
-    public Topic(String title){
-        mTitle = title;
+    public String getTitle(){
+        return "theme " + (i++);
     }
 
-    public CharSequence getTitle() {
-        return mTitle;
-    }
-
-    public void setTitle(CharSequence title) {
-        this.mTitle = title;
-    }
 }

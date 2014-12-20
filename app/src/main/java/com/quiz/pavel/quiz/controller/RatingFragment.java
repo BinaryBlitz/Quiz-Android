@@ -30,11 +30,11 @@ public class RatingFragment extends ListFragment{
 
 //        mItem = (ClipData.Item).findViewById(R.id.menu_item_show_subtitle);
 
-        getActivity().setTitle(R.string.topics_title);
+       // getActivity().setTitle(R.string.topics_title);
         mTopics = new ArrayList<Topic>();
-        mTopics.add(new Topic("babatbrtb0"));
-        mTopics.add(new Topic("tbabababrtb1"));
-        mTopics.add(new Topic("tbabababrtb2"));
+        mTopics.add(new Topic());
+        mTopics.add(new Topic());
+        mTopics.add(new Topic());
 
 
 

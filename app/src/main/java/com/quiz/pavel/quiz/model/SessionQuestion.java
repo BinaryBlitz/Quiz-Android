@@ -11,28 +11,24 @@ public class SessionQuestion {
 
     private Question mQuestion;
 
-    private UUID mIdQuestion;
-
-    private int mAnswerMyPlayer;
-
-    private int mAnswerOpponentPlayer;
-
-
-    public int getPointMyPlayer(){
-        return 15;
-    }
-    public int getPointOpponentPlayer(){
-        return 15;
-    }
-
-
     public Question getQuestion(){
         return mQuestion;
     }
 
     public SessionQuestion(String text){
         mQuestion = new Question(text);
+
+        for (int i = 0; i < 4; i++) {
+            if( mQuestion.getAnswers()[i].mIsCorrect == true){
+                mCorrectAnswer = i;
+            }
+        }
+
     }
+    public int mCorrectAnswer;
+
+
+
 
 
 }
