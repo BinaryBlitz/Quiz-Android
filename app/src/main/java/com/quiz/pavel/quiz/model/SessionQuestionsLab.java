@@ -1,6 +1,11 @@
 package com.quiz.pavel.quiz.model;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Stack;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Created by pavelkozemirov on 18.12.14.
@@ -11,18 +16,17 @@ public class SessionQuestionsLab {
 
     }
 
-    public static ArrayList<SessionQuestion> getSessionsQuestionArray(){
+    public static LinkedList<SessionQuestion> getSessionsQuestionArray(){
 
-        ArrayList<SessionQuestion> list = new ArrayList<SessionQuestion>();
+        LinkedList<SessionQuestion> list = new LinkedList<>();
 
-        for (int i = 0; i < 6; i++) {
+        list.add( new SessionQuestion("what is my name?") );
+        list.add( new SessionQuestion("what is your name?") );
+        list.add( new SessionQuestion("what is his name?") );
+        list.add( new SessionQuestion("what is her name?") );
+        list.add( new SessionQuestion("what is cat's name?") );
+        list.add( new SessionQuestion("what is dog's name?") );
 
-            if( i % 2 == 0){
-                list.add( new SessionQuestion("what is your name?") );
-            } else {
-                list.add( new SessionQuestion("what is his name?") );
-            }
-        }
         return list;
     }
 

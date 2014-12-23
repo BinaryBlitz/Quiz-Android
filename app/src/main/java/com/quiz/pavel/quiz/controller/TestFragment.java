@@ -148,12 +148,12 @@ public class TestFragment extends Fragment {
         timer = 0;
         myHandler.post(myRunnable);
 
-        Question newQuestion = null;
+        Question newQuestion;
 
 
-        try {
+        if(mSessionManager.newRound()){
             newQuestion = mSessionManager.getCurrentQuestion();
-        }catch(Exception ex){
+        } else{
             if(getActivity() != null) {
                 getActivity().finish();
             }
@@ -161,6 +161,8 @@ public class TestFragment extends Fragment {
 
             return;
         }
+
+
 
         mQuestionTextView.setText(newQuestion.getText());
 

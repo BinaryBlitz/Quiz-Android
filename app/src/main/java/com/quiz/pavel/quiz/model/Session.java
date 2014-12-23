@@ -4,13 +4,16 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 13.12.14.
  */
 public class Session {
-
+    private static final String TAG = "Session";
 
     private UUID mMyPlayer;
      private UUID mOpponentPlayer;
@@ -19,6 +22,8 @@ public class Session {
 
     public int pointsMine;
     public int pointsOpponent;
+
+    public int[]
 
 
     public void addPointsMe(int points){
@@ -36,21 +41,24 @@ public class Session {
 
     }
 
+    public LinkedList<SessionQuestion> mSessionQuestions;
 
-    public ArrayList<SessionQuestion> mSessionQuestions;
-
-    private int mNumber = 0;
 
 
 
     public Session(){
+
         mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
+        Log.d(TAG,"mSessiongQuestions lenght is, when initializing " + mSessionQuestions.size());
     }
 
     public SessionQuestion getSessionQuestion(){
-        if(mNumber < 6){
-            return mSessionQuestions.get(mNumber++);
+        Log.d(TAG,"mSessiongQuestions lenght is, when poll " + mSessionQuestions.size());
+        if(!mSessionQuestions.isEmpty()){
+            return mSessionQuestions.poll();
         }
+        Log.d(TAG,"mSessiongQuestions lenght is, when poll!!!!!!!!!!bullshit " + mSessionQuestions.size());
+
         return null;
     }
 

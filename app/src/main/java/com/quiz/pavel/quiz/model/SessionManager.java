@@ -50,8 +50,19 @@ public class SessionManager {
 
 
     public Question getCurrentQuestion(){
-        mCurrentSessionQuestion = mSession.getSessionQuestion();
         return mCurrentSessionQuestion.getQuestion();
+    }
+
+
+
+    // gets false if cannot carry on game = have not questions
+    public boolean newRound(){
+        if(mSession.mSessionQuestions.isEmpty()){
+            return false;
+        } else {
+            mCurrentSessionQuestion = mSession.getSessionQuestion();
+            return true;
+        }
     }
 
 
