@@ -6,10 +6,15 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
@@ -43,7 +48,9 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
     @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
 
+    
 
+    Animation animationButtons = null;
 
 
     public SessionManager mSessionManager;
@@ -72,10 +79,41 @@ public class TestFragment extends Fragment {
 
         mSessionManager = SessionManager.newInstance();
 
+        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                myTimer = new Timer();
+                myTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        timer++;
+                        myHandler.post(myRunnable);
+                    }
+                }, 0, 1000);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(v);
+
+
 
 
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
+
             @Override
             public void callbackCallMine(int i) {                                                               //CALLBACK
                 mMyPointsTextView.setText(String.valueOf(i));
@@ -92,19 +130,19 @@ public class TestFragment extends Fragment {
 
 
 
-        myTimer = new Timer();
-        myTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                timer++;
-                myHandler.post(myRunnable);
-            }
-        }, 0, 1000);
+
+
+
 
 
 
         return v;
     }
+
+
+
+
+
 
 
 
@@ -189,25 +227,47 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_a_button)
     public void onButtonAClick() {
+
+
+        YoYo.with(Techniques.Swing)
+                .duration(700)
+                .playOn(mVariantA);
+
         mSessionManager.answerMine(0,timer);
         update();
     }
 
     @OnClick(R.id.variant_b_button)
     public void onButtonBClick() {
+
+        YoYo.with(Techniques.FadeIn)
+                .duration(1500)
+                .playOn(mVariantB);
         mSessionManager.answerMine(1, timer);
         update();
     }
 
     @OnClick(R.id.variant_c_button)
     public void onButtonCClick() {
+
+        YoYo.with(Techniques.Flash)
+                .duration(700)
+                .playOn(mVariantC);
+
         mSessionManager.answerMine(2, timer);
         update();
     }
 
     @OnClick(R.id.variant_d_button)
     public void onButtonDClick() {
+
+
+        YoYo.with(Techniques.Landing)
+                .duration(600)
+                .playOn(mVariantD);
+
         mSessionManager.answerMine(3, timer);
+
         update();
     }
 

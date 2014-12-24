@@ -23,8 +23,10 @@ public class Session {
     public int pointsMine;
     public int pointsOpponent;
 
-    public int[]
+//    public int[]
 
+
+//    public void selectAnswerMe(int )
 
     public void addPointsMe(int points){
         pointsMine += points;
