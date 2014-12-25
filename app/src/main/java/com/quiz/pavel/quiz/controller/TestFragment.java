@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,9 +49,8 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
     @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
 
-    
+    @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
 
-    Animation animationButtons = null;
 
 
     public SessionManager mSessionManager;
@@ -79,7 +79,7 @@ public class TestFragment extends Fragment {
 
         mSessionManager = SessionManager.newInstance();
 
-        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+        YoYo.with(Techniques.FadeIn).duration(2000).withListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -95,6 +95,7 @@ public class TestFragment extends Fragment {
                         myHandler.post(myRunnable);
                     }
                 }, 0, 1000);
+
             }
 
             @Override
@@ -126,7 +127,7 @@ public class TestFragment extends Fragment {
 
 
 
-        update();
+        update();    //TODO: remove update
 
 
 
@@ -145,7 +146,7 @@ public class TestFragment extends Fragment {
 
 
 
-
+    int round;
 
     private int timer;
     Handler myHandler = new Handler();
@@ -160,7 +161,8 @@ public class TestFragment extends Fragment {
         public void run() {
             if(timer >= 10){
                 mSessionManager.answerMine(-1, timer);
-                update();
+                update();       //TODO: remove update
+                close();
             }
 
 
@@ -175,21 +177,97 @@ public class TestFragment extends Fragment {
     };
 
 
+    private void close(){
+
+        YoYo.with(Techniques.FadeOut).duration(2000).playOn(mButtonsBroad);
+        YoYo.with(Techniques.FadeOut).duration(2000).playOn(mQuestionTextView);
+        YoYo.with(Techniques.FadeOut).duration(2000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                showRound();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mTimerTextView);
+
+    }
+
+
+    private void open(){
+
+        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mButtonsBroad);
+        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mQuestionTextView);
+        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mTimerTextView);
+        timer = 0;
+
+    }
+
+    private void showRound(){
+
+        YoYo.with(Techniques.FadeIn).duration(500).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mQuestionTextView.setText("Round " + round);                                                    //bullshit
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                YoYo.with(Techniques.FadeOut).duration(500).playOn(mQuestionTextView);
+                open();
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mButtonsBroad);
+
+    }
+
+
+
+
+
+
+
     /**
     * Update question and variants of answer (new round)
      */
     private void update(){
+
         Random r = new Random();
+
+        round++;
 
         timeOfOpponentAnswer = r.nextInt(10);
 
         timer = 0;
+
         myHandler.post(myRunnable);
 
         Question newQuestion;
 
 
         if(mSessionManager.newRound()){
+            mSessionManager.nextRound();
             newQuestion = mSessionManager.getCurrentQuestion();
         } else{
             if(getActivity() != null) {
@@ -202,17 +280,21 @@ public class TestFragment extends Fragment {
 
 
 
-        mQuestionTextView.setText(newQuestion.getText());
+
+
+
+            mQuestionTextView.setText(newQuestion.getText());
 
         String[] vars = newQuestion.getAnswersText();
         mVariantA.setText(vars[0]);
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
+        //open();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy(){                            //TODO: add launching new fragment with results of game
         super.onDestroy();
         String str = "you are loser";
         if(mSessionManager.amIWinner())
@@ -234,7 +316,8 @@ public class TestFragment extends Fragment {
                 .playOn(mVariantA);
 
         mSessionManager.answerMine(0,timer);
-        update();
+        close();
+        update();    //TODO: remove update
     }
 
     @OnClick(R.id.variant_b_button)
@@ -244,7 +327,9 @@ public class TestFragment extends Fragment {
                 .duration(1500)
                 .playOn(mVariantB);
         mSessionManager.answerMine(1, timer);
-        update();
+        close();
+
+        update();       //TODO: remove update
     }
 
     @OnClick(R.id.variant_c_button)
@@ -255,7 +340,9 @@ public class TestFragment extends Fragment {
                 .playOn(mVariantC);
 
         mSessionManager.answerMine(2, timer);
-        update();
+        close();
+
+        update();           //TODO: remove update
     }
 
     @OnClick(R.id.variant_d_button)
@@ -267,8 +354,9 @@ public class TestFragment extends Fragment {
                 .playOn(mVariantD);
 
         mSessionManager.answerMine(3, timer);
+        close();
 
-        update();
+        update();           //TODO: remove update
     }
 
 

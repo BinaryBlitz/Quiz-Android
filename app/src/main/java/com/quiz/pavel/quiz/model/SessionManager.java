@@ -12,6 +12,8 @@ public class SessionManager {
 
     private SessionQuestion mCurrentSessionQuestion;
 
+    public int mCurrentRound;
+
 
     public SessionManager(){
         mSession = new Session();
@@ -60,10 +62,16 @@ public class SessionManager {
         if(mSession.mSessionQuestions.isEmpty()){
             return false;
         } else {
-            mCurrentSessionQuestion = mSession.getSessionQuestion();
             return true;
         }
     }
+
+    public void nextRound(){
+        mCurrentRound++;
+        mCurrentSessionQuestion = mSession.getSessionQuestion();
+                                                                                                        //TODO: add method updating view via callback
+    }
+
 
 
 }
