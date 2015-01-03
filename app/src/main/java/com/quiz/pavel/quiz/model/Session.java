@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -16,65 +17,81 @@ public class Session {
     private static final String TAG = "Session";
 
     private UUID mMyPlayer;
-     private UUID mOpponentPlayer;
+    private UUID mOpponentPlayer;
 
-     private Date mDate;
+    private Date mDate;
 
     public int pointsMine;
     public int pointsOpponent;
 
-//    public int[]
 
-
-//    public void selectAnswerMe(int )
-
-    public void addPointsMe(int points){
-        pointsMine += points;
-        callback.callbackCallMine(pointsMine);                                                                  //CALLBACK
-
-
-
-    }
-    public void addPointsOpponent(int points){
-        pointsOpponent += points;
-        callback.callbackCallOpponent(pointsOpponent);                                                                  //CALLBACK
-
-
-
-    }
+    public SessionQuestion mCurrentSessionQuestion;
 
     public LinkedList<SessionQuestion> mSessionQuestions;
 
 
-
-
     public Session(){
-
         mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
         Log.d(TAG,"mSessiongQuestions lenght is, when initializing " + mSessionQuestions.size());
+        Random r = new Random();
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        moveCurrentSessionQuestion();
+
     }
 
-    public SessionQuestion getSessionQuestion(){
-        Log.d(TAG,"mSessiongQuestions lenght is, when poll " + mSessionQuestions.size());
-        if(!mSessionQuestions.isEmpty()){
-            return mSessionQuestions.poll();
-        }
-        Log.d(TAG,"mSessiongQuestions lenght is, when poll!!!!!!!!!!bullshit " + mSessionQuestions.size());
-
-        return null;
-    }
-
-
+    // The class that takes the callback
+    public MyCallback callback;
 
     // The callback interface
     public interface MyCallback {
         void callbackCallMine(int i);
         void callbackCallOpponent(int i);
 
-    }                                                                                                           //CALLBACK
+    }
 
-    // The class that takes the callback
-        public MyCallback callback;
+    public void myAnswer(int number, int time){
+        mCurrentSessionQuestion.mMyAnswer = number;
+        mCurrentSessionQuestion.mMyTimeOfAnswer = time;
+        if(mCurrentSessionQuestion.mCorrectAnswer == number){
+            addPointsMe(time);
+        }
+    }
+    public void opponentsAnswer(){
+        if(mCurrentSessionQuestion.mCorrectAnswer == mCurrentSessionQuestion.mOpponentAnswer){
+            addPointsOpponent(mCurrentSessionQuestion.mOpponentTimeOfAnswer);
+        }
+    }
+    public void addPointsMe(int time){
+        pointsMine += (150 - 10 * time);
+        callback.callbackCallMine(pointsMine);                                                                  //CALLBACK
+    }
+    public void addPointsOpponent(int time){
+        pointsOpponent += (150 - 10 * time);
+        callback.callbackCallOpponent(pointsOpponent);                                                                  //CALLBACK
+    }
+
+
+    public int getNumberOfRound(){
+        return 6 - mSessionQuestions.size();
+    }
+
+
+
+
+                                                                                           //CALLBACK
+    public boolean moveCurrentSessionQuestion(){
+        if(!mSessionQuestions.isEmpty()){
+            mCurrentSessionQuestion = mSessionQuestions.poll();
+            return true;
+        }
+
+        return false;
+    }
 
 
 

@@ -1,8 +1,10 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +38,7 @@ import static com.quiz.pavel.quiz.R.id.variant_a_button;
  * Created by pavelkozemirov on 11.12.14.
  */
 public class TestFragment extends Fragment {
-
+    private static String TAG = "TestFragment";
 
     @InjectView(R.id.variant_a_button) Button mVariantA;
     @InjectView(R.id.variant_b_button) Button mVariantB;
@@ -51,11 +53,16 @@ public class TestFragment extends Fragment {
 
     @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
 
+    @InjectView(R.id.broad_my_profile) LinearLayout mMyProfileBroad;
+    @InjectView(R.id.broad_opponent_profile) LinearLayout mOpponentProfileBroad;
+
+    @InjectView(R.id.round_shower) TextView mRoundShowerTextView;
+
+    private Button mLastPushedButton;
 
 
     public SessionManager mSessionManager;
-
-
+    public Question mCurQuestion;
 
 
 
@@ -74,224 +81,156 @@ public class TestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this,v);
 
         mSessionManager = SessionManager.newInstance();
 
-        YoYo.with(Techniques.FadeIn).duration(2000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        mSessionManager.startTimer();
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                myTimer = new Timer();
-                myTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        timer++;
-                        myHandler.post(myRunnable);
-                    }
-                }, 0, 1000);
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).playOn(v);
-
-
-
-
+        mLoadingView = v.findViewById(R.id.round_shower);
+        mContentView = v.findViewById( R.id.question_text_view);
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
             @Override
-            public void callbackCallMine(int i) {                                                               //CALLBACK
+            public void callbackCallMine(int i) {
+
                 mMyPointsTextView.setText(String.valueOf(i));
+                mLastPushedButton.setBackgroundColor(0xff00ff00);
+                //TODO: change to switch with new parameter as a condition
+
             }
             @Override
-            public void callbackCallOpponent(int i) {                                                               //CALLBACK
-                mOpponentsPointsTextView.setText(String.valueOf(i));
+            public void callbackCallOpponent(int i) {
+                //mOpponentsPointsTextView.setText(String.valueOf(i));
             }
         };
 
+        mSessionManager.mCallbackOnView = new SessionManager.CallbackOnView() {
+            @Override
+            public void updateTimer(int i) {
+                mTimerTextView.setText(String.valueOf(10 - i));
+            }
+            @Override
+            public void closeRound(){
+
+                updateData();
+                updateGUI();
+
+            }
+            @Override
+            public void openRound(){
 
 
-        update();    //TODO: remove update
+            }
+            @Override
+            public void opponentChooseAnswer(int i){
+                switch (i){
+                    case 0:                 mVariantA.setBackgroundColor(0xffff0000);
+                    case 1:                 mVariantB.setBackgroundColor(0xffff0000);
+                    case 2:                 mVariantC.setBackgroundColor(0xffff0000);
+                    case 3:                 mVariantD.setBackgroundColor(0xffff0000);
+                        //TODO: NEEDS TO REWORK, SET a COLOR OF BACKGROUND AFTER FINISH OF A ROUND
+                }
+            }
+        };
+        mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
-
-
-
-
-
-
+        updateGUI();
 
 
         return v;
     }
 
 
+    private void updateData(){
 
-
-
-
-
-    int round;
-
-    private int timer;
-    Handler myHandler = new Handler();
-    Timer myTimer;
-    private  int timeOfOpponentAnswer;
-
-
-
-
-
-    final Runnable myRunnable = new Runnable() {
-        public void run() {
-            if(timer >= 10){
-                mSessionManager.answerMine(-1, timer);
-                update();       //TODO: remove update
-                close();
-            }
-
-
-            Random r = new Random();
-
-
-            if(timer == timeOfOpponentAnswer) {
-                mSessionManager.answerOpponent(3 - r.nextInt(1), timeOfOpponentAnswer);
-            }
-            mTimerTextView.setText(String.valueOf(10 - timer));
-        }
-    };
-
-
-    private void close(){
-
-        YoYo.with(Techniques.FadeOut).duration(2000).playOn(mButtonsBroad);
-        YoYo.with(Techniques.FadeOut).duration(2000).playOn(mQuestionTextView);
-        YoYo.with(Techniques.FadeOut).duration(2000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                showRound();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).playOn(mTimerTextView);
-
-    }
-
-
-    private void open(){
-
-        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mButtonsBroad);
-        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mQuestionTextView);
-        YoYo.with(Techniques.FadeIn).duration(2000).playOn(mTimerTextView);
-        timer = 0;
-
-    }
-
-    private void showRound(){
-
-        YoYo.with(Techniques.FadeIn).duration(500).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mQuestionTextView.setText("Round " + round);                                                    //bullshit
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                YoYo.with(Techniques.FadeOut).duration(500).playOn(mQuestionTextView);
-                open();
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        }).playOn(mButtonsBroad);
-
-    }
-
-
-
-
-
-
-
-    /**
-    * Update question and variants of answer (new round)
-     */
-    private void update(){
-
-        Random r = new Random();
-
-        round++;
-
-        timeOfOpponentAnswer = r.nextInt(10);
-
-        timer = 0;
-
-        myHandler.post(myRunnable);
-
-        Question newQuestion;
-
-
-        if(mSessionManager.newRound()){
-            mSessionManager.nextRound();
-            newQuestion = mSessionManager.getCurrentQuestion();
-        } else{
-            if(getActivity() != null) {
+            if(!mSessionManager.mSession.moveCurrentSessionQuestion()){
                 getActivity().finish();
             }
-            myTimer.cancel();
+            mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
-            return;
-        }
+    }
+
+    private void showRoundTable(){
+        mSessionManager.stopTimer();
+
+        mLoadingView.setAlpha(0f);
+        mLoadingView.setVisibility(View.VISIBLE);
+
+        mLoadingView.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .setListener(null);
+
+        mContentView.animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        mContentView.setVisibility(View.GONE);
+                        hideRoundTable();
+                    }
+                });
+
+    }
+    private void hideRoundTable(){
+        mContentView.setAlpha(0f);
+        mContentView.setVisibility(View.VISIBLE);
+
+        mContentView.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .setListener(null);
+
+        mLoadingView.animate()
+                .alpha(0f)
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        mLoadingView.setVisibility(View.GONE);
+                        justMethod();
+                    }
+                });
+    }
+    private void justMethod(){
+        mSessionManager.startTimer();
+        Log.d(TAG, "startTime() has been already worked");
+    }
+
+    private void updateGUI(){
 
 
+        mRoundShowerTextView.setText("Round "+ mSessionManager.mSession.getNumberOfRound());
+        showRoundTable();
+        blockOfButtons = false;
 
+        mQuestionTextView.setText(mCurQuestion.getText());
 
-
-
-            mQuestionTextView.setText(newQuestion.getText());
-
-        String[] vars = newQuestion.getAnswersText();
+        String[] vars = mCurQuestion.getAnswersText();
         mVariantA.setText(vars[0]);
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
-        //open();
+        mVariantA.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+        mVariantB.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+        mVariantC.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+        mVariantD.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+
+
+
     }
+
+
+    private View mContentView;
+
+
+    private View mLoadingView;
+
 
     @Override
     public void onDestroy(){                            //TODO: add launching new fragment with results of game
@@ -305,58 +244,73 @@ public class TestFragment extends Fragment {
 
     }
 
-
+    private boolean blockOfButtons;
 
     @OnClick(R.id.variant_a_button)
     public void onButtonAClick() {
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
 
+        if(blockOfButtons){
+            return;
+        }
+        blockOfButtons = true;
+        mLastPushedButton = mVariantA;
+        mSessionManager.iChooseAnswer(0);
+        mVariantA.setBackgroundColor(0xffff0000);
 
-        YoYo.with(Techniques.Swing)
-                .duration(700)
-                .playOn(mVariantA);
-
-        mSessionManager.answerMine(0,timer);
-        close();
-        update();    //TODO: remove update
     }
 
     @OnClick(R.id.variant_b_button)
     public void onButtonBClick() {
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
 
-        YoYo.with(Techniques.FadeIn)
-                .duration(1500)
-                .playOn(mVariantB);
-        mSessionManager.answerMine(1, timer);
-        close();
+        if(blockOfButtons){
+            return;
+        }
+        blockOfButtons = true;
 
-        update();       //TODO: remove update
+        mLastPushedButton = mVariantB;
+
+        mSessionManager.iChooseAnswer(1);
+        mVariantB.setBackgroundColor(0xffff0000);
+
     }
 
     @OnClick(R.id.variant_c_button)
     public void onButtonCClick() {
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
 
-        YoYo.with(Techniques.Flash)
-                .duration(700)
-                .playOn(mVariantC);
+        if(blockOfButtons){
+            return;
+        }
+        blockOfButtons = true;
 
-        mSessionManager.answerMine(2, timer);
-        close();
+        mLastPushedButton = mVariantC;
 
-        update();           //TODO: remove update
+        mSessionManager.iChooseAnswer(2);
+
+        mVariantC.setBackgroundColor(0xffff0000);
+
+
     }
 
     @OnClick(R.id.variant_d_button)
     public void onButtonDClick() {
 
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
 
-        YoYo.with(Techniques.Landing)
-                .duration(600)
-                .playOn(mVariantD);
+        if(blockOfButtons){
+            return;
+        }
+        blockOfButtons = true;
 
-        mSessionManager.answerMine(3, timer);
-        close();
+        mLastPushedButton = mVariantD;
 
-        update();           //TODO: remove update
+        mSessionManager.iChooseAnswer(3);
+        mVariantD.setBackgroundColor(0xffff0000);
+
+
+
     }
 
 

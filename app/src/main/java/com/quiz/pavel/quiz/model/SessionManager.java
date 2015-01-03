@@ -1,24 +1,57 @@
 package com.quiz.pavel.quiz.model;
 
+import android.os.Handler;
+import android.util.Log;
+
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 18.12.14.
  */
 public class SessionManager {
+    private final String TAG = "SessionManager";
 
     public Session mSession;
-
-    private SessionQuestion mCurrentSessionQuestion;
-
-    public int mCurrentRound;
 
 
     public SessionManager(){
         mSession = new Session();
 
+
     }
+
+    public void startTimer(){
+        mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timer++;
+                myHandler.post(myRunnable);
+            }
+        }, 0, 1000);
+    }
+
+    public void stopTimer(){
+        if(mTimer == null){
+            return;
+        }
+        mTimer.cancel();
+        mTimer.purge();
+
+    }
+
+    public void iChooseAnswer(int number){
+        mSession.myAnswer(number, timer);
+    }
+
+
+
+
+
+
 
     public boolean amIWinner(){
         if(mSession.pointsMine > mSession.pointsOpponent){
@@ -35,25 +68,11 @@ public class SessionManager {
 
 
 
-    public void answerMine(int answer, int time){
-        if(answer == mCurrentSessionQuestion.mCorrectAnswer){
-            mSession.addPointsMe(150 - 10 * time);
-        }
-
-
-    }
-    public void answerOpponent(int answer, int time){
-
-        if(answer == mCurrentSessionQuestion.mCorrectAnswer){
-            mSession.addPointsOpponent(150 - 10 * time);
-        }
-    }
 
 
 
-    public Question getCurrentQuestion(){
-        return mCurrentSessionQuestion.getQuestion();
-    }
+
+
 
 
 
@@ -66,11 +85,49 @@ public class SessionManager {
         }
     }
 
-    public void nextRound(){
-        mCurrentRound++;
-        mCurrentSessionQuestion = mSession.getSessionQuestion();
-                                                                                                        //TODO: add method updating view via callback
-    }
+
+
+
+
+
+    private int timer;
+    Handler myHandler = new Handler();
+    Timer mTimer;
+
+
+
+    final Runnable myRunnable = new Runnable() {
+        public void run() {
+            if(timer >= 11){
+                mCallbackOnView.closeRound();
+                timer = 0;
+            }
+
+
+
+            if(timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer){
+                mSession.opponentsAnswer();
+                mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
+            }
+
+
+            mCallbackOnView.updateTimer(timer);
+
+        }
+    };
+
+
+    // The callback interface
+    public interface CallbackOnView {
+        void updateTimer(int i);
+        void closeRound();
+        void openRound();
+        void opponentChooseAnswer(int i);
+
+    }                                                                                                           //CALLBACK
+
+    // The class that takes the callback
+    public CallbackOnView mCallbackOnView;
 
 
 

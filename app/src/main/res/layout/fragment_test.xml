@@ -21,6 +21,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:id="@+id/broad_my_profile"
             >
 
             <ImageView
@@ -62,6 +63,8 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
+            android:id="@+id/broad_opponent_profile"
+
             >
 
             <ImageView
@@ -83,81 +86,96 @@
     </LinearLayout>
 
 
-    <LinearLayout android:orientation="vertical"
+    <FrameLayout android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_weight="3"
+                  android:layout_weight="2"
             >
         <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="24dp"
+                android:layout_gravity="center"
                 android:id="@+id/question_text_view"
-                android:layout_weight="2"
-            android:gravity="center"
-            android:text="example" />
+                android:text="example" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Round "
+            android:layout_gravity="center"
+            android:id="@+id/round_shower"/>
+
+    </FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttons_broad"
+
+            >
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:paddingBottom="10dp"
                 >
-            <LinearLayout
-                    android:orientation="vertical"
+                <Button
+                    android:id="@+id/variant_a_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/buttons_broad"
+                    android:text="A"
+                    android:padding="30dp"
+                    android:background="@color/button_material_light"
+                    android:layout_marginRight="5dp"
+                    />
+                <Button
+                    android:layout_marginLeft="5dp"
 
-                    >
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="A"
-                            android:padding="15dp"
-                            android:paddingLeft="30dp"
-                            android:paddingRight="30dp"
-                            android:id="@+id/variant_a_button"
-                            />
-                    <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="B"
-                            android:paddingRight="30dp"
-                            android:paddingLeft="30dp"
-                            android:padding="15dp"
-                            android:id="@+id/variant_b_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:padding="30dp"
+                    android:id="@+id/variant_b_button"
+                    android:background="@color/button_material_light"
 
-                            />
-                </LinearLayout>
-                <LinearLayout android:orientation="horizontal"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:id="@+id/linearLayout">
+                    />
+            </LinearLayout>
+            <LinearLayout android:orientation="horizontal"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/linearLayout">
 
-                    <Button android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="C"
-                            android:padding="15dp"
-                            android:paddingLeft="30dp"
-                            android:paddingRight="30dp"
-                            android:id="@+id/variant_c_button"
-                            />
+                <Button android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="C"
+                        android:layout_marginRight="5dp"
 
-                    <Button android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="D"
-                            android:paddingRight="30dp"
-                            android:paddingLeft="30dp"
-                            android:padding="15dp"
-                            android:id="@+id/variant_d_button"
-                            />
-                </LinearLayout>
+                        android:padding="30dp"
+                        android:id="@+id/variant_c_button"
+                        android:background="@color/button_material_light"
+
+                    />
+
+                <Button android:layout_width="wrap_content"
+                        android:layout_marginLeft="5dp"
+
+                        android:layout_height="wrap_content"
+                        android:text="D"
+                        android:padding="30dp"
+                        android:id="@+id/variant_d_button"
+                        android:background="@color/button_material_light"
+
+                    />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 
 </LinearLayout>

@@ -20,12 +20,6 @@ public class SessionQuestionsLab {
 
         LinkedList<SessionQuestion> list = new LinkedList<>();
 
-        list.add( new SessionQuestion("what is my name?") );
-        list.add( new SessionQuestion("what is your name?") );
-        list.add( new SessionQuestion("what is his name?") );
-        list.add( new SessionQuestion("what is her name?") );
-        list.add( new SessionQuestion("what is cat's name?") );
-        list.add( new SessionQuestion("what is dog's name?") );
 
         return list;
     }
