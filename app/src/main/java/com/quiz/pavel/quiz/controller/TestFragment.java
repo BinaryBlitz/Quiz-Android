@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -61,6 +62,13 @@ public class TestFragment extends Fragment {
     private Button mLastPushedButton;
 
 
+    private View mQuestionShower;
+
+    private View mRoundShower;
+
+
+
+
     public SessionManager mSessionManager;
     public Question mCurQuestion;
 
@@ -87,10 +95,14 @@ public class TestFragment extends Fragment {
 
         mSessionManager = SessionManager.newInstance();
 
-        mSessionManager.startTimer();
 
-        mLoadingView = v.findViewById(R.id.round_shower);
-        mContentView = v.findViewById( R.id.question_text_view);
+        mRoundShower = v.findViewById(R.id.round_shower);
+        mQuestionShower = v.findViewById( R.id.question_text_view);
+
+        mQuestionShower.setVisibility(View.GONE);
+        mRoundShower.setVisibility(View.GONE);
+        mButtonsBroad.setVisibility(View.GONE);
+
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
@@ -104,7 +116,7 @@ public class TestFragment extends Fragment {
             }
             @Override
             public void callbackCallOpponent(int i) {
-                //mOpponentsPointsTextView.setText(String.valueOf(i));
+                mOpponentsPointsTextView.setText(String.valueOf(i));
             }
         };
 
@@ -116,24 +128,18 @@ public class TestFragment extends Fragment {
             @Override
             public void closeRound(){
 
+               onCloseRound();
+
+            }
+            @Override
+            public void openRound(){
                 updateData();
                 updateGUI();
 
             }
             @Override
-            public void openRound(){
-
-
-            }
-            @Override
             public void opponentChooseAnswer(int i){
-                switch (i){
-                    case 0:                 mVariantA.setBackgroundColor(0xffff0000);
-                    case 1:                 mVariantB.setBackgroundColor(0xffff0000);
-                    case 2:                 mVariantC.setBackgroundColor(0xffff0000);
-                    case 3:                 mVariantD.setBackgroundColor(0xffff0000);
-                        //TODO: NEEDS TO REWORK, SET a COLOR OF BACKGROUND AFTER FINISH OF A ROUND
-                }
+
             }
         };
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
@@ -145,10 +151,44 @@ public class TestFragment extends Fragment {
     }
 
 
+    private void onCloseRound(){
+
+        mSessionManager.stopTimer();
+        Log.d(TAG, "mOpponentAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer){
+            case 0:                 mVariantA.setBackgroundColor(0xffffff00);
+            case 1:                 mVariantB.setBackgroundColor(0xffffff00);
+            case 2:                 mVariantC.setBackgroundColor(0xffffff00);
+            case 3:                 mVariantD.setBackgroundColor(0xffffff00);
+
+        }
+        Log.d(TAG, "mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
+            case 0:                 mVariantA.setBackgroundColor(0xff00ff00);
+            case 1:                 mVariantB.setBackgroundColor(0xff00ff00);
+            case 2:                 mVariantC.setBackgroundColor(0xff00ff00);
+            case 3:                 mVariantD.setBackgroundColor(Color.GREEN);
+
+        //TODO: сдеать что-то с этим, непонятно почему не работает.....
+
+        }
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+
+         //TODO: обязательно убрать это, можно сделать метод в менеджере, который создает новый таймер с задержкой на нужное время, его как раз засунуть в параметры метода
+        }
+        mSessionManager.startTimer(0);
+
+
+    }
+
+
     private void updateData(){
 
             if(!mSessionManager.mSession.moveCurrentSessionQuestion()){
                 getActivity().finish();
+                mSessionManager.stopTimer();
             }
             mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
@@ -157,48 +197,48 @@ public class TestFragment extends Fragment {
     private void showRoundTable(){
         mSessionManager.stopTimer();
 
-        mLoadingView.setAlpha(0f);
-        mLoadingView.setVisibility(View.VISIBLE);
+        mRoundShower.setAlpha(0f);
+        mRoundShower.setVisibility(View.VISIBLE);
 
-        mLoadingView.animate()
+        mRoundShower.animate()
                 .alpha(1f)
                 .setDuration(1000)
                 .setListener(null);
 
-        mContentView.animate()
+        mQuestionShower.animate()
                 .alpha(0f)
                 .setDuration(1000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
-                        mContentView.setVisibility(View.GONE);
+                        mQuestionShower.setVisibility(View.GONE);
                         hideRoundTable();
                     }
                 });
 
     }
     private void hideRoundTable(){
-        mContentView.setAlpha(0f);
-        mContentView.setVisibility(View.VISIBLE);
+        mQuestionShower.setAlpha(0f);
+        mQuestionShower.setVisibility(View.VISIBLE);
 
-        mContentView.animate()
+        mQuestionShower.animate()
                 .alpha(1f)
                 .setDuration(1000)
                 .setListener(null);
 
-        mLoadingView.animate()
+        mRoundShower.animate()
                 .alpha(0f)
                 .setDuration(1000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
-                        mLoadingView.setVisibility(View.GONE);
+                        mRoundShower.setVisibility(View.GONE);
                         justMethod();
                     }
                 });
     }
     private void justMethod(){
-        mSessionManager.startTimer();
+        mSessionManager.startTimer(0);
         Log.d(TAG, "startTime() has been already worked");
     }
 
@@ -226,16 +266,12 @@ public class TestFragment extends Fragment {
     }
 
 
-    private View mContentView;
-
-
-    private View mLoadingView;
-
 
     @Override
     public void onDestroy(){                            //TODO: add launching new fragment with results of game
         super.onDestroy();
         String str = "you are loser";
+        mSessionManager.stopTimer();
         if(mSessionManager.amIWinner())
         {
             str = "you are winner";

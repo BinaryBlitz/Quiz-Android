@@ -34,12 +34,12 @@ public class Session {
         mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
         Log.d(TAG,"mSessiongQuestions lenght is, when initializing " + mSessionQuestions.size());
         Random r = new Random();
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
-        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(1),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
+        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
         moveCurrentSessionQuestion();
 
     }

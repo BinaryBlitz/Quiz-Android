@@ -23,7 +23,8 @@ public class SessionManager {
 
     }
 
-    public void startTimer(){
+    public void startTimer(int delay){
+
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -31,7 +32,8 @@ public class SessionManager {
                 timer++;
                 myHandler.post(myRunnable);
             }
-        }, 0, 1000);
+        }, delay, 1000);
+
     }
 
     public void stopTimer(){
@@ -100,6 +102,7 @@ public class SessionManager {
         public void run() {
             if(timer >= 11){
                 mCallbackOnView.closeRound();
+                mCallbackOnView.openRound();
                 timer = 0;
             }
 
