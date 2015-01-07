@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Text"
+                android:text="10"
                 android:id="@+id/timer_textView" />
         </LinearLayout>
 

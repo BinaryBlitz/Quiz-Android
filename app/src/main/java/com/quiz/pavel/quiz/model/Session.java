@@ -29,6 +29,13 @@ public class Session {
 
     public LinkedList<SessionQuestion> mSessionQuestions;
 
+    private boolean mOpponentIsAnwered;
+    private boolean mIIsAnswered;
+
+    public boolean bothPlayersAreAnswered(){
+        return mOpponentIsAnwered && mIIsAnswered;
+    }
+
 
     public Session(){
         mSessionQuestions = SessionQuestionsLab.getSessionsQuestionArray();
@@ -55,6 +62,7 @@ public class Session {
     }
 
     public void myAnswer(int number, int time){
+        mIIsAnswered = true;
         mCurrentSessionQuestion.mMyAnswer = number;
         mCurrentSessionQuestion.mMyTimeOfAnswer = time;
         if(mCurrentSessionQuestion.mCorrectAnswer == number){
@@ -62,6 +70,7 @@ public class Session {
         }
     }
     public void opponentsAnswer(){
+        mOpponentIsAnwered = true;
         if(mCurrentSessionQuestion.mCorrectAnswer == mCurrentSessionQuestion.mOpponentAnswer){
             addPointsOpponent(mCurrentSessionQuestion.mOpponentTimeOfAnswer);
         }
@@ -87,6 +96,8 @@ public class Session {
     public boolean moveCurrentSessionQuestion(){
         if(!mSessionQuestions.isEmpty()){
             mCurrentSessionQuestion = mSessionQuestions.poll();
+            mIIsAnswered = false;
+            mOpponentIsAnwered = false;
             return true;
         }
 

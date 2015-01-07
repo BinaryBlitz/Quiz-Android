@@ -25,6 +25,8 @@ public class SessionManager {
 
     public void startTimer(int delay){
 
+
+
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -100,7 +102,7 @@ public class SessionManager {
 
     final Runnable myRunnable = new Runnable() {
         public void run() {
-            if(timer >= 11){
+            if(timer >= 11 || mSession.bothPlayersAreAnswered()){
                 mCallbackOnView.closeRound();
                 mCallbackOnView.openRound();
                 timer = 0;

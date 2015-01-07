@@ -12,12 +12,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewAnimator;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.tagmanager.Container;
 import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Question;
@@ -59,12 +63,10 @@ public class TestFragment extends Fragment {
 
     @InjectView(R.id.round_shower) TextView mRoundShowerTextView;
 
-    private Button mLastPushedButton;
+    private Button mLastPushedButton; //TODO: delete this line
 
 
-    private View mQuestionShower;
 
-    private View mRoundShower;
 
 
 
@@ -96,12 +98,10 @@ public class TestFragment extends Fragment {
         mSessionManager = SessionManager.newInstance();
 
 
-        mRoundShower = v.findViewById(R.id.round_shower);
-        mQuestionShower = v.findViewById( R.id.question_text_view);
 
-        mQuestionShower.setVisibility(View.GONE);
-        mRoundShower.setVisibility(View.GONE);
-        mButtonsBroad.setVisibility(View.GONE);
+        mQuestionTextView.setVisibility(View.GONE);
+        mRoundShowerTextView.setVisibility(View.GONE);
+        mButtonsBroad.setAlpha(0f);
 
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
@@ -110,8 +110,6 @@ public class TestFragment extends Fragment {
             public void callbackCallMine(int i) {
 
                 mMyPointsTextView.setText(String.valueOf(i));
-                mLastPushedButton.setBackgroundColor(0xff00ff00);
-                //TODO: change to switch with new parameter as a condition
 
             }
             @Override
@@ -133,8 +131,8 @@ public class TestFragment extends Fragment {
             }
             @Override
             public void openRound(){
-                updateData();
-                updateGUI();
+               // updateData();
+               // updateGUI();
 
             }
             @Override
@@ -154,33 +152,167 @@ public class TestFragment extends Fragment {
     private void onCloseRound(){
 
         mSessionManager.stopTimer();
-        Log.d(TAG, "mOpponentAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
+        Log.d(TAG, "mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer){
-            case 0:                 mVariantA.setBackgroundColor(0xffffff00);
-            case 1:                 mVariantB.setBackgroundColor(0xffffff00);
-            case 2:                 mVariantC.setBackgroundColor(0xffffff00);
-            case 3:                 mVariantD.setBackgroundColor(0xffffff00);
+            case 0: mVariantA.setTextColor(Color.RED);
+            case 1:mVariantB.setTextColor(Color.RED);
+            case 2:mVariantC.setTextColor(Color.RED);
+            case 3:mVariantD.setTextColor(Color.RED);
 
         }
         Log.d(TAG, "mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0:                 mVariantA.setBackgroundColor(0xff00ff00);
-            case 1:                 mVariantB.setBackgroundColor(0xff00ff00);
-            case 2:                 mVariantC.setBackgroundColor(0xff00ff00);
-            case 3:                 mVariantD.setBackgroundColor(Color.GREEN);
-
-        //TODO: сдеать что-то с этим, непонятно почему не работает.....
+            case 0:                 mVariantA.setTextColor(Color.GREEN);
+            case 1:                 mVariantB.setTextColor(Color.GREEN);
+            case 2:                 mVariantC.setTextColor(Color.GREEN);
+            case 3:                 mVariantD.setTextColor(Color.GREEN);
 
         }
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException e) {
+        hideUncorrectAnswerVariants();
+    }
 
-         //TODO: обязательно убрать это, можно сделать метод в менеджере, который создает новый таймер с задержкой на нужное время, его как раз засунуть в параметры метода
+    // hide buttons of uncorrect answers using animation
+    Button b1, b2, b3;
+    private void hideUncorrectAnswerVariants(){
+
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
+            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD;
+            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD;
+            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD;
+            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA;
         }
-        mSessionManager.startTimer(0);
+        b1.setAlpha(1f);
+        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                b1.setAlpha(0f);
+                hideCorrectQuestion();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(b1);
+
+        b2.setAlpha(1f);
+        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                b2.setAlpha(0f);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(b2);
+
+        b3.setAlpha(1f);
+        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                b3.setAlpha(0f);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(b3);
 
 
+
+    }
+
+
+    //hide correct answer's variant and question textview
+    Button b4;
+    TextView tv;
+    private void hideCorrectQuestion(){
+
+        tv = mQuestionTextView;
+
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
+            case 0: b4 = mVariantA;
+            case 1: b4 = mVariantB;
+            case 2: b4 = mVariantC;
+            case 3: b4 = mVariantD;
+        }
+        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                tv.setAlpha(0f);
+                updateData();
+                updateGUI();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(tv);
+        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                b4.setAlpha(0f);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(b4);
     }
 
 
@@ -197,49 +329,184 @@ public class TestFragment extends Fragment {
     private void showRoundTable(){
         mSessionManager.stopTimer();
 
-        mRoundShower.setAlpha(0f);
-        mRoundShower.setVisibility(View.VISIBLE);
+        mRoundShowerTextView.setAlpha(0f);
+        mRoundShowerTextView.setVisibility(View.VISIBLE);
 
-        mRoundShower.animate()
+        mRoundShowerTextView.animate()
                 .alpha(1f)
-                .setDuration(1000)
-                .setListener(null);
-
-        mQuestionShower.animate()
-                .alpha(0f)
                 .setDuration(1000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
-                        mQuestionShower.setVisibility(View.GONE);
                         hideRoundTable();
                     }
                 });
+//
+//        mQuestionShower.animate()
+//                .alpha(0f)
+//                .setDuration(1000)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(android.animation.Animator animation) {
+//                        mQuestionShower.setVisibility(View.GONE);
+//                        hideRoundTable();
+//                    }
+//                });
 
     }
     private void hideRoundTable(){
-        mQuestionShower.setAlpha(0f);
-        mQuestionShower.setVisibility(View.VISIBLE);
+//        mQuestionShower.setAlpha(0f);
+//        mQuestionShower.setVisibility(View.VISIBLE);
 
-        mQuestionShower.animate()
-                .alpha(1f)
-                .setDuration(1000)
-                .setListener(null);
+//        mQuestionShower.animate()
+//                .alpha(1f)
+//                .setDuration(1000)
+//                .setListener(null);
 
-        mRoundShower.animate()
+        mRoundShowerTextView.animate()
                 .alpha(0f)
                 .setDuration(1000)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
-                        mRoundShower.setVisibility(View.GONE);
-                        justMethod();
+                        mRoundShowerTextView.setVisibility(View.GONE);
+                        showNewQuestion();
                     }
                 });
     }
-    private void justMethod(){
-        mSessionManager.startTimer(0);
-        Log.d(TAG, "startTime() has been already worked");
+    private void showNewQuestion(){
+
+        mQuestionTextView.setAlpha(0f);
+        mQuestionTextView.setVisibility(View.VISIBLE);
+
+        mQuestionTextView.animate()
+                .alpha(1f)
+                .setDuration(1000)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(android.animation.Animator animation) {
+                        showAnswerVariants();
+                    }
+                });
+
+
+    }
+    private void showAnswerVariants(){
+
+        mButtonsBroad.setVisibility(View.VISIBLE);
+        mButtonsBroad.setAlpha(1f);
+        mVariantA.setVisibility(View.VISIBLE);
+        mVariantB.setVisibility(View.VISIBLE);
+        mVariantC.setVisibility(View.VISIBLE);
+        mVariantD.setVisibility(View.VISIBLE);
+        mVariantA.setAlpha(0f);
+        mVariantB.setAlpha(0f);
+        mVariantC.setAlpha(0f);
+        mVariantD.setAlpha(0f);
+
+
+        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mSessionManager.startTimer(0);
+                mVariantA.setAlpha(1f);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mVariantA);
+        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mVariantB.setAlpha(1f);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mVariantB);
+        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mVariantC.setAlpha(1f);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mVariantC);
+        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mVariantD.setAlpha(1f);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        }).playOn(mVariantD);
+
+
+
+//        mButtonsBroad.animate()
+//                .alpha(1f)
+//                .setDuration(1000)
+//                .setListener(new AnimatorListenerAdapter() {
+//                    @Override
+//                    public void onAnimationEnd(android.animation.Animator animation) {
+//                        mSessionManager.startTimer(0);
+//                        mVariantA.setAlpha(1f);
+//                        mVariantB.setAlpha(1f);
+//                        mVariantC.setAlpha(1f);
+//                        mVariantD.setAlpha(1f);
+//
+//                    }
+//                });
     }
 
     private void updateGUI(){
@@ -256,10 +523,10 @@ public class TestFragment extends Fragment {
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
-        mVariantA.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-        mVariantB.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-        mVariantC.setBackgroundColor(getResources().getColor(R.color.button_material_light));
-        mVariantD.setBackgroundColor(getResources().getColor(R.color.button_material_light));
+       mVariantA.setTextColor(Color.BLACK);
+       mVariantB.setTextColor(Color.BLACK);
+        mVariantC.setTextColor(Color.BLACK);
+        mVariantD.setTextColor(Color.BLACK);
 
 
 
@@ -292,8 +559,11 @@ public class TestFragment extends Fragment {
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
         mSessionManager.iChooseAnswer(0);
-        mVariantA.setBackgroundColor(0xffff0000);
-
+        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 0){
+            mVariantA.setTextColor(Color.GREEN);
+        } else {
+            mVariantA.setTextColor(Color.RED);
+        }
     }
 
     @OnClick(R.id.variant_b_button)
@@ -308,8 +578,11 @@ public class TestFragment extends Fragment {
         mLastPushedButton = mVariantB;
 
         mSessionManager.iChooseAnswer(1);
-        mVariantB.setBackgroundColor(0xffff0000);
-
+        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 1){
+            mVariantB.setTextColor(Color.GREEN);
+        } else {
+            mVariantB.setTextColor(Color.RED);
+        }
     }
 
     @OnClick(R.id.variant_c_button)
@@ -325,8 +598,11 @@ public class TestFragment extends Fragment {
 
         mSessionManager.iChooseAnswer(2);
 
-        mVariantC.setBackgroundColor(0xffff0000);
-
+        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 2){
+            mVariantC.setTextColor(Color.GREEN);
+        } else {
+            mVariantC.setTextColor(Color.RED);
+        }
 
     }
 
@@ -343,7 +619,15 @@ public class TestFragment extends Fragment {
         mLastPushedButton = mVariantD;
 
         mSessionManager.iChooseAnswer(3);
-        mVariantD.setBackgroundColor(0xffff0000);
+
+        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 3){
+            mVariantD.setTextColor(Color.GREEN);
+        } else {
+            mVariantD.setTextColor(Color.RED);
+        }
+
+
+
 
 
 
