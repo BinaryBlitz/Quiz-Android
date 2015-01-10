@@ -2,6 +2,9 @@ package com.quiz.pavel.quiz.model;
 
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -44,6 +47,30 @@ public class SessionQuestion {
         mOpponentAnswer = opponentAnswer;
         mOpponentTimeOfAnswer = opponentTimeOfAnswer;
         Log.d(TAG,"mOpponentTimeOfAnswer = "+opponentTimeOfAnswer);
+    }
+
+    public SessionQuestion(JSONObject json){
+        try {
+            mQuestion = new Question(json.getJSONObject("question"));
+            for (int i = 0; i < 4; i++) {
+                if( mQuestion.getAnswers()[i].mIsCorrect == true){
+                    mCorrectAnswer = i;
+                }
+            }
+            int opponent_answer_id = json.getInt("opponent_answer_id");
+            for (int i = 0; i < 4; i++) {
+                if( mQuestion.getAnswers()[i].mId == opponent_answer_id){
+                    mOpponentAnswer = i;
+                }
+            }
+            mOpponentTimeOfAnswer = json.getInt("opponent_time");
+
+
+        } catch (JSONException e) {
+            Log.d(TAG,"Error, parsing in the constructor of sessionQuestion" );
+
+            e.printStackTrace();
+        }
     }
 
 

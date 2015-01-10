@@ -95,7 +95,7 @@ public class TestFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this,v);
 
-        mSessionManager = SessionManager.newInstance();
+        mSessionManager = SessionManager.newInstance(getActivity());
 
 
 
@@ -115,6 +115,11 @@ public class TestFragment extends Fragment {
             @Override
             public void callbackCallOpponent(int i) {
                 mOpponentsPointsTextView.setText(String.valueOf(i));
+            }
+
+            @Override
+            public void downloadCompleted(){
+                beginGame();
             }
         };
 
@@ -140,12 +145,17 @@ public class TestFragment extends Fragment {
 
             }
         };
-        mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
-        updateGUI();
 
 
         return v;
+    }
+
+    private void beginGame(){
+
+        mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
+
+        updateGUI();
     }
 
 
@@ -319,8 +329,8 @@ public class TestFragment extends Fragment {
     private void updateData(){
 
             if(!mSessionManager.mSession.moveCurrentSessionQuestion()){
-                getActivity().finish();
                 mSessionManager.stopTimer();
+                getActivity().finish();
             }
             mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 

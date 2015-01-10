@@ -1,5 +1,11 @@
 package com.quiz.pavel.quiz.model;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 /**
@@ -10,7 +16,6 @@ public class Question {
     private UUID mId;
     private String mText;
     private Answer[] mAnswers;
-    private int mCorrectAnswer;
 
 
     public Question(String text){
@@ -21,6 +26,25 @@ public class Question {
             mAnswers[i] = new Answer("answer"+(i+1),false);
         }
         mAnswers[3].mIsCorrect = true;
+    }
+    public Question(JSONObject json){
+        try {
+            mText = json.getString("content");
+            JSONArray answers = json.getJSONArray("answers");
+            mAnswers = new Answer[4];
+
+            for (int i = 0; i < answers.length(); i++) {
+                mAnswers[i] = new Answer(answers.getJSONObject(i));
+            }
+
+
+
+        } catch (JSONException e) {
+            Log.d("", "Error, parsing in the constructor of question");
+
+            e.printStackTrace();
+        }
+
     }
 
     public String[] getAnswersText() {

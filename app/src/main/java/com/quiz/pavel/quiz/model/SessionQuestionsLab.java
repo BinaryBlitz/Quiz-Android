@@ -18,7 +18,7 @@ public class SessionQuestionsLab {
 
     public static LinkedList<SessionQuestion> getSessionsQuestionArray(){
 
-        LinkedList<SessionQuestion> list = new LinkedList<>();
+        LinkedList<SessionQuestion> list = new LinkedList<SessionQuestion>();
 
 
         return list;

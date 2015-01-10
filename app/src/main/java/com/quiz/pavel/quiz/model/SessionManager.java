@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.model;
 
+import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
@@ -17,8 +18,8 @@ public class SessionManager {
     public Session mSession;
 
 
-    public SessionManager(){
-        mSession = new Session();
+    public SessionManager(Context c){
+        mSession = new Session(c);
 
 
     }
@@ -65,8 +66,8 @@ public class SessionManager {
     }
 
 
-    public static SessionManager newInstance(){
-        SessionManager ob = new SessionManager();
+    public static SessionManager newInstance(Context c){
+        SessionManager ob = new SessionManager(c);
         return ob;
     }
 
