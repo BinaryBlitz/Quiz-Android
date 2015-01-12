@@ -162,34 +162,36 @@ public class TestFragment extends Fragment {
     private void onCloseRound(){
 
         mSessionManager.stopTimer();
-        Log.d(TAG, "mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
+
+        Log.d(TAG, "HERE1 mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer){
-            case 0: mVariantA.setTextColor(Color.RED);
-            case 1:mVariantB.setTextColor(Color.RED);
-            case 2:mVariantC.setTextColor(Color.RED);
-            case 3:mVariantD.setTextColor(Color.RED);
+            case 0: mVariantA.setTextColor(Color.RED); break;
+            case 1:mVariantB.setTextColor(Color.RED);break;
+            case 2:mVariantC.setTextColor(Color.RED);break;
+            case 3:mVariantD.setTextColor(Color.RED);break;
 
         }
-        Log.d(TAG, "mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
+        Log.d(TAG, "HERE1 mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0:                 mVariantA.setTextColor(Color.GREEN);
-            case 1:                 mVariantB.setTextColor(Color.GREEN);
-            case 2:                 mVariantC.setTextColor(Color.GREEN);
-            case 3:                 mVariantD.setTextColor(Color.GREEN);
+            case 0:                 mVariantA.setTextColor(Color.GREEN);break;
+            case 1:                 mVariantB.setTextColor(Color.GREEN);break;
+            case 2:                 mVariantC.setTextColor(Color.GREEN);break;
+            case 3:                 mVariantD.setTextColor(Color.GREEN);break;
 
         }
-        hideUncorrectAnswerVariants();
+        hideIncorrectAnswerVariants();
     }
 
-    // hide buttons of uncorrect answers using animation
+    // hide buttons of incorrect answers using animation
     Button b1, b2, b3;
-    private void hideUncorrectAnswerVariants(){
+    private void hideIncorrectAnswerVariants(){
 
+        Log.d(TAG, "HERE1 mCorrectAnswer= " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD;
-            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD;
-            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD;
-            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA;
+            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD;         Log.d(TAG, "HERE1 B C D"); break;
+            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD;Log.d(TAG, " A C D "); break;
+            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD;Log.d(TAG, "B A D ");break;
+            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA;Log.d(TAG, "B C A ");break;
         }
         b1.setAlpha(1f);
         YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
@@ -274,10 +276,10 @@ public class TestFragment extends Fragment {
         tv = mQuestionTextView;
 
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0: b4 = mVariantA;
-            case 1: b4 = mVariantB;
-            case 2: b4 = mVariantC;
-            case 3: b4 = mVariantD;
+            case 0: b4 = mVariantA;break;
+            case 1: b4 = mVariantB;break;
+            case 2: b4 = mVariantC;break;
+            case 3: b4 = mVariantD;break;
         }
         YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
             @Override
@@ -561,11 +563,12 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_a_button)
     public void onButtonAClick() {
-        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
-
         if(blockOfButtons){
             return;
         }
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
+
+
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
         mSessionManager.iChooseAnswer(0);
@@ -578,11 +581,12 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_b_button)
     public void onButtonBClick() {
-        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
-
         if(blockOfButtons){
             return;
         }
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
+
+
         blockOfButtons = true;
 
         mLastPushedButton = mVariantB;
@@ -597,11 +601,12 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_c_button)
     public void onButtonCClick() {
-        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
-
         if(blockOfButtons){
             return;
         }
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
+
+
         blockOfButtons = true;
 
         mLastPushedButton = mVariantC;
@@ -618,12 +623,13 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_d_button)
     public void onButtonDClick() {
-
-        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
-
         if(blockOfButtons){
             return;
         }
+
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
+
+
         blockOfButtons = true;
 
         mLastPushedButton = mVariantD;
