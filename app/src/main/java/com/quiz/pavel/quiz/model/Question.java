@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,7 +39,10 @@ public class Question {
             for (int i = 0; i < answers.length(); i++) {
                 mAnswers[i] = new Answer(answers.getJSONObject(i));
             }
-
+            List<Answer> list =  Arrays.asList(mAnswers);
+            Collections.shuffle(list);
+            mAnswers = new Answer[list.size()];
+            list.toArray(mAnswers);
 
 
         } catch (JSONException e) {

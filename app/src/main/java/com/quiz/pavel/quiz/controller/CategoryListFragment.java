@@ -23,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by pavelkozemirov on 12.12.14.
  */
-public class TopicListFragment extends ListFragment {
+public class CategoryListFragment extends ListFragment {
 
 
 
