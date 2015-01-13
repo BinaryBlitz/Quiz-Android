@@ -124,6 +124,7 @@ public class TestFragment extends Fragment {
         };
 
         mSessionManager.mCallbackOnView = new SessionManager.CallbackOnView() {
+            
             @Override
             public void updateTimer(int i) {
                 mTimerTextView.setText(String.valueOf(10 - i));
@@ -136,8 +137,6 @@ public class TestFragment extends Fragment {
             }
             @Override
             public void openRound(){
-               // updateData();
-               // updateGUI();
 
             }
             @Override
@@ -166,17 +165,17 @@ public class TestFragment extends Fragment {
         Log.d(TAG, "HERE1 mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer){
             case 0: mVariantA.setTextColor(Color.RED); break;
-            case 1:mVariantB.setTextColor(Color.RED);break;
-            case 2:mVariantC.setTextColor(Color.RED);break;
-            case 3:mVariantD.setTextColor(Color.RED);break;
+            case 1:mVariantB.setTextColor(Color.RED); break;
+            case 2:mVariantC.setTextColor(Color.RED); break;
+            case 3:mVariantD.setTextColor(Color.RED); break;
 
         }
         Log.d(TAG, "HERE1 mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0:                 mVariantA.setTextColor(Color.GREEN);break;
-            case 1:                 mVariantB.setTextColor(Color.GREEN);break;
-            case 2:                 mVariantC.setTextColor(Color.GREEN);break;
-            case 3:                 mVariantD.setTextColor(Color.GREEN);break;
+            case 0:                 mVariantA.setTextColor(Color.GREEN); break;
+            case 1:                 mVariantB.setTextColor(Color.GREEN); break;
+            case 2:                 mVariantC.setTextColor(Color.GREEN); break;
+            case 3:                 mVariantD.setTextColor(Color.GREEN); break;
 
         }
         hideIncorrectAnswerVariants();
@@ -188,10 +187,10 @@ public class TestFragment extends Fragment {
 
         Log.d(TAG, "HERE1 mCorrectAnswer= " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD;         Log.d(TAG, "HERE1 B C D"); break;
-            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD;Log.d(TAG, " A C D "); break;
-            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD;Log.d(TAG, "B A D ");break;
-            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA;Log.d(TAG, "B C A ");break;
+            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD; break;
+            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD; break;
+            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD; break;
+            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA; break;
         }
         b1.setAlpha(1f);
         YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
@@ -332,6 +331,9 @@ public class TestFragment extends Fragment {
 
             if(!mSessionManager.mSession.moveCurrentSessionQuestion()){
                 mSessionManager.stopTimer();
+                if(getActivity() == null){
+                    return;
+                }
                 getActivity().finish();
             }
             mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
@@ -571,7 +573,7 @@ public class TestFragment extends Fragment {
 
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
-        mSessionManager.iChooseAnswer(0);
+        mSessionManager.iChooseAnswer(getActivity(), 0);
         if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 0){
             mVariantA.setTextColor(Color.GREEN);
         } else {
@@ -591,7 +593,7 @@ public class TestFragment extends Fragment {
 
         mLastPushedButton = mVariantB;
 
-        mSessionManager.iChooseAnswer(1);
+        mSessionManager.iChooseAnswer(getActivity(), 1);
         if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 1){
             mVariantB.setTextColor(Color.GREEN);
         } else {
@@ -611,7 +613,7 @@ public class TestFragment extends Fragment {
 
         mLastPushedButton = mVariantC;
 
-        mSessionManager.iChooseAnswer(2);
+        mSessionManager.iChooseAnswer(getActivity(), 2);
 
         if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 2){
             mVariantC.setTextColor(Color.GREEN);
@@ -634,7 +636,7 @@ public class TestFragment extends Fragment {
 
         mLastPushedButton = mVariantD;
 
-        mSessionManager.iChooseAnswer(3);
+        mSessionManager.iChooseAnswer(getActivity(), 3);
 
         if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 3){
             mVariantD.setTextColor(Color.GREEN);

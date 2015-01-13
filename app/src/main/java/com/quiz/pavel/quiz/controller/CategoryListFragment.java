@@ -3,6 +3,7 @@ package com.quiz.pavel.quiz.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,8 +16,23 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Category;
+import com.quiz.pavel.quiz.model.SessionQuestion;
 import com.quiz.pavel.quiz.model.Topic;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -24,10 +40,12 @@ import java.util.ArrayList;
  * Created by pavelkozemirov on 12.12.14.
  */
 public class CategoryListFragment extends ListFragment {
+    private static final String TAG = "CategoryListFragment";
+
+    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
-
-    private ArrayList<Topic> mTopics;
+    private ArrayList<Category> mCategories;
 
 
     @Override
@@ -36,17 +54,64 @@ public class CategoryListFragment extends ListFragment {
         setHasOptionsMenu(true);
 
         //getActivity().setTitle(R.string.topics_title);
-        mTopics = new ArrayList<Topic>();
-        mTopics.add(new Topic());
-        mTopics.add(new Topic());
-        mTopics.add(new Topic());
+        mCategories = new ArrayList<Category>();
+        Log.d(TAG, " Have begun downloading categories");
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        // Request a string response from the provided URL.
+        // Request a string response from the provided URL.
+        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories",
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                mCategories.add(new Category(response.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                Log.d(TAG, "Error, JSONException");
+                            }
+                        }
+                        TopicAdapter adapter = new TopicAdapter(mCategories);
+                        setListAdapter(adapter);
+
+                        setRetainInstance(true);
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,"Error Response, have no data from server" );
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+        //TODO: save downloaded topics and categories
+
+
+//
+//        JsonArrayRequest req = new JsonArrayRequest(urlJsonArry,
+//                new Response.Listener<JSONArray>() {
+//                    @Override
+//                    public void onResponse(JSONArray response) {
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                VolleyLog.d(TAG, "Error: " + error.getMessage());
+//
+//            }
+//        });
 
 
 
-        TopicAdapter adapter = new TopicAdapter(mTopics);
-        setListAdapter(adapter);
 
-        setRetainInstance(true);
+
+
+
+
+
+
 
     }
 
@@ -91,8 +156,8 @@ public class CategoryListFragment extends ListFragment {
         return v;
     }
 
-    private class TopicAdapter extends ArrayAdapter<Topic> {
-        public TopicAdapter(ArrayList<Topic> topics){
+    private class TopicAdapter extends ArrayAdapter<Category> {
+        public TopicAdapter(ArrayList<Category> topics){
             super(getActivity(),0,topics);
         }
         @Override
@@ -102,10 +167,14 @@ public class CategoryListFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Topic c = (Topic)getListAdapter().getItem(position);
+            Category c = (Category)getListAdapter().getItem(position);
 
             TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
             titleTextView.setText(c.getTitle());
+
+            TextView titleTextView1 = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
+            titleTextView1.setText(c.getTitleTopics());
+
 
 
             CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
@@ -119,8 +188,8 @@ public class CategoryListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id){
-//        Crime cr = (Crime)(getListAdapter().getItem(position));
-        Topic cr = ((TopicAdapter)getListAdapter()).getItem(position);
+
+        Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
 
         Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
 

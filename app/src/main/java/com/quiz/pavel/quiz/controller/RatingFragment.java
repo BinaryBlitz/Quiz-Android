@@ -32,9 +32,9 @@ public class RatingFragment extends ListFragment{
 
        // getActivity().setTitle(R.string.topics_title);
         mTopics = new ArrayList<Topic>();
-        mTopics.add(new Topic());
-        mTopics.add(new Topic());
-        mTopics.add(new Topic());
+//        mTopics.add(new Topic());
+//        mTopics.add(new Topic());
+//        mTopics.add(new Topic());
 
 
 
@@ -77,7 +77,7 @@ public class RatingFragment extends ListFragment{
             Topic c = (Topic)getListAdapter().getItem(position);
 
             TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
-            titleTextView.setText(c.getTitle());
+//            titleTextView.setText(c.getTitle());
 
 
             CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);

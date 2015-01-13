@@ -20,8 +20,6 @@ public class SessionManager {
 
     public SessionManager(Context c){
         mSession = new Session(c);
-
-
     }
 
     public void startTimer(int delay){
@@ -48,8 +46,8 @@ public class SessionManager {
 
     }
 
-    public void iChooseAnswer(int number){
-        mSession.myAnswer(number, timer);
+    public void iChooseAnswer(Context c, int number){
+        mSession.myAnswer(c, number, timer);
     }
 
 

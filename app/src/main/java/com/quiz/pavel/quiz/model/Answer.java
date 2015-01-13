@@ -25,8 +25,6 @@ public class Answer {
             mId = json.getInt("id");
         } catch (JSONException e) {
             Log.d("", "Error, parsing in the constructor of answer");
-
-            e.printStackTrace();
         }
 
     }

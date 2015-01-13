@@ -16,7 +16,6 @@ import java.util.UUID;
  */
 public class Question {
 
-    private UUID mId;
     private String mText;
     private Answer[] mAnswers;
 
@@ -39,6 +38,7 @@ public class Question {
             for (int i = 0; i < answers.length(); i++) {
                 mAnswers[i] = new Answer(answers.getJSONObject(i));
             }
+
             List<Answer> list =  Arrays.asList(mAnswers);
             Collections.shuffle(list);
             mAnswers = new Answer[list.size()];
@@ -51,6 +51,10 @@ public class Question {
             e.printStackTrace();
         }
 
+    }
+
+    public Answer getAnswer(int i){
+        return mAnswers[i];
     }
 
     public String[] getAnswersText() {

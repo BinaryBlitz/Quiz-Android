@@ -34,10 +34,7 @@ public class Session {
 
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
-    private UUID mMyPlayer;
-    private UUID mOpponentPlayer;
 
-    private Date mDate;
 
     public int pointsMine;
     public int pointsOpponent;
@@ -57,17 +54,6 @@ public class Session {
 
     public Session(Context c){
         mSessionQuestions =  new LinkedList<SessionQuestion>();
-        Log.d(TAG,"mSessiongQuestions lenght is, when initializing " + mSessionQuestions.size());
-//        Random r = new Random();
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-//        mSessionQuestions.push(new SessionQuestion(3 - r.nextInt(3),r.nextInt(6)));
-
-
-
 
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
@@ -88,15 +74,10 @@ public class Session {
                     public void onResponse(JSONObject response) {
 
                         try {
-                            Log.d(TAG,"Error, parsing in the constructor of session $$" + String.valueOf(response));
 
                             JSONArray sqs = response.getJSONArray("game_session_questions");
-                            Log.d(TAG,"Error, parsing in the constructor of session $$"+ String.valueOf(sqs) );
-                            Log.d(TAG,"Error, parsing in the constructor of session lenght()= $$"+ String.valueOf(sqs.length()) );
 
                             for (int i = 0; i < sqs.length(); i++) {
-                                Log.d(TAG,"Error, parsing in the constructor of session getJSONOBJ= $$"+ String.valueOf(sqs.getJSONObject(i)) );
-
                                 mSessionQuestions.push(new SessionQuestion(sqs.getJSONObject(i)));
                             }
 
@@ -116,8 +97,6 @@ public class Session {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG,"Error Response, have no data from server" );
-
-//                mTextView.setText("That didn't work!");
             }
         }){
 
@@ -149,10 +128,11 @@ public class Session {
 
     }
 
-    public void myAnswer(int number, int time){
+    public void myAnswer(Context c, int number, int time){
         mIIsAnswered = true;
         mCurrentSessionQuestion.mMyAnswer = number;
         mCurrentSessionQuestion.mMyTimeOfAnswer = time;
+        sendData(c, number, time);
         if(mCurrentSessionQuestion.mCorrectAnswer == number){
             addPointsMe(time);
         }
@@ -182,6 +162,7 @@ public class Session {
 
                                                                                            //CALLBACK
     public boolean moveCurrentSessionQuestion(){
+
         if(!mSessionQuestions.isEmpty()){
             mCurrentSessionQuestion = mSessionQuestions.poll();
             mIIsAnswered = false;
@@ -190,6 +171,47 @@ public class Session {
         }
 
         return false;
+    }
+
+    public void sendData(Context c, int number, int time){
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+
+        JSONObject params = new JSONObject();
+        try {
+            params.put("host_answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
+            params.put("host_time", time);
+
+        } catch (JSONException e) {
+
+        }
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH, URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                       //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,"Error Response, have no data from server" );
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/json");
+                params.put("Accept","application/json");
+                return params;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 

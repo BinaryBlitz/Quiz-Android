@@ -19,6 +19,8 @@ public class SessionQuestion {
     private Question mQuestion;
     public int mCorrectAnswer;
 
+    public int mId;
+
 
     public int mMyTimeOfAnswer;
     public int mOpponentTimeOfAnswer;
@@ -64,6 +66,7 @@ public class SessionQuestion {
                 }
             }
             mOpponentTimeOfAnswer = json.getInt("opponent_time");
+            mId = json.getInt("id");
 
 
         } catch (JSONException e) {

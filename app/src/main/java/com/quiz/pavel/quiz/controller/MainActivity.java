@@ -129,7 +129,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
             switch (position) {
                 case 0:
-                    return new TopicListFragment();
+                    return new CategoryListFragment();
                 case 1:
                     return ProfileFragment.newInstance();
                 case 2:
