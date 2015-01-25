@@ -41,6 +41,8 @@ import static com.quiz.pavel.quiz.R.id.variant_a_button;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
+ * @author Pavel Kozemirov
+ * @version 1.0
  */
 public class TestFragment extends Fragment {
     private static String TAG = "TestFragment";
@@ -124,7 +126,7 @@ public class TestFragment extends Fragment {
         };
 
         mSessionManager.mCallbackOnView = new SessionManager.CallbackOnView() {
-            
+
             @Override
             public void updateTimer(int i) {
                 mTimerTextView.setText(String.valueOf(10 - i));
@@ -326,7 +328,9 @@ public class TestFragment extends Fragment {
         }).playOn(b4);
     }
 
-
+    /**
+     * Update data for UI. {@code mSessionManager != null }
+     */
     private void updateData(){
 
             if(!mSessionManager.mSession.moveCurrentSessionQuestion()){

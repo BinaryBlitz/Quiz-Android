@@ -128,18 +128,16 @@
                 >
                 <Button
                     android:id="@+id/variant_a_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="A"
                     android:padding="30dp"
                     android:background="@color/button_material_light"
                     android:layout_marginRight="5dp"
+                    style="@style/ButtonVar"
                     />
                 <Button
                     android:layout_marginLeft="5dp"
+                    style="@style/ButtonVar"
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="B"
                     android:padding="30dp"
                     android:id="@+id/variant_b_button"
@@ -152,10 +150,9 @@
                           android:layout_height="wrap_content"
                           android:id="@+id/linearLayout">
 
-                <Button android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="C"
+                <Button
                         android:layout_marginRight="5dp"
+                        style="@style/ButtonVar"
 
                         android:padding="30dp"
                         android:id="@+id/variant_c_button"
@@ -163,10 +160,10 @@
 
                     />
 
-                <Button android:layout_width="wrap_content"
+                <Button
                         android:layout_marginLeft="5dp"
+                        style="@style/ButtonVar"
 
-                        android:layout_height="wrap_content"
                         android:text="D"
                         android:padding="30dp"
                         android:id="@+id/variant_d_button"
