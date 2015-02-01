@@ -27,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
+import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.SessionQuestion;
 import com.quiz.pavel.quiz.model.Topic;
 
@@ -53,14 +54,13 @@ public class CategoryListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        //getActivity().setTitle(R.string.topics_title);
         mCategories = new ArrayList<Category>();
+        
         Log.d(TAG, " Have begun downloading categories");
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        // Request a string response from the provided URL.
-        // Request a string response from the provided URL.
-        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories",
+
+        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories"+"?token="+ IntentJSONSerializer.getInitialize().getApiKey(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -86,30 +86,6 @@ public class CategoryListFragment extends ListFragment {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
         //TODO: save downloaded topics and categories
-
-
-//
-//        JsonArrayRequest req = new JsonArrayRequest(urlJsonArry,
-//                new Response.Listener<JSONArray>() {
-//                    @Override
-//                    public void onResponse(JSONArray response) {
-//
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.d(TAG, "Error: " + error.getMessage());
-//
-//            }
-//        });
-
-
-
-
-
-
-
-
 
 
 

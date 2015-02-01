@@ -22,12 +22,14 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
+import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.SessionQuestion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -56,6 +58,7 @@ public class LoginSignupActivity extends Activity {
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
+    private IntentJSONSerializer mIntentJSONSerializer;
 
     /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
@@ -72,13 +75,20 @@ public class LoginSignupActivity extends Activity {
         usernametxt = mUsernameEditText.getText().toString();
         passwordtxt = mPasswordEditText.getText().toString();
         mailtxt = mMailEditText.getText().toString();
-        if (usernametxt.equals("") && passwordtxt.equals("")) {
+        if (usernametxt.equals("") && passwordtxt.equals("") ) {
                     Toast.makeText(getApplicationContext(),
                             "Please complete the sign up form",
                             Toast.LENGTH_LONG).show();
 
                 } else {
-            // Instantiate the RequestQueue.
+
+
+
+
+            signUp();
+
+
+
             RequestQueue queue = Volley.newRequestQueue(this);
 
             MessageDigest md = null;
@@ -104,17 +114,27 @@ public class LoginSignupActivity extends Activity {
             }
 
             // Request a string response from the provided URL.
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/players", params,
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/authenticate", params,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
 
+                            String token = "";
                             try {
-                                String token = response.getString("token");
+                                token = response.getString("api_key");
                             } catch (JSONException e) {
-
+                                Log.d(TAG, "we has not got api_key");
                             }
+                            Log.d(TAG, " token which we got from server = " + token);
+
                             //TODO: wrap out token from response to Intent for MainActivity...
+
+                            mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
+                            try {
+                                mIntentJSONSerializer.saveData(response);
+                            } catch (Exception e) {
+                                Log.d(TAG, "problems with SaveData()");
+                            }
 
                             Intent intent = new Intent(LoginSignupActivity.this,
                                     MainActivity.class);
@@ -140,6 +160,62 @@ public class LoginSignupActivity extends Activity {
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         }
+    }
+
+    private void signUp(){
+
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        MessageDigest md = null;
+        byte[] bytesOfMessage = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+        }
+        try {
+            bytesOfMessage = "regreg".getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+        }
+        byte[] thedigest = md.digest(bytesOfMessage);
+
+        JSONObject params = new JSONObject();
+        try {
+            params.put("name", usernametxt);
+            params.put("email",mailtxt);
+            params.put("password_digest", thedigest);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/players", params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+
+
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,"Error Response, have no data from server" );
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/json");
+                params.put("Accept","application/json");
+                return params;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 

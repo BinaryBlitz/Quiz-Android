@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,19 +20,19 @@ import java.io.Writer;
  * Created by pavelkozemirov on 24.01.15.
  */
 public class IntentJSONSerializer {
-
+    private static final String TAG = "IntentJSONSerializer";
     public static IntentJSONSerializer mIntentJSONSerializer;
     private Context mContext;
     private static final String FILENAME = "quiz.json";
 
-    public static IntentJSONSerializer getInitialize(Context c){
+    public static IntentJSONSerializer getInitialize(){
         if(mIntentJSONSerializer == null){
-            mIntentJSONSerializer = new IntentJSONSerializer(c);
+            mIntentJSONSerializer = new IntentJSONSerializer();
         }
         return mIntentJSONSerializer;
     }
 
-    public IntentJSONSerializer(Context c){
+    public void setContext(Context c){
         mContext = c;
     }
 
@@ -54,6 +55,7 @@ public class IntentJSONSerializer {
 
     public JSONObject loadData()
             throws IOException, JSONException{
+
         BufferedReader reader = null;
         JSONObject json = null;
         try {
@@ -74,12 +76,16 @@ public class IntentJSONSerializer {
             }
         }
         return json;
+
     }
 
     public boolean hasAccount(){
         String str = null;
+
+
         try {
-            str = loadData().getString("token");
+            str = loadData().getString("api_key");
+            Log.d(TAG, "str(api_key) = " + str);
 
         } catch(JSONException e){
             return false;
@@ -87,10 +93,19 @@ public class IntentJSONSerializer {
         catch (Exception e) {
 
         }
+
         if(str == null){
             return false;
         }
         return true;
+    }
+
+    public String getApiKey(){
+        try {
+            return loadData().getString("api_key");
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 }

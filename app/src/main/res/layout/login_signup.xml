@@ -30,7 +30,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/txtmail"
-        android:inputType="textPassword" />
+        android:inputType="textEmailAddress" />
 
     <TextView
         android:id="@+id/txtpassword"
