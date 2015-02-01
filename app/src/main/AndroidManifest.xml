@@ -20,10 +20,18 @@
         <activity android:name=".controller.MainActivity">
 
         </activity>
-        <activity android:name=".controller.LoginSignupActivity">
+        <activity android:name=".controller.SignUpActivity">
 
         </activity>
+
         <activity android:name=".controller.SingleFragmentActivity">
+
+        </activity>
+
+        <activity android:name=".controller.ChoiceSignUpLogIn">
+
+        </activity>
+        <activity android:name=".controller.LogInActivity">
 
         </activity>
     </application>

@@ -5,24 +5,12 @@
                 android:orientation="vertical"
                 android:padding="10dip" >
 
-    <TextView
-        android:id="@+id/txtusername"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/username" />
 
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/txtusername"
-        android:inputType="text" />
 
     <TextView
         android:id="@+id/txtmail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
         android:text="@string/mail" />
 
     <EditText
@@ -51,10 +39,10 @@
 
 
     <Button
-        android:id="@+id/signup"
+        android:id="@+id/login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
-        android:text="@string/signupBtn" />
+        android:text="@string/loginBtn" />
 
 </RelativeLayout>

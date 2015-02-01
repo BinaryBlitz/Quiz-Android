@@ -80,24 +80,19 @@ public class IntentJSONSerializer {
     }
 
     public boolean hasAccount(){
-        String str = null;
-
-
+        boolean flag;
         try {
-            str = loadData().getString("api_key");
-            Log.d(TAG, "str(api_key) = " + str);
+            flag = loadData().getBoolean("login");
 
-        } catch(JSONException e){
+        } catch(Exception e){
             return false;
         }
-        catch (Exception e) {
 
-        }
 
-        if(str == null){
-            return false;
+        if(flag){
+            return true;
         }
-        return true;
+        return false;
     }
 
     public String getApiKey(){

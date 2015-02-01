@@ -3,7 +3,6 @@ package com.quiz.pavel.quiz.controller;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 
@@ -21,14 +20,6 @@ public class StartActivity extends Activity {
         mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
         mIntentJSONSerializer.setContext(this);
 
-        try {
-            Log.d(TAG, "json has parsed, = " + mIntentJSONSerializer.loadData());
-
-        }catch(Exception e){
-            Log.d(TAG, "jsonException");
-        }
-
-        Log.d(TAG, "mIntentJSONSerializer.hasAccount() = "+ mIntentJSONSerializer.hasAccount());
 
         if (mIntentJSONSerializer.hasAccount()) {
 
@@ -38,7 +29,7 @@ public class StartActivity extends Activity {
 
         } else {
 
-            Intent intent = new Intent(StartActivity.this, LoginSignupActivity.class);
+            Intent intent = new Intent(StartActivity.this, ChoiceSignUpLogIn.class);
             startActivity(intent);
             finish();
 

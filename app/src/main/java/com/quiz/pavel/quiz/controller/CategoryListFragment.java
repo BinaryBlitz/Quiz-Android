@@ -55,7 +55,7 @@ public class CategoryListFragment extends ListFragment {
         setHasOptionsMenu(true);
 
         mCategories = new ArrayList<Category>();
-        
+
         Log.d(TAG, " Have begun downloading categories");
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());

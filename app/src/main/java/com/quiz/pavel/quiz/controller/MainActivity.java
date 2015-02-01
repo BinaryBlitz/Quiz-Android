@@ -1,7 +1,9 @@
 package com.quiz.pavel.quiz.controller;
 
+import java.io.IOException;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -17,6 +19,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
@@ -89,14 +95,30 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.log_out:
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("login",false);
+                } catch (JSONException e) {
+                }
+
+                try {
+                    IntentJSONSerializer.getInitialize().saveData(json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Intent intent = new Intent( MainActivity.this, ChoiceSignUpLogIn.class);
+                startActivity(intent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
