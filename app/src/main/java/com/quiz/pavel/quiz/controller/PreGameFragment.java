@@ -148,6 +148,7 @@ public class PreGameFragment extends Fragment{
 
     private void sendReq(){
 
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
 
@@ -172,7 +173,7 @@ public class PreGameFragment extends Fragment{
                 Log.d(TAG,"Error Response, have no data from server" );
             }
         });
-        // Add the request to the RequestQueue.
+        // Add the request to the
         queue.add(jsonRequest);
 
     }
