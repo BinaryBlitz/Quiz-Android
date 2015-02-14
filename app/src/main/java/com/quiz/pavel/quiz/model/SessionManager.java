@@ -18,8 +18,8 @@ public class SessionManager {
     public Session mSession;
 
 
-    public SessionManager(Context c){
-        mSession = new Session(c);
+    public SessionManager(Context c, String res){
+        mSession = new Session(c, res);
     }
 
     public void startTimer(int delay){
@@ -64,8 +64,8 @@ public class SessionManager {
     }
 
 
-    public static SessionManager newInstance(Context c){
-        SessionManager ob = new SessionManager(c);
+    public static SessionManager newInstance(Context c, String res){
+        SessionManager ob = new SessionManager(c, res);
         return ob;
     }
 

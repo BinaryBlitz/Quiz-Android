@@ -175,6 +175,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
+
             switch (position) {
                 case 0:
                     return getString(R.string.title_section1).toUpperCase(l);

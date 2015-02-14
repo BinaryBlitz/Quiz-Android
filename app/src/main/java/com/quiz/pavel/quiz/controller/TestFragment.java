@@ -24,6 +24,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.tagmanager.Container;
 import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
@@ -75,6 +76,7 @@ public class TestFragment extends Fragment {
 
     public SessionManager mSessionManager;
     public Question mCurQuestion;
+    private String mDataSession;
 
 
 
@@ -88,7 +90,8 @@ public class TestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
+        mDataSession = (String)getArguments().getSerializable("extra");
+        Log.d(TAG, "mData: "+ mDataSession);
     }
 
     @Override
@@ -97,10 +100,10 @@ public class TestFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this,v);
 
-        mSessionManager = SessionManager.newInstance(getActivity());
+        Log.d(TAG, "Answer: " + mDataSession);
 
 
-
+        mSessionManager = SessionManager.newInstance(getActivity(), mDataSession);
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
@@ -119,10 +122,10 @@ public class TestFragment extends Fragment {
                 mOpponentsPointsTextView.setText(String.valueOf(i));
             }
 
-            @Override
-            public void downloadCompleted(){
-                beginGame();
-            }
+//            @Override
+//            public void downloadCompleted(){
+//                beginGame();
+//            }
         };
 
         mSessionManager.mCallbackOnView = new SessionManager.CallbackOnView() {
@@ -148,7 +151,7 @@ public class TestFragment extends Fragment {
         };
 
 
-
+        beginGame();
         return v;
     }
 

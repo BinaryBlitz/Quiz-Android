@@ -34,6 +34,7 @@ public class Session {
 
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
+    String mToken;
 
 
     public int pointsMine;
@@ -52,37 +53,48 @@ public class Session {
     }
 
 
-    public Session(Context c){
+    public Session(Context c, String res){
         mSessionQuestions =  new LinkedList<SessionQuestion>();
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(c);
+        Log.d(TAG, "Res in constructor: "   + res);
 
-        JSONObject params = new JSONObject();
+        JSONObject response = new JSONObject();
         try {
-            params.put("host_id", 1);
-            params.put("topic_id",1);
-
+            response.getString(res);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/game_sessions", params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
+        // Instantiate the RequestQueue.
+//        RequestQueue queue = Volley.newRequestQueue(c);
+//
+//        mToken = IntentJSONSerializer.getInitialize().getApiKey();
+//
+//        JSONObject params = new JSONObject();
+//        try {
+//            params.put("host_id", 1);
+//            params.put("topic_id", 1);
+//            params.put("token", mToken);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Request a string response from the provided URL.
+//        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/game_sessions", params,
+//                new Response.Listener<JSONObject>() {
+//                    @Override
+//                    public void onResponse(JSONObject response) {
+//
                         try {
-
+//
                             JSONArray sqs = response.getJSONArray("game_session_questions");
 
                             for (int i = 0; i < sqs.length(); i++) {
                                 mSessionQuestions.push(new SessionQuestion(sqs.getJSONObject(i)));
                             }
-
-
-
+//
+//
+//
 
                         } catch (JSONException e) {
                             Log.d(TAG,"Error, parsing in the constructor of session" );
@@ -90,26 +102,26 @@ public class Session {
                         }
                         moveCurrentSessionQuestion();
 
-                        callback.downloadCompleted();
-                    }
-                }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG,"Error Response, have no data from server" );
-            }
-        }){
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/json");
-                params.put("Accept","application/json");
-                return params;
-            }
-        };
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+//                        callback.downloadCompleted();
+//                    }
+//                }
+//                , new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d(TAG,"Error Response, have no data from server" );
+//            }
+//        }){
+//
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String,String> params = new HashMap<String, String>();
+//                params.put("Content-Type","application/json");
+//                params.put("Accept","application/json");
+//                return params;
+//            }
+//        };
+//        // Add the request to the RequestQueue.
+//        queue.add(stringRequest);
         //TODO: move it at least to a single method
         //TODO: create at least a single method for parsing JSON
 
@@ -124,7 +136,7 @@ public class Session {
     public interface MyCallback {
         void callbackCallMine(int i);
         void callbackCallOpponent(int i);
-        void downloadCompleted();
+//        void downloadCompleted();
 
     }
 

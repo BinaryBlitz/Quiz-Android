@@ -167,7 +167,7 @@ public class CategoryListFragment extends ListFragment {
 
         Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
 
-        Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+        Intent i = new Intent(getActivity(), PreGameActivity.class);
 
         startActivity(i);
     }

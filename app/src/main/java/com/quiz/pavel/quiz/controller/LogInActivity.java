@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -118,8 +120,18 @@ public class LogInActivity extends Activity {
                     , new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG,"FUCKOFF, Error Response, have no data from server" );
+                    Log.d(TAG, "FUCKOFF, Error Response, have no data from server");
+//                    NetworkResponse response = error.networkResponse;
+//                    if(response != null && response.data != null){
+//                        switch(response.statusCode){
+//                            case 422:
+//                                Toast.makeText(getApplicationContext(), "Error: такой существует", Toast.LENGTH_SHORT).show();
+//                                break;
+//                        }
+//                        //Additional cases
+//                    }
                 }
+
             }){
 
                 @Override
