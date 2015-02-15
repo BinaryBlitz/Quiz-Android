@@ -90,8 +90,6 @@ public class TestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        mDataSession = (String)getArguments().getSerializable("extra");
-        Log.d(TAG, "mData: "+ mDataSession);
     }
 
     @Override
@@ -100,7 +98,9 @@ public class TestFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this,v);
 
-        Log.d(TAG, "Answer: " + mDataSession);
+        mDataSession = getActivity().getIntent().getStringExtra("extra");
+        Log.d(TAG, "Intent: " + mDataSession);
+
 
 
         mSessionManager = SessionManager.newInstance(getActivity(), mDataSession);
@@ -342,6 +342,7 @@ public class TestFragment extends Fragment {
                     return;
                 }
                 getActivity().finish();
+                return;
             }
             mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 

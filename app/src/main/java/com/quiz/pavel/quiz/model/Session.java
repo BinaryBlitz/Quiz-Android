@@ -58,12 +58,13 @@ public class Session {
 
         Log.d(TAG, "Res in constructor: "   + res);
 
-        JSONObject response = new JSONObject();
+        JSONObject response = null;
         try {
-            response.getString(res);
+            response = new JSONObject(res);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG,"problem with parsing string to json");
         }
+
         // Instantiate the RequestQueue.
 //        RequestQueue queue = Volley.newRequestQueue(c);
 //
@@ -88,16 +89,18 @@ public class Session {
                         try {
 //
                             JSONArray sqs = response.getJSONArray("game_session_questions");
-
+                            Log.d(TAG, "jsonArray: " + sqs.toString());
                             for (int i = 0; i < sqs.length(); i++) {
                                 mSessionQuestions.push(new SessionQuestion(sqs.getJSONObject(i)));
+                                Log.d(TAG, "fot constructor of sessionQuestion: " + sqs.getJSONObject(i).toString());
+
                             }
 //
 //
 //
 
                         } catch (JSONException e) {
-                            Log.d(TAG,"Error, parsing in the constructor of session" );
+                            Log.d(TAG,"Error, error with parsing in the constructor of session" );
 
                         }
                         moveCurrentSessionQuestion();

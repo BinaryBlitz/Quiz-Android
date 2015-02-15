@@ -52,19 +52,14 @@ public class PreGameFragment extends Fragment{
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
 
-        createLobby();
-        startTimer();
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_pre_game, parent, false);
 
+        createLobby();
+        startTimer();
 
         return v;
     }
@@ -163,6 +158,13 @@ public class PreGameFragment extends Fragment{
                         i.putExtra("extra", response.toString());
 
                         startActivity(i);
+
+                        if(mTimer == null){
+                            return;
+                        }
+                        mTimer.cancel();
+                        mTimer.purge();
+
 
 
                     }
