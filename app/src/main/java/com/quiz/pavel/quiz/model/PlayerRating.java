@@ -32,4 +32,7 @@ public class PlayerRating {
         mName = "FUCKER";
         mPoints = 12312;
     }
+    public String getTitle(){
+        return mName;
+    }
 }

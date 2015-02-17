@@ -126,7 +126,7 @@ public class TopicListFragment extends ListFragment {
             }
             Topic c = (Topic)getListAdapter().getItem(position);
 
-            TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
+            TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
 

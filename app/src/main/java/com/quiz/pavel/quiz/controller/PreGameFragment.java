@@ -55,9 +55,7 @@ public class PreGameFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-
         createLobby();
-//        startTimer(); it calls after getting response on request
     }
 
     @Override
@@ -153,7 +151,7 @@ public class PreGameFragment extends Fragment{
 
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
-                URL + "/lobbies/"+mId+"/find?token="+ IntentJSONSerializer.getInitialize().getApiKey(), null,
+                URL + "/lobbies/" + mId + "/find?token=" + IntentJSONSerializer.getInitialize().getApiKey(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

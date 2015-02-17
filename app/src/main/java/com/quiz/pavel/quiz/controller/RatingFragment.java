@@ -62,8 +62,31 @@ public class RatingFragment extends ListFragment{
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
+        Log.d(TAG, "token= "+IntentJSONSerializer.getInitialize().getApiKey());
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general", null,
+        String name="";
+        try {
+            name = IntentJSONSerializer.getInitialize().loadData().getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String em="";
+        try {
+            em = IntentJSONSerializer.getInitialize().loadData().getString("email");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "Name= "+ name + "  Email= "+ em);
+        Log.d(TAG, "Name= "+ name + "  Email= "+ em);
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general?token="
+                +
+                IntentJSONSerializer.getInitialize().getApiKey(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -138,10 +161,10 @@ public class RatingFragment extends ListFragment{
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Topic c = (Topic)getListAdapter().getItem(position);
+            PlayerRating c = (PlayerRating)getListAdapter().getItem(position);
 
-            TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
-//            titleTextView.setText(c.getTitle());
+            TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
+            titleTextView.setText(c.getTitle());
 
 //
 //            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
