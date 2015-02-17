@@ -2,6 +2,7 @@ package com.quiz.pavel.quiz.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,25 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Category;
+import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.PlayerRating;
 import com.quiz.pavel.quiz.model.Topic;
 
+import org.apache.http.protocol.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +37,12 @@ import java.util.ArrayList;
  */
 public class RatingFragment extends ListFragment{
 
-    private ArrayList<Topic> mTopics;
+    private static final String TAG = "RatingFragment";
+
+    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
+
+
+    private ArrayList<PlayerRating> mPlayers;
 
     public static RatingFragment newInstance(){
         Bundle args = new Bundle();
@@ -35,13 +57,51 @@ public class RatingFragment extends ListFragment{
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+
+
+
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        mPlayers = new ArrayList<PlayerRating>();
+
+                        try {
+                            JSONArray array = response.getJSONArray("top_rankings");
+                            for (int i = 0; i < array.length(); i++) {
+                                mPlayers.add(new PlayerRating(array.getJSONObject(i)));
+                            }
+
+
+                        } catch (JSONException e) {
+                            Log.d(TAG, "Error with parsing json response");
+                        }
+                        mPlayers.add(new PlayerRating());
+
+                        TopicAdapter adapter = new TopicAdapter(mPlayers);
+                        setListAdapter(adapter);
+
+                        setRetainInstance(true);
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG,"Error Response, have no data from server" );
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+
+
+
 //        mItem = (ClipData.Item).findViewById(R.id.menu_item_show_subtitle);
 
        // getActivity().setTitle(R.string.topics_title);
-        mTopics = new ArrayList<Topic>();
-//        mTopics.add(new Topic());
-//        mTopics.add(new Topic());
-//        mTopics.add(new Topic());
 
 
 
@@ -49,10 +109,7 @@ public class RatingFragment extends ListFragment{
 
 
 //        ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(), android.R.layout.simple_list_item_1, mCrimes);
-        TopicAdapter adapter = new TopicAdapter(mTopics);
-        setListAdapter(adapter);
 
-        setRetainInstance(true);
 //        mIconNumber = android.R.drawable.ic_menu_help;
 
     }
@@ -70,8 +127,8 @@ public class RatingFragment extends ListFragment{
         return v;
     }
 
-    private class TopicAdapter extends ArrayAdapter<Topic> {
-        public TopicAdapter(ArrayList<Topic> topics){
+    private class TopicAdapter extends ArrayAdapter<PlayerRating> {
+        public TopicAdapter(ArrayList<PlayerRating> topics){
             super(getActivity(),0,topics);
         }
         @Override

@@ -19,6 +19,9 @@ public class Topic {
 
         }
     }
+   public Topic(){
+       mText = "person";
+   }
     public String getTitle(){
         return mText;
     }
