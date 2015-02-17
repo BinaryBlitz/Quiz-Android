@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -35,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -49,6 +51,21 @@ public class CategoryListFragment extends ListFragment {
     private ArrayList<Category> mCategories;
 
 
+    public static CategoryListFragment newInstance(){
+        Bundle args = new Bundle();
+        CategoryListFragment fragment = new CategoryListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    OnCategorySelectedListener mCallback;
+
+    // The container Activity must implement this interface so the frag can deliver messages
+    public interface OnCategorySelectedListener {
+        /** Called by HeadlinesFragment when a list item is selected */
+        public void onCategorySelected(int position);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +77,17 @@ public class CategoryListFragment extends ListFragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories"+"?token="+ IntentJSONSerializer.getInitialize().getApiKey(),
+        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories"+"?token=" +
+                IntentJSONSerializer.getInitialize().getApiKey(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.d(TAG, "categories: " + response);
+                        try {
+                            IntentJSONSerializer.getInitialize().saveCatTopicJsonAr(response);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 mCategories.add(new Category(response.getJSONObject(i)));
@@ -132,6 +156,20 @@ public class CategoryListFragment extends ListFragment {
         return v;
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception.
+        try {
+            mCallback = (OnCategorySelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
     private class TopicAdapter extends ArrayAdapter<Category> {
         public TopicAdapter(ArrayList<Category> topics){
             super(getActivity(),0,topics);
@@ -148,13 +186,13 @@ public class CategoryListFragment extends ListFragment {
             TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
-            TextView titleTextView1 = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
-            titleTextView1.setText(c.getTitleTopics());
+//            TextView titleTextView1 = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
+//            titleTextView1.setText(c.getTitleTopics());
 
 
 
-            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-            solvedCheckBox.setChecked(false);
+//            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
+//            solvedCheckBox.setChecked(false);
 
 
             return convertView;
@@ -165,11 +203,15 @@ public class CategoryListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id){
 
-        Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
+//        Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
+//
+//        Intent i = new Intent(getActivity(), TopicListFragment.class);
+//        i.putExtra("extra", mCategories.get(position).getJsonTopics());
+//
+//        startActivity(i);
+        mCallback.onCategorySelected(position);
 
-        Intent i = new Intent(getActivity(), PreGameActivity.class);
 
-        startActivity(i);
     }
 
 }

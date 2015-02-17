@@ -22,6 +22,13 @@ public class RatingFragment extends ListFragment{
 
     private ArrayList<Topic> mTopics;
 
+    public static RatingFragment newInstance(){
+        Bundle args = new Bundle();
+//        args.putSerializable(EXTRA_CRIME_ID, crimeId);
+        RatingFragment fragment = new RatingFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,9 +86,9 @@ public class RatingFragment extends ListFragment{
             TextView titleTextView = (TextView)convertView.findViewById(R.id.crime_list_item_titleTextView);
 //            titleTextView.setText(c.getTitle());
 
-
-            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-            solvedCheckBox.setChecked(false);
+//
+//            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
+//            solvedCheckBox.setChecked(false);
 
 
             return convertView;

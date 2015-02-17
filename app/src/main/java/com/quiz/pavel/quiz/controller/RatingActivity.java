@@ -1,10 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
-import java.io.IOException;
 import java.util.Locale;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -13,20 +10,17 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
+public class RatingActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -46,7 +40,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_rating);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -87,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_rating, menu);
         return true;
     }
 
@@ -96,30 +90,14 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.log_out:
+        int id = item.getItemId();
 
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("login",false);
-                } catch (JSONException e) {
-                }
-
-                try {
-                    IntentJSONSerializer.getInitialize().saveData(json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Intent intent = new Intent( MainActivity.this, ChoiceSignUpLogIn.class);
-                startActivity(intent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -149,25 +127,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
 
         @Override
         public Fragment getItem(int position) {
-
-            switch (position) {
-                case 0:
-                    return new CategoryListFragment();
-                case 1:
-                    return ProfileFragment.newInstance();
-                case 2:
-                    return new RatingFragment();
-
-            }
-
-
-
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
-
-
 
         @Override
         public int getCount() {
@@ -178,7 +141,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
-
             switch (position) {
                 case 0:
                     return getString(R.string.title_section1).toUpperCase(l);
@@ -219,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
             return rootView;
         }
     }

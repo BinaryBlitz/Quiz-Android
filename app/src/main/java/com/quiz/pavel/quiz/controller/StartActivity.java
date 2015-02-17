@@ -23,7 +23,7 @@ public class StartActivity extends Activity {
 
         if (mIntentJSONSerializer.hasAccount()) {
 
-            Intent intent = new Intent(StartActivity.this, MainActivity.class);
+            Intent intent = new Intent(StartActivity.this, MainTabsActivity.class);
             startActivity(intent);
             finish();
 

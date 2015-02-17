@@ -18,12 +18,14 @@ public class Category {
     public String mText;
     public UUID mId;
     public ArrayList<Topic> mTopics;
+    public JSONArray mJsonTopics;
 
     public Category(JSONObject json){
         try {
             mText = json.getString("name");
 
             JSONArray ar = json.getJSONArray("topics");
+            mJsonTopics = ar;
 
             mTopics = new ArrayList<>();
 
@@ -35,10 +37,30 @@ public class Category {
             Log.d(TAG, "Error, JSONException");
         }
     }
+    public String getJsonTopics(){
+        return mJsonTopics.toString();
+    }
+
+    public static ArrayList<Topic> stringToArray(String jsonAr){
+        JSONArray ar;
+        try {
+            ar = new JSONArray(jsonAr);
+            ArrayList<Topic> topics = new ArrayList<>();
+
+            for (int i = 0; i < ar.length(); i++) {
+                topics.add(new Topic(ar.getJSONObject(i)));
+            }
+            return topics;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public String getTitle(){
         return mText;
     }
+
     public String getTitleTopics(){
         String str = "";
         for (Topic topic : mTopics) {
@@ -46,6 +68,7 @@ public class Category {
         }
         return str;
     }
+
 
 
 
