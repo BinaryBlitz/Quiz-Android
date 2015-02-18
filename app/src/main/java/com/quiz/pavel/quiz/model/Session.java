@@ -53,39 +53,11 @@ public class Session {
     }
 
 
-    public Session(Context c, String res){
+    public Session( JSONObject response){
         mSessionQuestions =  new LinkedList<SessionQuestion>();
 
-        Log.d(TAG, "Res in constructor: "   + res);
 
-        JSONObject response = null;
-        try {
-            response = new JSONObject(res);
-        } catch (JSONException e) {
-            Log.d(TAG,"problem with parsing string to json");
-        }
 
-        // Instantiate the RequestQueue.
-//        RequestQueue queue = Volley.newRequestQueue(c);
-//
-//        mToken = IntentJSONSerializer.getInitialize().getApiKey();
-//
-//        JSONObject params = new JSONObject();
-//        try {
-//            params.put("host_id", 1);
-//            params.put("topic_id", 1);
-//            params.put("token", mToken);
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Request a string response from the provided URL.
-//        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/game_sessions", params,
-//                new Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//
                         try {
 //
                             JSONArray sqs = response.getJSONArray("game_session_questions");
@@ -105,26 +77,7 @@ public class Session {
                         }
                         moveCurrentSessionQuestion();
 
-//                        callback.downloadCompleted();
-//                    }
-//                }
-//                , new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d(TAG,"Error Response, have no data from server" );
-//            }
-//        }){
 //
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                Map<String,String> params = new HashMap<String, String>();
-//                params.put("Content-Type","application/json");
-//                params.put("Accept","application/json");
-//                return params;
-//            }
-//        };
-//        // Add the request to the RequestQueue.
-//        queue.add(stringRequest);
         //TODO: move it at least to a single method
         //TODO: create at least a single method for parsing JSON
 
@@ -152,7 +105,14 @@ public class Session {
             addPointsMe(time);
         }
     }
-    public void opponentsAnswer(){
+    public void opponentsAnswer(int answer, int time){
+
+        if(mCurrentSessionQuestion.mOpponentAnswer == -1 &&
+                mCurrentSessionQuestion.mOpponentTimeOfAnswer == -1){
+            mCurrentSessionQuestion.mOpponentTimeOfAnswer = time;
+            mCurrentSessionQuestion.mOpponentAnswer = answer;
+        }
+
         mOpponentIsAnwered = true;
         if(mCurrentSessionQuestion.mCorrectAnswer == mCurrentSessionQuestion.mOpponentAnswer){
             addPointsOpponent(mCurrentSessionQuestion.mOpponentTimeOfAnswer);

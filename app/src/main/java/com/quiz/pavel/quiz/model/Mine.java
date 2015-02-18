@@ -1,5 +1,11 @@
 package com.quiz.pavel.quiz.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.android.volley.Response;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,55 +17,60 @@ import java.io.IOException;
 public class Mine {
     private static Mine sMine;
 
+    public static final String PREFS_NAME = "MyPrefsFile";
+
     private String mName;
     private String mEmail;
     private String mToken;
     private int mId;
 
-    private Mine(JSONObject json) throws JSONException {
+    private Mine(Context c, JSONObject json) throws JSONException {
         mName = json.getString("name");
         mEmail = json.getString("email");
         mToken = json.getString("api_key");
         mId = json.getInt("id");
 
-        //TODO: replace with preference store, and remove it
-        try {
-            IntentJSONSerializer.getInitialize().saveData(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("name", mName);
+        editor.putString("email", mEmail);
+        editor.putString("api_key", mToken);
+        editor.putBoolean("signin", true);
+        editor.putInt("id", mId);
+        // Commit the edits!
+        editor.commit();
+
     }
-    private Mine(){
-        try {
-            JSONObject json = IntentJSONSerializer.getInitialize().loadData();
-            mName = json.getString("name");
-            mEmail = json.getString("email");
-            mToken = json.getString("api_key");
-            mId = json.getInt("id");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    private Mine(Context c){
+            SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+
+            mName = settings.getString("name", "");
+            mEmail = settings.getString("email", "");
+            mToken = settings.getString("api_key", "");
+            mId = settings.getInt("id",1);
+            Log.d("MINE", "name= " + mName + "emal ="+ mEmail + "token= "+ mToken + "id= "+mId);
+
+
 
     }
 
-    public static Mine getInstance(JSONObject json) throws JSONException {
-        String name = json.getString("name");
-        String email = json.getString("email");
-        String token = json.getString("api_key");
-        int id = json.getInt("id");
+    public static Mine getInstance(Context c, JSONObject json) throws JSONException {
+
         if(sMine == null){
-            sMine = new Mine(json);
+            sMine = new Mine(c,json);
         }
         return sMine;
     }
 
-    public static Mine getInstance(){
+    public static Mine getInstance(Context c){
         if(sMine == null){
-            sMine = new Mine();
+            sMine = new Mine(c);
         }
         return sMine;
+    }
+    public static void newInstance(Context c, JSONObject json) throws JSONException {
+
+            sMine = new Mine(c,json);
     }
 
     public String getName() {
@@ -94,24 +105,18 @@ public class Mine {
         mId = id;
     }
 
-    public boolean isSignIn(){
-        return IntentJSONSerializer.getInitialize().hasAccount();
+    public boolean isSignIn(Context c){
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+        return settings.getBoolean("signin", false);
     }
 
-    public void logOut(){
-        JSONObject json = new JSONObject();
-        try {
-            json.put("login",false);
-        } catch (JSONException e) {
-        }
+    public void logOut(Context c){
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("signin", false);
 
-        try {
-            IntentJSONSerializer.getInitialize().saveData(json);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Commit the edits!
+        editor.commit();
     }
 
 }

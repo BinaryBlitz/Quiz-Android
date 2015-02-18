@@ -28,28 +28,11 @@ public class SessionQuestion {
     public int mMyAnswer;
     public int mOpponentAnswer;
 
-    public static String[] sQuestions = new String[]{"what is 1 name?","what is 2 name?","what is 3 name?", "what is 4 name?","what is 5 name?","what is 6 name?"};
-    public String getTextQuestion(){
-        Random r = new Random();
-        return sQuestions[r.nextInt(6)];
-    }
 
     public Question getQuestion(){
         return mQuestion;
     }
 
-    public SessionQuestion(int opponentAnswer, int opponentTimeOfAnswer){
-        mQuestion = new Question(getTextQuestion());
-
-        for (int i = 0; i < 4; i++) {
-            if( mQuestion.getAnswers()[i].mIsCorrect == true){
-                mCorrectAnswer = i;
-            }
-        }
-        mOpponentAnswer = opponentAnswer;
-        mOpponentTimeOfAnswer = opponentTimeOfAnswer;
-        Log.d(TAG,"mOpponentTimeOfAnswer = "+opponentTimeOfAnswer);
-    }
 
     public SessionQuestion(JSONObject json){
         try {
@@ -59,13 +42,18 @@ public class SessionQuestion {
                     mCorrectAnswer = i;
                 }
             }
-            int opponent_answer_id = json.getInt("opponent_answer_id");
-            for (int i = 0; i < 4; i++) {
-                if( mQuestion.getAnswers()[i].mId == opponent_answer_id){
-                    mOpponentAnswer = i;
+            if (!json.isNull("opponent_answer_id")){
+                int opponent_answer_id = json.getInt("opponent_answer_id");
+                for (int i = 0; i < 4; i++) {
+                    if( mQuestion.getAnswers()[i].mId == opponent_answer_id){
+                        mOpponentAnswer = i;
+                    }
                 }
+                mOpponentTimeOfAnswer = json.getInt("opponent_time");
+            } else{
+                mOpponentTimeOfAnswer = -1;
+                mOpponentAnswer = -1;
             }
-            mOpponentTimeOfAnswer = json.getInt("opponent_time");
             mId = json.getInt("id");
 
 
@@ -74,6 +62,15 @@ public class SessionQuestion {
 
             e.printStackTrace();
         }
+    }
+
+    public int searchNubById(int id){
+        for (int i = 0; i < mQuestion.getAnswers().length; i++) {
+            if (id == mQuestion.getAnswers()[i].mId){
+                return i;
+            }
+        }
+        return 0;
     }
 
 

@@ -36,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by pavelkozemirov on 12.12.14.
  */
-public class RatingFragment extends ListFragment{
+public class RatingFragment extends ListFragment {
 
     private static final String TAG = "RatingFragment";
 
@@ -45,7 +45,7 @@ public class RatingFragment extends ListFragment{
 
     private ArrayList<PlayerRating> mPlayers;
 
-    public static RatingFragment newInstance(){
+    public static RatingFragment newInstance() {
         Bundle args = new Bundle();
 //        args.putSerializable(EXTRA_CRIME_ID, crimeId);
         RatingFragment fragment = new RatingFragment();
@@ -59,17 +59,12 @@ public class RatingFragment extends ListFragment{
         setHasOptionsMenu(true);
 
 
-
-
-
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        Log.d(TAG, "token= " + Mine.getInstance().getToken());
-
-
+        Log.d(TAG, "token= " + Mine.getInstance(getActivity()).getToken());
 
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general?token="
-                + Mine.getInstance().getToken(), null,
+                + Mine.getInstance(getActivity()).getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -97,18 +92,16 @@ public class RatingFragment extends ListFragment{
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG,"Error Response, have no data from server" );
+                Log.d(TAG, "Error Response, have no data from server");
             }
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
 
-
 //        mItem = (ClipData.Item).findViewById(R.id.menu_item_show_subtitle);
 
-       // getActivity().setTitle(R.string.topics_title);
-
+        // getActivity().setTitle(R.string.topics_title);
 
 
 //        mTopics = CrimeLab.get(getActivity()).getCrimes();
@@ -121,12 +114,11 @@ public class RatingFragment extends ListFragment{
     }
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 
 
@@ -134,19 +126,20 @@ public class RatingFragment extends ListFragment{
     }
 
     private class TopicAdapter extends ArrayAdapter<PlayerRating> {
-        public TopicAdapter(ArrayList<PlayerRating> topics){
-            super(getActivity(),0,topics);
+        public TopicAdapter(ArrayList<PlayerRating> topics) {
+            super(getActivity(), 0, topics);
         }
+
         @Override
-        public View getView(int position, View convertView, ViewGroup parent){
+        public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            PlayerRating c = (PlayerRating)getListAdapter().getItem(position);
+            PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
 
-            TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
 //

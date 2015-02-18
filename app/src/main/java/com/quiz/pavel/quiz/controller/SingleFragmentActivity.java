@@ -21,7 +21,7 @@ public class SingleFragmentActivity extends FragmentActivity {
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
-        if(fragment == null){
+        if (fragment == null) {
             fragment = TestFragment.newInstance();
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)

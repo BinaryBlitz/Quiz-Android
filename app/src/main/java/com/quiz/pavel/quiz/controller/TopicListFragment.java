@@ -40,7 +40,7 @@ public class TopicListFragment extends ListFragment {
     private ArrayList<Topic> mTopics;
 
 
-    public static TopicListFragment newInstance(){
+    public static TopicListFragment newInstance() {
         Bundle args = new Bundle();
         TopicListFragment fragment = new TopicListFragment();
         fragment.setArguments(args);
@@ -53,15 +53,13 @@ public class TopicListFragment extends ListFragment {
         setHasOptionsMenu(true);
 
 
-
     }
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             Log.d("TAG", " WHAT THE FUCK");
         }
         try {
@@ -74,7 +72,7 @@ public class TopicListFragment extends ListFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -114,19 +112,20 @@ public class TopicListFragment extends ListFragment {
     }
 
     private class TopicAdapter extends ArrayAdapter<Topic> {
-        public TopicAdapter(ArrayList<Topic> topics){
-            super(getActivity(),0,topics);
+        public TopicAdapter(ArrayList<Topic> topics) {
+            super(getActivity(), 0, topics);
         }
+
         @Override
-        public View getView(int position, View convertView, ViewGroup parent){
+        public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Topic c = (Topic)getListAdapter().getItem(position);
+            Topic c = (Topic) getListAdapter().getItem(position);
 
-            TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
 
@@ -136,9 +135,9 @@ public class TopicListFragment extends ListFragment {
 
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id){
+    public void onListItemClick(ListView l, View v, int position, long id) {
 
-        Topic cr = ((TopicAdapter)getListAdapter()).getItem(position);
+        Topic cr = ((TopicAdapter) getListAdapter()).getItem(position);
 
         Intent i = new Intent(getActivity(), PreGameActivity.class);
         i.putExtra("topic", mTopics.get(position).getId());

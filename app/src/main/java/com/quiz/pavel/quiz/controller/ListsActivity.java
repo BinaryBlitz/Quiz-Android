@@ -12,7 +12,7 @@ import com.quiz.pavel.quiz.R;
  * Created by pavelkozemirov on 15.02.15.
  */
 public class ListsActivity extends FragmentActivity
-        implements CategoryListFragment.OnCategorySelectedListener{
+        implements CategoryListFragment.OnCategorySelectedListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class ListsActivity extends FragmentActivity
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
-        if(fragment == null){
+        if (fragment == null) {
             fragment = CategoryListFragment.newInstance();
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
@@ -32,24 +32,25 @@ public class ListsActivity extends FragmentActivity
 
 
     }
+
     public void onCategorySelected(int position) {
 
 
-            // Create fragment and give it an argument for the selected article
-            TopicListFragment newFragment = new TopicListFragment();
-            Bundle args = new Bundle();
+        // Create fragment and give it an argument for the selected article
+        TopicListFragment newFragment = new TopicListFragment();
+        Bundle args = new Bundle();
 
-            args.putInt("n", position);
-            newFragment.setArguments(args);
+        args.putInt("n", position);
+        newFragment.setArguments(args);
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.fragmentContainer, newFragment);
-            transaction.addToBackStack(null);
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        transaction.replace(R.id.fragmentContainer, newFragment);
+        transaction.addToBackStack(null);
 
-            // Commit the transaction
-            transaction.commit();
+        // Commit the transaction
+        transaction.commit();
     }
 }

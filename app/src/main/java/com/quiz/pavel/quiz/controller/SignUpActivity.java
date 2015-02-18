@@ -46,16 +46,22 @@ public class SignUpActivity extends Activity {
     String usernametxt;
     String passwordtxt;
     String mailtxt;
-    @InjectView(R.id.signup) Button mSignUp;
-    @InjectView(R.id.username) EditText mUsernameEditText;
-    @InjectView(R.id.mail) EditText mMailEditText;
-    @InjectView(R.id.password) EditText mPasswordEditText;
+    @InjectView(R.id.signup)
+    Button mSignUp;
+    @InjectView(R.id.username)
+    EditText mUsernameEditText;
+    @InjectView(R.id.mail)
+    EditText mMailEditText;
+    @InjectView(R.id.password)
+    EditText mPasswordEditText;
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private IntentJSONSerializer mIntentJSONSerializer;
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get the view from main.xml
@@ -63,8 +69,8 @@ public class SignUpActivity extends Activity {
         ButterKnife.inject(this);
 
 
-
     }
+
     @OnClick(R.id.signup)
     public void onClick() {
         usernametxt = mUsernameEditText.getText().toString();
@@ -81,7 +87,6 @@ public class SignUpActivity extends Activity {
             RequestQueue queue = Volley.newRequestQueue(this);
 
 
-
             JSONObject params = new JSONObject();
             try {
                 params.put("name", usernametxt);
@@ -91,7 +96,7 @@ public class SignUpActivity extends Activity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d(TAG, "SIGNUP,pass = "+ md5(passwordtxt));
+            Log.d(TAG, "SIGNUP,pass = " + md5(passwordtxt));
 
             // Request a string response from the provided URL.
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/players", params,
@@ -101,7 +106,7 @@ public class SignUpActivity extends Activity {
 
 
                             try {
-                                Mine.getInstance(response);
+                                Mine.newInstance(getBaseContext(), response);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -118,8 +123,8 @@ public class SignUpActivity extends Activity {
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "Sign up Error Response, have no data from server");
                     NetworkResponse response = error.networkResponse;
-                    if(response != null && response.data != null){
-                        switch(response.statusCode){
+                    if (response != null && response.data != null) {
+                        switch (response.statusCode) {
                             case 422:
                                 Toast.makeText(getApplicationContext(), "Error: такой существует", Toast.LENGTH_SHORT).show();
                                 break;
@@ -146,11 +151,12 @@ public class SignUpActivity extends Activity {
 
 
     }
+
     public static String md5(String input) {
 
         String md5 = null;
 
-        if(null == input) return null;
+        if (null == input) return null;
 
         try {
 

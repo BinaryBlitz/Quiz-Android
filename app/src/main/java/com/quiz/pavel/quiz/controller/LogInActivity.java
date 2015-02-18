@@ -44,16 +44,21 @@ public class LogInActivity extends Activity {
     String usernametxt;
     String passwordtxt;
     String mailtxt;
-    @InjectView(R.id.login) Button mSignUp;
-    @InjectView(R.id.mail) EditText mMailEditText;
-    @InjectView(R.id.password) EditText mPasswordEditText;
+    @InjectView(R.id.login)
+    Button mSignUp;
+    @InjectView(R.id.mail)
+    EditText mMailEditText;
+    @InjectView(R.id.password)
+    EditText mPasswordEditText;
 
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private IntentJSONSerializer mIntentJSONSerializer;
 
-    /** Called when the activity is first created. */
+    /**
+     * Called when the activity is first created.
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Get the view from main.xml
@@ -61,14 +66,14 @@ public class LogInActivity extends Activity {
         ButterKnife.inject(this);
 
 
-
     }
+
     @OnClick(R.id.login)
     public void onClick() {
         passwordtxt = mPasswordEditText.getText().toString();
         mailtxt = mMailEditText.getText().toString();
 
-        if (mailtxt.equals("") && passwordtxt.equals("") ) {
+        if (mailtxt.equals("") && passwordtxt.equals("")) {
             Toast.makeText(getApplicationContext(),
                     "Please complete the sign up form",
                     Toast.LENGTH_LONG).show();
@@ -79,10 +84,9 @@ public class LogInActivity extends Activity {
             RequestQueue queue = Volley.newRequestQueue(this);
 
 
-
             JSONObject params = new JSONObject();
             try {
-                params.put("email",mailtxt);
+                params.put("email", mailtxt);
                 params.put("password_digest", md5(passwordtxt));
 
             } catch (JSONException e) {
@@ -97,13 +101,12 @@ public class LogInActivity extends Activity {
                         public void onResponse(JSONObject response) {
 
 
-
                             //TODO: wrap out token from response to Intent for MainActivity...
 
 
                             mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
                             try {
-                                Mine.getInstance(response);
+                                Mine.newInstance(getBaseContext(), response);
                             } catch (Exception e) {
                                 Log.d(TAG, "problems with SaveData()");
                             }
@@ -129,13 +132,13 @@ public class LogInActivity extends Activity {
 //                    }
                 }
 
-            }){
+            }) {
 
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String,String> params = new HashMap<String, String>();
-                    params.put("Content-Type","application/json");
-                    params.put("Accept","application/json");
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Accept", "application/json");
                     return params;
                 }
             };
@@ -148,7 +151,7 @@ public class LogInActivity extends Activity {
 
         String md5 = null;
 
-        if(null == input) return null;
+        if (null == input) return null;
 
         try {
 
@@ -167,7 +170,6 @@ public class LogInActivity extends Activity {
         }
         return md5;
     }
-
 
 
 }

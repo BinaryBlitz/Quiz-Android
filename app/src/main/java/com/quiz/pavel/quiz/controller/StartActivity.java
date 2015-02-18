@@ -2,7 +2,9 @@ package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
@@ -21,8 +23,7 @@ public class StartActivity extends Activity {
         mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
         mIntentJSONSerializer.setContext(this);
 
-
-        if (Mine.getInstance().isSignIn()) {
+        if (Mine.getInstance(this).isSignIn(this)) {
 
             Intent intent = new Intent(StartActivity.this, MainTabsActivity.class);
             startActivity(intent);

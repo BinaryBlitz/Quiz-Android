@@ -27,9 +27,10 @@ import butterknife.OnClick;
  */
 public class ProfileFragment extends Fragment {
 
-    @InjectView(R.id.crime_date)Button mButton;
+    @InjectView(R.id.crime_date)
+    Button mButton;
 
-    public static ProfileFragment newInstance(){
+    public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
 //        args.putSerializable(EXTRA_CRIME_ID, crimeId);
         ProfileFragment fragment = new ProfileFragment();
@@ -38,30 +39,32 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
 //        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         setHasOptionsMenu(true);
 
     }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
 
         ButterKnife.inject(this, v);
 
-        if ( NavUtils.getParentActivityName(getActivity()) != null){
+        if (NavUtils.getParentActivityName(getActivity()) != null) {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         return v;
     }
-    @OnClick(R.id.crime_date)
-    public void onClick(){
 
-        Mine.getInstance().logOut();
-        Intent intent = new Intent( getActivity(), ChoiceSignUpLogIn.class);
+    @OnClick(R.id.crime_date)
+    public void onClick() {
+
+        Mine.getInstance(getActivity()).logOut(getActivity());
+        Intent intent = new Intent(getActivity(), ChoiceSignUpLogIn.class);
         startActivity(intent);
         getActivity().finish();
     }

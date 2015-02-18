@@ -42,36 +42,44 @@ import static com.quiz.pavel.quiz.R.id.variant_a_button;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
+ *
  * @author Pavel Kozemirov
  * @version 1.0
  */
 public class TestFragment extends Fragment {
     private static String TAG = "TestFragment";
 
-    @InjectView(R.id.variant_a_button) Button mVariantA;
-    @InjectView(R.id.variant_b_button) Button mVariantB;
-    @InjectView(R.id.variant_c_button) Button mVariantC;
-    @InjectView(R.id.variant_d_button) Button mVariantD;
+    @InjectView(R.id.variant_a_button)
+    Button mVariantA;
+    @InjectView(R.id.variant_b_button)
+    Button mVariantB;
+    @InjectView(R.id.variant_c_button)
+    Button mVariantC;
+    @InjectView(R.id.variant_d_button)
+    Button mVariantD;
 
-    @InjectView(R.id.question_text_view) TextView mQuestionTextView;
-    @InjectView(R.id.timer_textView) TextView mTimerTextView;
+    @InjectView(R.id.question_text_view)
+    TextView mQuestionTextView;
+    @InjectView(R.id.timer_textView)
+    TextView mTimerTextView;
 
-    @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
-    @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
+    @InjectView(R.id.my_points_textView)
+    TextView mMyPointsTextView;
+    @InjectView(R.id.opponents_points_textView)
+    TextView mOpponentsPointsTextView;
 
-    @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
+    @InjectView(R.id.buttons_broad)
+    LinearLayout mButtonsBroad;
 
-    @InjectView(R.id.broad_my_profile) LinearLayout mMyProfileBroad;
-    @InjectView(R.id.broad_opponent_profile) LinearLayout mOpponentProfileBroad;
+    @InjectView(R.id.broad_my_profile)
+    LinearLayout mMyProfileBroad;
+    @InjectView(R.id.broad_opponent_profile)
+    LinearLayout mOpponentProfileBroad;
 
-    @InjectView(R.id.round_shower) TextView mRoundShowerTextView;
+    @InjectView(R.id.round_shower)
+    TextView mRoundShowerTextView;
 
     private Button mLastPushedButton; //TODO: delete this line
-
-
-
-
-
 
 
     public SessionManager mSessionManager;
@@ -79,8 +87,7 @@ public class TestFragment extends Fragment {
     private String mDataSession;
 
 
-
-    public static TestFragment newInstance(){
+    public static TestFragment newInstance() {
         Bundle args = new Bundle();
         TestFragment fragment = new TestFragment();
         fragment.setArguments(args);
@@ -88,22 +95,19 @@ public class TestFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
-        ButterKnife.inject(this,v);
-
-        mDataSession = getActivity().getIntent().getStringExtra("extra");
-        Log.d(TAG, "Intent: " + mDataSession);
+        ButterKnife.inject(this, v);
 
 
 
-        mSessionManager = SessionManager.newInstance(getActivity(), mDataSession);
+        mSessionManager = SessionManager.getInstance(getActivity());
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
@@ -117,6 +121,7 @@ public class TestFragment extends Fragment {
                 mMyPointsTextView.setText(String.valueOf(i));
 
             }
+
             @Override
             public void callbackCallOpponent(int i) {
                 mOpponentsPointsTextView.setText(String.valueOf(i));
@@ -134,18 +139,21 @@ public class TestFragment extends Fragment {
             public void updateTimer(int i) {
                 mTimerTextView.setText(String.valueOf(10 - i));
             }
-            @Override
-            public void closeRound(){
 
-               onCloseRound();
-
-            }
             @Override
-            public void openRound(){
+            public void closeRound() {
+
+                onCloseRound();
 
             }
+
             @Override
-            public void opponentChooseAnswer(int i){
+            public void openRound() {
+
+            }
+
+            @Override
+            public void opponentChooseAnswer(int i) {
 
             }
         };
@@ -155,7 +163,7 @@ public class TestFragment extends Fragment {
         return v;
     }
 
-    private void beginGame(){
+    private void beginGame() {
 
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
@@ -163,24 +171,40 @@ public class TestFragment extends Fragment {
     }
 
 
-    private void onCloseRound(){
+    private void onCloseRound() {
 
         mSessionManager.stopTimer();
 
         Log.d(TAG, "HERE1 mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
-        switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer){
-            case 0: mVariantA.setTextColor(Color.RED); break;
-            case 1:mVariantB.setTextColor(Color.RED); break;
-            case 2:mVariantC.setTextColor(Color.RED); break;
-            case 3:mVariantD.setTextColor(Color.RED); break;
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
+            case 0:
+                mVariantA.setTextColor(Color.RED);
+                break;
+            case 1:
+                mVariantB.setTextColor(Color.RED);
+                break;
+            case 2:
+                mVariantC.setTextColor(Color.RED);
+                break;
+            case 3:
+                mVariantD.setTextColor(Color.RED);
+                break;
 
         }
-        Log.d(TAG, "HERE1 mCorrectAnswer = "+mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
-        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0:                 mVariantA.setTextColor(Color.GREEN); break;
-            case 1:                 mVariantB.setTextColor(Color.GREEN); break;
-            case 2:                 mVariantC.setTextColor(Color.GREEN); break;
-            case 3:                 mVariantD.setTextColor(Color.GREEN); break;
+        Log.d(TAG, "HERE1 mCorrectAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
+            case 0:
+                mVariantA.setTextColor(Color.GREEN);
+                break;
+            case 1:
+                mVariantB.setTextColor(Color.GREEN);
+                break;
+            case 2:
+                mVariantC.setTextColor(Color.GREEN);
+                break;
+            case 3:
+                mVariantD.setTextColor(Color.GREEN);
+                break;
 
         }
         hideIncorrectAnswerVariants();
@@ -188,14 +212,31 @@ public class TestFragment extends Fragment {
 
     // hide buttons of incorrect answers using animation
     Button b1, b2, b3;
-    private void hideIncorrectAnswerVariants(){
+
+    private void hideIncorrectAnswerVariants() {
 
         Log.d(TAG, "HERE1 mCorrectAnswer= " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
-        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0: b1 = mVariantB; b2 = mVariantC; b3 = mVariantD; break;
-            case 1: b1 = mVariantA; b2 = mVariantC; b3 = mVariantD; break;
-            case 2: b1 = mVariantB; b2 = mVariantA; b3 = mVariantD; break;
-            case 3: b1 = mVariantB; b2 = mVariantC; b3 = mVariantA; break;
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
+            case 0:
+                b1 = mVariantB;
+                b2 = mVariantC;
+                b3 = mVariantD;
+                break;
+            case 1:
+                b1 = mVariantA;
+                b2 = mVariantC;
+                b3 = mVariantD;
+                break;
+            case 2:
+                b1 = mVariantB;
+                b2 = mVariantA;
+                b3 = mVariantD;
+                break;
+            case 3:
+                b1 = mVariantB;
+                b2 = mVariantC;
+                b3 = mVariantA;
+                break;
         }
         b1.setAlpha(1f);
         YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
@@ -268,22 +309,30 @@ public class TestFragment extends Fragment {
         }).playOn(b3);
 
 
-
     }
 
 
     //hide correct answer's variant and question textview
     Button b4;
     TextView tv;
-    private void hideCorrectQuestion(){
+
+    private void hideCorrectQuestion() {
 
         tv = mQuestionTextView;
 
-        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer){
-            case 0: b4 = mVariantA;break;
-            case 1: b4 = mVariantB;break;
-            case 2: b4 = mVariantC;break;
-            case 3: b4 = mVariantD;break;
+        switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
+            case 0:
+                b4 = mVariantA;
+                break;
+            case 1:
+                b4 = mVariantB;
+                break;
+            case 2:
+                b4 = mVariantC;
+                break;
+            case 3:
+                b4 = mVariantD;
+                break;
         }
         YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
             @Override
@@ -334,21 +383,21 @@ public class TestFragment extends Fragment {
     /**
      * Update data for UI. {@code mSessionManager != null }
      */
-    private void updateData(){
+    private void updateData() {
 
-            if(!mSessionManager.mSession.moveCurrentSessionQuestion()){
-                mSessionManager.stopTimer();
-                if(getActivity() == null){
-                    return;
-                }
-                getActivity().finish();
+        if (!mSessionManager.mSession.moveCurrentSessionQuestion()) {
+            mSessionManager.stopTimer();
+            if (getActivity() == null) {
                 return;
             }
-            mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
+            getActivity().finish();
+            return;
+        }
+        mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
     }
 
-    private void showRoundTable(){
+    private void showRoundTable() {
         mSessionManager.stopTimer();
 
         mRoundShowerTextView.setAlpha(0f);
@@ -376,7 +425,8 @@ public class TestFragment extends Fragment {
 //                });
 
     }
-    private void hideRoundTable(){
+
+    private void hideRoundTable() {
 //        mQuestionShower.setAlpha(0f);
 //        mQuestionShower.setVisibility(View.VISIBLE);
 
@@ -396,7 +446,8 @@ public class TestFragment extends Fragment {
                     }
                 });
     }
-    private void showNewQuestion(){
+
+    private void showNewQuestion() {
 
         mQuestionTextView.setAlpha(0f);
         mQuestionTextView.setVisibility(View.VISIBLE);
@@ -413,7 +464,8 @@ public class TestFragment extends Fragment {
 
 
     }
-    private void showAnswerVariants(){
+
+    private void showAnswerVariants() {
 
         mButtonsBroad.setVisibility(View.VISIBLE);
         mButtonsBroad.setAlpha(1f);
@@ -514,7 +566,6 @@ public class TestFragment extends Fragment {
         }).playOn(mVariantD);
 
 
-
 //        mButtonsBroad.animate()
 //                .alpha(1f)
 //                .setDuration(1000)
@@ -531,10 +582,10 @@ public class TestFragment extends Fragment {
 //                });
     }
 
-    private void updateGUI(){
+    private void updateGUI() {
 
 
-        mRoundShowerTextView.setText("Round "+ mSessionManager.mSession.getNumberOfRound());
+        mRoundShowerTextView.setText("Round " + mSessionManager.mSession.getNumberOfRound());
         showRoundTable();
         blockOfButtons = false;
 
@@ -545,35 +596,32 @@ public class TestFragment extends Fragment {
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
-       mVariantA.setTextColor(Color.BLACK);
-       mVariantB.setTextColor(Color.BLACK);
+        mVariantA.setTextColor(Color.BLACK);
+        mVariantB.setTextColor(Color.BLACK);
         mVariantC.setTextColor(Color.BLACK);
         mVariantD.setTextColor(Color.BLACK);
-
 
 
     }
 
 
-
     @Override
-    public void onDestroy(){                            //TODO: add launching new fragment with results of game
+    public void onDestroy() {                            //TODO: add launching new fragment with results of game
         super.onDestroy();
         String str = "you are loser";
         mSessionManager.stopTimer();
-        if(mSessionManager.amIWinner())
-        {
+        if (mSessionManager.amIWinner()) {
             str = "you are winner";
         }
-        Toast.makeText(getActivity(),str,Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+        SessionManager.deleteInstance();
     }
 
     private boolean blockOfButtons;
 
     @OnClick(R.id.variant_a_button)
     public void onButtonAClick() {
-        if(blockOfButtons){
+        if (blockOfButtons) {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
@@ -582,7 +630,7 @@ public class TestFragment extends Fragment {
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
         mSessionManager.iChooseAnswer(getActivity(), 0);
-        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 0){
+        if (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 0) {
             mVariantA.setTextColor(Color.GREEN);
         } else {
             mVariantA.setTextColor(Color.RED);
@@ -591,7 +639,7 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_b_button)
     public void onButtonBClick() {
-        if(blockOfButtons){
+        if (blockOfButtons) {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
@@ -602,7 +650,7 @@ public class TestFragment extends Fragment {
         mLastPushedButton = mVariantB;
 
         mSessionManager.iChooseAnswer(getActivity(), 1);
-        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 1){
+        if (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 1) {
             mVariantB.setTextColor(Color.GREEN);
         } else {
             mVariantB.setTextColor(Color.RED);
@@ -611,7 +659,7 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_c_button)
     public void onButtonCClick() {
-        if(blockOfButtons){
+        if (blockOfButtons) {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
@@ -623,7 +671,7 @@ public class TestFragment extends Fragment {
 
         mSessionManager.iChooseAnswer(getActivity(), 2);
 
-        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 2){
+        if (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 2) {
             mVariantC.setTextColor(Color.GREEN);
         } else {
             mVariantC.setTextColor(Color.RED);
@@ -633,7 +681,7 @@ public class TestFragment extends Fragment {
 
     @OnClick(R.id.variant_d_button)
     public void onButtonDClick() {
-        if(blockOfButtons){
+        if (blockOfButtons) {
             return;
         }
 
@@ -646,19 +694,14 @@ public class TestFragment extends Fragment {
 
         mSessionManager.iChooseAnswer(getActivity(), 3);
 
-        if(mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 3){
+        if (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer == 3) {
             mVariantD.setTextColor(Color.GREEN);
         } else {
             mVariantD.setTextColor(Color.RED);
         }
 
 
-
-
-
-
     }
-
 
 
 }

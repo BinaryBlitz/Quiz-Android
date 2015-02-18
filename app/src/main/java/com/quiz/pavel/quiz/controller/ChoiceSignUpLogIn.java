@@ -16,8 +16,10 @@ import butterknife.OnClick;
  */
 public class ChoiceSignUpLogIn extends Activity {
 
-    @InjectView(R.id.signup_choice)Button mSignUp;
-    @InjectView(R.id.login_choice) Button mLogIn;
+    @InjectView(R.id.signup_choice)
+    Button mSignUp;
+    @InjectView(R.id.login_choice)
+    Button mLogIn;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +28,7 @@ public class ChoiceSignUpLogIn extends Activity {
         ButterKnife.inject(this);
 
     }
+
     @OnClick(R.id.login_choice)
     public void onClick1() {
         Intent intent = new Intent(ChoiceSignUpLogIn.this, LogInActivity.class);

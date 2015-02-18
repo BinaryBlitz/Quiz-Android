@@ -1,8 +1,18 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
+
+import com.pusher.client.Pusher;
+import com.pusher.client.channel.Channel;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.quiz.pavel.quiz.controller.SingleFragmentActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Random;
 import java.util.Timer;
@@ -14,12 +24,44 @@ import java.util.UUID;
  */
 public class SessionManager {
     private final String TAG = "SessionManager";
+    private static SessionManager sSessionManager;
+
 
     public Session mSession;
+    public boolean online;
+    public Channel mChannel;
 
+    public SessionManager(Context c){
+        Pusher pusher = new Pusher("YOUR_APP_KEY");
+        mChannel = pusher.subscribe("opponent-answer" + Mine.getInstance(c).getId());
 
-    public SessionManager(Context c, String res){
-        mSession = new Session(c, res);
+        mChannel.bind("opponent-answer", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channel, String event, String data) {
+                int time = 0, answer = 0;
+
+                try {
+                    JSONObject json = new JSONObject(data);
+                    time = json.getInt("answer_time");
+                    answer = json.getInt("answer_id");
+                } catch (JSONException e) {
+                    Log.d(TAG,"data doesnt parse to json");
+                }
+
+                mSession.opponentsAnswer(answer, time);
+            }
+        });
+    }
+
+    public static SessionManager getInstance(Context c){
+        if(sSessionManager == null) {
+            sSessionManager = new SessionManager(c);
+        }
+        return sSessionManager;
+    }
+
+    public static void deleteInstance(){
+        sSessionManager = null;
     }
 
     public void startTimer(int delay){
@@ -64,10 +106,7 @@ public class SessionManager {
     }
 
 
-    public static SessionManager newInstance(Context c, String res){
-        SessionManager ob = new SessionManager(c, res);
-        return ob;
-    }
+
 
 
 
@@ -108,12 +147,12 @@ public class SessionManager {
             }
 
 
-
-            if(timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer){
-                mSession.opponentsAnswer();
-                mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
+            if(!online) {
+                if (timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
+                    mSession.opponentsAnswer(0,0);
+                    mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
+                }
             }
-
 
             mCallbackOnView.updateTimer(timer);
 

@@ -27,7 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class MainActivity extends ActionBarActivity implements ActionBar.TabListener{
+public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,9 +100,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         switch (item.getItemId()) {
             case R.id.log_out:
 
-                Mine.getInstance().logOut();
+                Mine.getInstance(this).logOut(this);
 
-                Intent intent = new Intent( MainActivity.this, ChoiceSignUpLogIn.class);
+                Intent intent = new Intent(MainActivity.this, ChoiceSignUpLogIn.class);
                 startActivity(intent);
                 finish();
                 return true;
@@ -151,12 +151,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
             }
 
 
-
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
-
 
 
         @Override

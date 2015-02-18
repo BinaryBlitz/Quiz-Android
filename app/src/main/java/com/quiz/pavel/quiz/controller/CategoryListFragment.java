@@ -52,7 +52,7 @@ public class CategoryListFragment extends ListFragment {
     private ArrayList<Category> mCategories;
 
 
-    public static CategoryListFragment newInstance(){
+    public static CategoryListFragment newInstance() {
         Bundle args = new Bundle();
         CategoryListFragment fragment = new CategoryListFragment();
         fragment.setArguments(args);
@@ -63,7 +63,9 @@ public class CategoryListFragment extends ListFragment {
 
     // The container Activity must implement this interface so the frag can deliver messages
     public interface OnCategorySelectedListener {
-        /** Called by HeadlinesFragment when a list item is selected */
+        /**
+         * Called by HeadlinesFragment when a list item is selected
+         */
         public void onCategorySelected(int position);
     }
 
@@ -78,8 +80,8 @@ public class CategoryListFragment extends ListFragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories"+"?token=" +
-                Mine.getInstance().getToken(),
+        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories" + "?token=" +
+                Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -105,7 +107,7 @@ public class CategoryListFragment extends ListFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG,"Error Response, have no data from server" );
+                Log.d(TAG, "Error Response, have no data from server");
             }
         });
         // Add the request to the RequestQueue.
@@ -113,16 +115,14 @@ public class CategoryListFragment extends ListFragment {
         //TODO: save downloaded topics and categories
 
 
-
     }
 
 
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
@@ -172,24 +172,24 @@ public class CategoryListFragment extends ListFragment {
     }
 
     private class TopicAdapter extends ArrayAdapter<Category> {
-        public TopicAdapter(ArrayList<Category> topics){
-            super(getActivity(),0,topics);
+        public TopicAdapter(ArrayList<Category> topics) {
+            super(getActivity(), 0, topics);
         }
+
         @Override
-        public View getView(int position, View convertView, ViewGroup parent){
+        public View getView(int position, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Category c = (Category)getListAdapter().getItem(position);
+            Category c = (Category) getListAdapter().getItem(position);
 
-            TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
 //            TextView titleTextView1 = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
 //            titleTextView1.setText(c.getTitleTopics());
-
 
 
 //            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
@@ -202,7 +202,7 @@ public class CategoryListFragment extends ListFragment {
 
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id){
+    public void onListItemClick(ListView l, View v, int position, long id) {
 
 //        Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
 //

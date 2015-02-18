@@ -21,7 +21,7 @@ public class PreGameActivity extends FragmentActivity {
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
-        if(fragment == null){
+        if (fragment == null) {
             fragment = PreGameFragment.newInstance();
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
