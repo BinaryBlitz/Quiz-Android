@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/BaseGameUtils/BaseGameUtils.iml" filepath="$PROJECT_DIR$/BaseGameUtils/BaseGameUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/Quiz.iml" filepath="$PROJECT_DIR$/Quiz.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pusher-java-client-0.3.3-jar-with-dependencies/pusher-java-client-0.3.3-jar-with-dependencies.iml" filepath="$PROJECT_DIR$/pusher-java-client-0.3.3-jar-with-dependencies/pusher-java-client-0.3.3-jar-with-dependencies.iml" />
     </modules>
   </component>
 </project>

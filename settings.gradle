@@ -1,1 +1,1 @@
-include ':app', ':BaseGameUtils'
+include ':app', ':BaseGameUtils', ':pusher-java-client-0.3.3-jar-with-dependencies'

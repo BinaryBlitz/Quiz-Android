@@ -36,12 +36,13 @@ import java.util.TimerTask;
 public class PreGameFragment extends Fragment{
     private static String TAG = "PreGameFragment";
 
-    private String mId;
-
-    Handler myHandler = new Handler();
-    Timer mTimer;
-
     private static final String URL = "https://protected-atoll-5061.herokuapp.com";
+
+    Timer mTimer;
+    Handler myHandler = new Handler();
+
+    public int mTopicId;
+    private String mId;
 
 
     public static PreGameFragment newInstance(){
@@ -51,10 +52,11 @@ public class PreGameFragment extends Fragment{
         return fragment;
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
+        Log.d(TAG, "mTopicId = after bundle" + mTopicId);
         createLobby();
     }
 
@@ -62,10 +64,8 @@ public class PreGameFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_pre_game, parent, false);
 
-
         return v;
     }
-
     public void startTimer(){
 
         mTimer = new Timer();
@@ -79,12 +79,9 @@ public class PreGameFragment extends Fragment{
     }
 
 
-
     final Runnable myRunnable = new Runnable() {
         public void run() {
-
             sendReq();
-
         }
     };
 
@@ -96,10 +93,11 @@ public class PreGameFragment extends Fragment{
 
 
         JSONObject params = new JSONObject();
+        Log.d(TAG, "mTopicID = " + mTopicId);
         try {
             JSONObject par = new JSONObject();
             //TODO: change constant id on value from previous activity
-            par.put("topic_id",1);
+            par.put("topic_id", mTopicId);
 
             params.put("lobby", par);
 
@@ -146,9 +144,10 @@ public class PreGameFragment extends Fragment{
 
     private void sendReq(){
 
-
+        if(getActivity() == null) {
+            return;
+        }
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
                 URL + "/lobbies/" + mId + "/find?token=" + IntentJSONSerializer.getInitialize().getApiKey(), null,

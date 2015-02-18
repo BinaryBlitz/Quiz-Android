@@ -141,6 +141,7 @@ public class TopicListFragment extends ListFragment {
         Topic cr = ((TopicAdapter)getListAdapter()).getItem(position);
 
         Intent i = new Intent(getActivity(), PreGameActivity.class);
+        i.putExtra("topic", mTopics.get(position).getId());
 
         startActivity(i);
     }
