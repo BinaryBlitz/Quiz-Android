@@ -20,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +102,7 @@ public class PreGameFragment extends Fragment{
 
             params.put("lobby", par);
 
-            params.put("token", IntentJSONSerializer.getInitialize().getApiKey());
+            params.put("token", Mine.getInstance().getToken());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -150,7 +151,7 @@ public class PreGameFragment extends Fragment{
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
-                URL + "/lobbies/" + mId + "/find?token=" + IntentJSONSerializer.getInitialize().getApiKey(), null,
+                URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance().getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

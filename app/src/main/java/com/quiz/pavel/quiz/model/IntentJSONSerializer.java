@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 /**
  * Created by pavelkozemirov on 24.01.15.
+ * TODO: Should replace with preferences store
  */
 public class IntentJSONSerializer {
     private static final String TAG = "IntentJSONSerializer";
@@ -41,8 +43,15 @@ public class IntentJSONSerializer {
 
     public void saveData(JSONObject json)
             throws JSONException, IOException {
+        try {
+            json.put("login",true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d(TAG, "saveData json" + json);
 
-        Writer writer = null;
+
+                Writer writer = null;
         try{
             OutputStream out = mContext
                     .openFileOutput(FILENAME1, Context.MODE_PRIVATE);
@@ -78,6 +87,9 @@ public class IntentJSONSerializer {
                 reader.close();
             }
         }
+
+        Log.d(TAG, "loadData json" + json);
+
         return json;
 
     }
@@ -105,6 +117,19 @@ public class IntentJSONSerializer {
             return null;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void saveCatTopicJsonAr(JSONArray jsonArray)
             throws IOException {

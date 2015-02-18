@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,21 +99,17 @@ public class LogInActivity extends Activity {
 
 
                             //TODO: wrap out token from response to Intent for MainActivity...
-                            try {
-                                response.put("login",true);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
+
 
                             mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
                             try {
-                                mIntentJSONSerializer.saveData(response);
+                                Mine.getInstance(response);
                             } catch (Exception e) {
                                 Log.d(TAG, "problems with SaveData()");
                             }
 
                             Intent intent = new Intent(LogInActivity.this,
-                                    MainActivity.class);
+                                    MainTabsActivity.class);
                             startActivity(intent);
                             finish();
                         }

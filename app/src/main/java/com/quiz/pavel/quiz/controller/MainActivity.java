@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -99,19 +100,8 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         switch (item.getItemId()) {
             case R.id.log_out:
 
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("login",false);
-                } catch (JSONException e) {
-                }
+                Mine.getInstance().logOut();
 
-                try {
-                    IntentJSONSerializer.getInitialize().saveData(json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 Intent intent = new Intent( MainActivity.this, ChoiceSignUpLogIn.class);
                 startActivity(intent);
                 finish();

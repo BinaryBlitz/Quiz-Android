@@ -21,6 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerRating;
 import com.quiz.pavel.quiz.model.Topic;
 
@@ -62,31 +63,13 @@ public class RatingFragment extends ListFragment{
 
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        Log.d(TAG, "token= "+IntentJSONSerializer.getInitialize().getApiKey());
+        Log.d(TAG, "token= " + Mine.getInstance().getToken());
 
-        String name="";
-        try {
-            name = IntentJSONSerializer.getInitialize().loadData().getString("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String em="";
-        try {
-            em = IntentJSONSerializer.getInitialize().loadData().getString("email");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        Log.d(TAG, "Name= "+ name + "  Email= "+ em);
-        Log.d(TAG, "Name= "+ name + "  Email= "+ em);
+
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general?token="
-                +
-                IntentJSONSerializer.getInitialize().getApiKey(), null,
+                + Mine.getInstance().getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,20 +98,16 @@ public class SignUpActivity extends Activity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+
+
                             try {
-                                Log.d(TAG, "SUCCESS: token:"+ response.getString("api_key"));
+                                Mine.getInstance(response);
                             } catch (JSONException e) {
-
+                                e.printStackTrace();
                             }
-
-                            try {
-                                IntentJSONSerializer.getInitialize().saveData(response.put("login", true));
-                            } catch (Exception e) {
-                            }
-
 
                             Intent intent = new Intent(SignUpActivity.this,
-                                    MainActivity.class);
+                                    MainTabsActivity.class);
                             startActivity(intent);
                             finish();
 

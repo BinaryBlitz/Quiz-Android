@@ -29,6 +29,7 @@ import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.SessionQuestion;
 import com.quiz.pavel.quiz.model.Topic;
 
@@ -78,7 +79,7 @@ public class CategoryListFragment extends ListFragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories"+"?token=" +
-                IntentJSONSerializer.getInitialize().getApiKey(),
+                Mine.getInstance().getToken(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

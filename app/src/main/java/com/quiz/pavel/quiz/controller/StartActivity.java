@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 
 /**
  * Created by pavelkozemirov on 24.01.15.
@@ -21,7 +22,7 @@ public class StartActivity extends Activity {
         mIntentJSONSerializer.setContext(this);
 
 
-        if (mIntentJSONSerializer.hasAccount()) {
+        if (Mine.getInstance().isSignIn()) {
 
             Intent intent = new Intent(StartActivity.this, MainTabsActivity.class);
             startActivity(intent);
