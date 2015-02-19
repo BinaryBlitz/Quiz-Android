@@ -55,6 +55,23 @@ public class SessionManager {
             }
         }, ConnectionState.ALL);
 
+        mChannel.bind("opponent-answer", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channel, String event, String data) {
+                try {
+                    JSONObject json = new JSONObject(data);
+                    int answer = json.getInt("answer_id");
+
+                    int time = json.getInt("answer_time");
+                    mSession.opponentsAnswer(mSession.mCurrentSessionQuestion.searchNubById(answer), time);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
     }
 
     public static SessionManager getInstance(Context c){
