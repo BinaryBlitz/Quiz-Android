@@ -146,7 +146,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 case 1:
                     return ProfileFragment.newInstance();
                 case 2:
-                    return new RatingFragment();
+                    return new RatingFragment("");
 
             }
 

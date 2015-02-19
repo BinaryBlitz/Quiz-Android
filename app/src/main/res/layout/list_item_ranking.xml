@@ -1,0 +1,63 @@
+<RelativeLayout
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_activated"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+
+
+
+
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+
+        android:id="@+id/linearLayout2">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:id="@+id/number_textView"
+            android:paddingLeft="10dp"
+            android:layout_centerVertical="true"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crime Title"
+            android:id="@+id/list_item_titleTextView"
+            android:textStyle="bold"
+            android:layout_toRightOf="@+id/number_textView"
+            android:paddingLeft="10dp"
+            android:paddingRight="4dp"
+            android:layout_centerVertical="true"
+
+            android:clickable="false"/>
+
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:id="@+id/points_textView"
+
+            android:focusable="false"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

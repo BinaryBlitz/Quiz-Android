@@ -40,16 +40,19 @@ public class RatingFragment extends ListFragment {
 
     private static final String TAG = "RatingFragment";
 
-
+    private String mName;
 
     private ArrayList<PlayerRating> mPlayers;
 
-    public static RatingFragment newInstance() {
+    public static RatingFragment newInstance(String name) {
         Bundle args = new Bundle();
 //        args.putSerializable(EXTRA_CRIME_ID, crimeId);
-        RatingFragment fragment = new RatingFragment();
+        RatingFragment fragment = new RatingFragment(name);
         fragment.setArguments(args);
         return fragment;
+    }
+    public RatingFragment(String name){
+        mName = name;
     }
 
     @Override
@@ -62,7 +65,8 @@ public class RatingFragment extends ListFragment {
         Log.d(TAG, "token= " + Mine.getInstance(getActivity()).getToken());
 
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, Mine.URL + "/rankings/general?token="
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET,
+                Mine.URL + "/rankings/"+mName+"?token="
                 + Mine.getInstance(getActivity()).getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -71,16 +75,23 @@ public class RatingFragment extends ListFragment {
                         mPlayers = new ArrayList<PlayerRating>();
 
                         try {
-                            JSONArray array = response.getJSONArray("top_rankings");
+                            JSONArray array = response.getJSONArray("rankings");
                             for (int i = 0; i < array.length(); i++) {
-                                mPlayers.add(new PlayerRating(array.getJSONObject(i)));
+                                mPlayers.add(new PlayerRating( array.getJSONObject(i), i,false));
                             }
-
 
                         } catch (JSONException e) {
                             Log.d(TAG, "Error with parsing json response");
                         }
-                        mPlayers.add(new PlayerRating());
+                        JSONArray array1;
+                        mPlayers.add(new PlayerRating(-1, "...", false));
+                        int m=0;
+                        try {
+                             m = response.getInt("position");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        mPlayers.add(new PlayerRating(m, Mine.getInstance(getActivity()).getName(), true));
 
                         TopicAdapter adapter = new TopicAdapter(mPlayers);
                         setListAdapter(adapter);
@@ -94,21 +105,9 @@ public class RatingFragment extends ListFragment {
                 Log.d(TAG, "Error Response, have no data from server");
             }
         });
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
 
-//        mItem = (ClipData.Item).findViewById(R.id.menu_item_show_subtitle);
-
-        // getActivity().setTitle(R.string.topics_title);
-
-
-//        mTopics = CrimeLab.get(getActivity()).getCrimes();
-
-
-//        ArrayAdapter<Crime> adapter = new ArrayAdapter<Crime>(getActivity(), android.R.layout.simple_list_item_1, mCrimes);
-
-//        mIconNumber = android.R.drawable.ic_menu_help;
 
     }
 
@@ -134,17 +133,32 @@ public class RatingFragment extends ListFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_ranking, null);
             }
             PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
-//
-//            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-//            solvedCheckBox.setChecked(false);
+            if(c.mI){
+            TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
+            numberTextView.setText(String.valueOf(position));
 
+            TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
+            pointsTextView.setText("");
+                if(c.mPosition == -1) {
+                    pointsTextView.setText("");
+                }
+            }else{
+                TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
+                numberTextView.setText(String.valueOf(position + 1));
+
+                TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
+                pointsTextView.setText(String.valueOf(c.mPoints));
+                if(c.mPosition == -1) {
+                    pointsTextView.setText("");
+                }
+            }
 
             return convertView;
         }

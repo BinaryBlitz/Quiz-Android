@@ -131,9 +131,9 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new RatingFragment();
+                    return new RatingFragment("general");
                 case 1:
-                    return new RatingFragment();
+                    return new RatingFragment("weekly");
 
 
             }
@@ -153,9 +153,9 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.rating_section1).toUpperCase(l);
-                case 1:
                     return getString(R.string.rating_section2).toUpperCase(l);
+                case 1:
+                    return getString(R.string.rating_section1).toUpperCase(l);
 
             }
             return null;
