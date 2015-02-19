@@ -2,8 +2,10 @@ package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -153,15 +155,19 @@ public class Session {
 
         JSONObject params = new JSONObject();
         try {
-            params.put("host_answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
-            params.put("host_time", time);
+            JSONObject par = new JSONObject();
+            par.put("answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
+            par.put("time", time);
+            params.put("game_session_question",par);
+            params.put("token",Mine.getInstance(c).getToken());
 
         } catch (JSONException e) {
 
         }
 
         // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH, Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
+                Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -172,7 +178,15 @@ public class Session {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG,"Error Response, have no data from server" );
+                NetworkResponse response = error.networkResponse;
+                if (response != null && response.data != null) {
+                    switch (response.statusCode) {
+                        case 401:
+                            Log.d(TAG, "Error 401" + error.getMessage());
+                            break;
+                    }
+                    //Additional cases
+                }
             }
         }){
 

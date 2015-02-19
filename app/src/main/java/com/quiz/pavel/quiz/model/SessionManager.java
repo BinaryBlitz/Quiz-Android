@@ -55,31 +55,6 @@ public class SessionManager {
             }
         }, ConnectionState.ALL);
 
-//        mChannel = pusher.subscribe("test_channel");
-//
-//        mChannel.bind("my_event", new SubscriptionEventListener() {
-//            @Override
-//            public void onEvent(String channel, String event, String data) {
-//                Log.d(TAG, "THATs good");
-//            }
-//        });
-
-//        mChannel.bind("opponent-answer", new SubscriptionEventListener() {
-//            @Override
-//            public void onEvent(String channel, String event, String data) {
-//                int time = 0, answer = 0;
-//
-//                try {
-//                    JSONObject json = new JSONObject(data);
-//                    time = json.getInt("answer_time");
-//                    answer = json.getInt("answer_id");
-//                } catch (JSONException e) {
-//                    Log.d(TAG,"data doesnt parse to json");
-//                }
-//
-//                mSession.opponentsAnswer(answer, time);
-//            }
-//        });
     }
 
     public static SessionManager getInstance(Context c){

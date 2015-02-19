@@ -616,6 +616,55 @@ public class TestFragment extends Fragment {
         Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
         SessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
+        RequestQueue queue = Volley.newRequestQueue(c);
+
+        JSONObject params = new JSONObject();
+        try {
+            JSONObject par = new JSONObject();
+            par.put("answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
+            par.put("time", time);
+            params.put("game_session_question",par);
+            params.put("token",Mine.getInstance(c).getToken());
+
+        } catch (JSONException e) {
+
+        }
+
+        // Request a string response from the provided URL.
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
+                Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse response = error.networkResponse;
+                if (response != null && response.data != null) {
+                    switch (response.statusCode) {
+                        case 401:
+                            Log.d(TAG, "Error 401" + error.getMessage());
+                            break;
+                    }
+                    //Additional cases
+                }
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/json");
+                params.put("Accept","application/json");
+                return params;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     private boolean blockOfButtons;
