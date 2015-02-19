@@ -8,6 +8,9 @@ import android.util.Log;
 import com.pusher.client.Pusher;
 import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
 import com.quiz.pavel.quiz.controller.SingleFragmentActivity;
 
 import org.json.JSONArray;
@@ -19,43 +22,70 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+
 /**
  * Created by pavelkozemirov on 18.12.14.
  */
 public class SessionManager {
-    private final String TAG = "SessionManager";
+    private static final String TAG = "SessionManager";
     private static SessionManager sSessionManager;
 
 
     public Session mSession;
     public boolean online;
     public Channel mChannel;
+    public Pusher mPusher;
 
     public SessionManager(Context c){
-        Pusher pusher = new Pusher("YOUR_APP_KEY");
-        mChannel = pusher.subscribe("opponent-answer" + Mine.getInstance(c).getId());
 
-        mChannel.bind("opponent-answer", new SubscriptionEventListener() {
+        mPusher = new Pusher("d982e4517caa41cf637c");
+        mChannel = mPusher.subscribe("player-session-" + Mine.getInstance(c).getId());
+//        Pusher pusher = new Pusher("d982e4517caa41cf637c");
+        mPusher.connect(new ConnectionEventListener() {
             @Override
-            public void onEvent(String channel, String event, String data) {
-                int time = 0, answer = 0;
+            public void onConnectionStateChange(ConnectionStateChange change) {
+                System.out.println("GOO State changed to " + change.getCurrentState() +
+                        " from " + change.getPreviousState());
 
-                try {
-                    JSONObject json = new JSONObject(data);
-                    time = json.getInt("answer_time");
-                    answer = json.getInt("answer_id");
-                } catch (JSONException e) {
-                    Log.d(TAG,"data doesnt parse to json");
-                }
-
-                mSession.opponentsAnswer(answer, time);
             }
-        });
+
+            @Override
+            public void onError(String message, String code, Exception e) {
+                System.out.println("GOO There was a problem connecting!");
+            }
+        }, ConnectionState.ALL);
+
+//        mChannel = pusher.subscribe("test_channel");
+//
+//        mChannel.bind("my_event", new SubscriptionEventListener() {
+//            @Override
+//            public void onEvent(String channel, String event, String data) {
+//                Log.d(TAG, "THATs good");
+//            }
+//        });
+
+//        mChannel.bind("opponent-answer", new SubscriptionEventListener() {
+//            @Override
+//            public void onEvent(String channel, String event, String data) {
+//                int time = 0, answer = 0;
+//
+//                try {
+//                    JSONObject json = new JSONObject(data);
+//                    time = json.getInt("answer_time");
+//                    answer = json.getInt("answer_id");
+//                } catch (JSONException e) {
+//                    Log.d(TAG,"data doesnt parse to json");
+//                }
+//
+//                mSession.opponentsAnswer(answer, time);
+//            }
+//        });
     }
 
     public static SessionManager getInstance(Context c){
         if(sSessionManager == null) {
             sSessionManager = new SessionManager(c);
+            Log.d(TAG, "new instance of SM was created");
         }
         return sSessionManager;
     }

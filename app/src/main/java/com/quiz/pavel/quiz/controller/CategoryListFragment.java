@@ -46,7 +46,6 @@ import java.util.ArrayList;
 public class CategoryListFragment extends ListFragment {
     private static final String TAG = "CategoryListFragment";
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private ArrayList<Category> mCategories;
@@ -80,7 +79,7 @@ public class CategoryListFragment extends ListFragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest stringRequest = new JsonArrayRequest(URL + "/categories" + "?token=" +
+        JsonArrayRequest stringRequest = new JsonArrayRequest(Mine.URL + "/categories" + "?token=" +
                 Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONArray>() {
                     @Override

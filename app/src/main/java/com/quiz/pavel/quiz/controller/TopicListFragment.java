@@ -34,7 +34,6 @@ import java.util.ArrayList;
 public class TopicListFragment extends ListFragment {
     private static final String TAG = "TopicListFragment";
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private ArrayList<Topic> mTopics;

@@ -17,6 +17,11 @@ import java.io.IOException;
 public class Mine {
     private static Mine sMine;
 
+    public static final String URL = "https://protected-atoll-5061.herokuapp.com";
+//    public static final String URL = "https://192.168.1.39:3000";
+
+
+
     public static final String PREFS_NAME = "MyPrefsFile";
 
     private String mName;
@@ -27,16 +32,18 @@ public class Mine {
     private Mine(Context c, JSONObject json) throws JSONException {
         mName = json.getString("name");
         mEmail = json.getString("email");
-        mToken = json.getString("api_key");
+        mToken = json.getString("token");
         mId = json.getInt("id");
 
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("name", mName);
         editor.putString("email", mEmail);
-        editor.putString("api_key", mToken);
+        editor.putString("token", mToken);
         editor.putBoolean("signin", true);
         editor.putInt("id", mId);
+        Log.d("MINE", "name= " + mName + "emal ="+ mEmail + "token= "+ mToken + "id= "+mId);
+
         // Commit the edits!
         editor.commit();
 
@@ -46,7 +53,7 @@ public class Mine {
 
             mName = settings.getString("name", "");
             mEmail = settings.getString("email", "");
-            mToken = settings.getString("api_key", "");
+            mToken = settings.getString("token", "");
             mId = settings.getInt("id",1);
             Log.d("MINE", "name= " + mName + "emal ="+ mEmail + "token= "+ mToken + "id= "+mId);
 

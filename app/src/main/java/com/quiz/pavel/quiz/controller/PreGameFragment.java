@@ -42,7 +42,6 @@ import java.util.TimerTask;
 public class PreGameFragment extends Fragment {
     private static String TAG = "PreGameFragment";
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
     Timer mTimer;
     Handler myHandler = new Handler();
@@ -81,7 +80,7 @@ public class PreGameFragment extends Fragment {
             public void run() {
                 myHandler.post(myRunnable);
             }
-        }, 0, 1000);
+        }, 0, 2000);
 
     }
 
@@ -97,7 +96,7 @@ public class PreGameFragment extends Fragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-
+        sm = SessionManager.getInstance(getActivity());
 
         JSONObject params = new JSONObject();
         Log.d(TAG, "mTopicID = " + mTopicId);
@@ -115,7 +114,7 @@ public class PreGameFragment extends Fragment {
         }
 
         // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/lobbies", params,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies", params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -149,6 +148,9 @@ public class PreGameFragment extends Fragment {
         queue.add(stringRequest);
     }
 
+    SessionManager sm;
+    boolean flag;
+
     private void sendReq() {
 
         if (getActivity() == null) {
@@ -156,13 +158,17 @@ public class PreGameFragment extends Fragment {
         }
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        final SessionManager sm = SessionManager.getInstance(getActivity());                                                    //PUSHER
 
-
+        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channel, String event, String data) {
+                flag = true;
+            }
+        });
 
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
-                URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity()).getToken(), null,
+                Mine.URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity()).getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -175,16 +181,13 @@ public class PreGameFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        if(sm.online){
+                        if(sm.online && flag){
 
-                        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
-                            @Override
-                            public void onEvent(String channel, String event, String data) {
-                                Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                                startActivity(i);
-                            }
-                        });
-                        } else{
+                                    Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                    startActivity(i);
+
+
+                        } else {
                             Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
                             startActivity(i);
 

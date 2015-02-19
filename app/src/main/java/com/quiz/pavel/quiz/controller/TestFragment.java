@@ -615,6 +615,7 @@ public class TestFragment extends Fragment {
         }
         Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
         SessionManager.deleteInstance();
+        mSessionManager.mPusher.disconnect();
     }
 
     private boolean blockOfButtons;

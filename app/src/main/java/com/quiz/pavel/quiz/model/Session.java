@@ -32,7 +32,6 @@ import java.util.UUID;
 public class Session {
     private static final String TAG = "Session";
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
     String mToken;
 
@@ -162,7 +161,7 @@ public class Session {
         }
 
         // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH, URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH, Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

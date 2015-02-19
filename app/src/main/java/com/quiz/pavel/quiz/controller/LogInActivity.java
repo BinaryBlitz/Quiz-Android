@@ -51,7 +51,6 @@ public class LogInActivity extends Activity {
     @InjectView(R.id.password)
     EditText mPasswordEditText;
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private IntentJSONSerializer mIntentJSONSerializer;
@@ -95,7 +94,8 @@ public class LogInActivity extends Activity {
             Log.d(TAG, "LOGIN, email:" + mailtxt + " pass:" + md5(passwordtxt));
 
             // Request a string response from the provided URL.
-            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URL + "/players/authenticate", params,
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST,
+                    Mine.URL + "/players/authenticate", params,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {

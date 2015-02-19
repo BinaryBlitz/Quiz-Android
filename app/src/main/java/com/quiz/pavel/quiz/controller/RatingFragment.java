@@ -40,7 +40,6 @@ public class RatingFragment extends ListFragment {
 
     private static final String TAG = "RatingFragment";
 
-    private static final String URL = "https://protected-atoll-5061.herokuapp.com";
 
 
     private ArrayList<PlayerRating> mPlayers;
@@ -63,7 +62,7 @@ public class RatingFragment extends ListFragment {
         Log.d(TAG, "token= " + Mine.getInstance(getActivity()).getToken());
 
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, URL + "/rankings/general?token="
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, Mine.URL + "/rankings/general?token="
                 + Mine.getInstance(getActivity()).getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
