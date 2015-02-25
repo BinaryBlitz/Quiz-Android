@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
+import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Theme;
 import com.quiz.pavel.quiz.model.Topic;
 
@@ -61,16 +62,11 @@ public class TopicListFragment extends ListFragment {
         if (savedInstanceState == null) {
             Log.d("TAG", " WHAT THE FUCK");
         }
-        try {
 
-            mTopics = IntentJSONSerializer.getInitialize().loadCatArray().
+        mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).
                     get(0).mTopics;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+
         ListView listView = (ListView) v.findViewById(android.R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 

@@ -20,16 +20,17 @@ public class Question {
     private Answer[] mAnswers;
 
 
-    public Question(String text){
+    public Question(String text) {
 
         mText = text;
         mAnswers = new Answer[4];
         for (int i = 0; i < 4; i++) {
-            mAnswers[i] = new Answer("answer"+(i+1),false);
+            mAnswers[i] = new Answer("answer" + (i + 1), false);
         }
         mAnswers[3].mIsCorrect = true;
     }
-    public Question(JSONObject json){
+
+    public Question(JSONObject json) {
         try {
             mText = json.getString("content");
             JSONArray answers = json.getJSONArray("answers");
@@ -39,7 +40,7 @@ public class Question {
                 mAnswers[i] = new Answer(answers.getJSONObject(i));
             }
 
-            List<Answer> list =  Arrays.asList(mAnswers);
+            List<Answer> list = Arrays.asList(mAnswers);
             Collections.shuffle(list);
             mAnswers = new Answer[list.size()];
             list.toArray(mAnswers);
@@ -53,7 +54,7 @@ public class Question {
 
     }
 
-    public Answer getAnswer(int i){
+    public Answer getAnswer(int i) {
         return mAnswers[i];
     }
 
@@ -65,7 +66,7 @@ public class Question {
         return ar;
     }
 
-    public Answer[] getAnswers(){
+    public Answer[] getAnswers() {
         return mAnswers;
     }
 
@@ -83,9 +84,6 @@ public class Question {
 //        mVariants[2] = "ccc";
 //        mVariants[3] = "ddd";
 //    }
-
-
-
 
 
 }

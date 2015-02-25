@@ -14,22 +14,26 @@ public class Topic {
     public static final String TAG = "Topic";
     public String mText;
     public int mId;
-    public Topic(JSONObject json){
+
+    public Topic(JSONObject json) {
         try {
             mText = json.getString("name");
             mId = json.getInt("id");
         } catch (JSONException e) {
-             Log.d(TAG, "Error, JSONException");
+            Log.d(TAG, "Error, JSONException");
 
         }
     }
-   public Topic(){
-       mText = "person";
-   }
-    public String getTitle(){
+
+    public Topic() {
+        mText = "person";
+    }
+
+    public String getTitle() {
         return mText;
     }
-    public int getId(){
+
+    public int getId() {
         return mId;
     }
 

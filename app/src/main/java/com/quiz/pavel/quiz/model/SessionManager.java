@@ -36,7 +36,7 @@ public class SessionManager {
     public Channel mChannel;
     public Pusher mPusher;
 
-    public SessionManager(Context c){
+    public SessionManager(Context c) {
 
         mPusher = new Pusher("d982e4517caa41cf637c");
         mChannel = mPusher.subscribe("player-session-" + Mine.getInstance(c).getId());
@@ -59,37 +59,37 @@ public class SessionManager {
             @Override
             public void onEvent(String channel, String event, String data) {
                 try {
+                    Log.d(TAG, "DATA: " + data);
                     JSONObject json = new JSONObject(data);
                     int answer = json.getInt("answer_id");
 
                     int time = json.getInt("answer_time");
+
                     mSession.opponentsAnswer(mSession.mCurrentSessionQuestion.searchNubById(answer), time);
-
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.d(TAG, "Problem with parsing data sended via pusher");
                 }
-
             }
         });
+        myHandler = new Handler();
 
     }
 
-    public static SessionManager getInstance(Context c){
-        if(sSessionManager == null) {
+    public static SessionManager getInstance(Context c) {
+        if (sSessionManager == null) {
             sSessionManager = new SessionManager(c);
             Log.d(TAG, "new instance of SM was created");
         }
         return sSessionManager;
     }
 
-    public static void deleteInstance(){
+    public void deleteInstance() {
+        myHandler.removeCallbacks(myRunnable);
         sSessionManager = null;
     }
 
-    public void startTimer(int delay){
-
-
-
+    public void startTimer(int delay) {
+        //TODO: change on scheduleAtFixedRated
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -101,8 +101,8 @@ public class SessionManager {
 
     }
 
-    public void stopTimer(){
-        if(mTimer == null){
+    public void stopTimer() {
+        if (mTimer == null) {
             return;
         }
         mTimer.cancel();
@@ -110,39 +110,22 @@ public class SessionManager {
 
     }
 
-    public void iChooseAnswer(Context c, int number){
+    public void iChooseAnswer(Context c, int number) {
         mSession.myAnswer(c, number, timer);
     }
 
 
-
-
-
-
-
-    public boolean amIWinner(){
-        if(mSession.pointsMine > mSession.pointsOpponent){
+    public boolean amIWinner() {
+        if (mSession.pointsMine > mSession.pointsOpponent) {
             return true;                                                                                //BULLSHIT
         }
         return false;
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     // gets false if cannot carry on game = have not questions
-    public boolean newRound(){
-        if(mSession.mSessionQuestions.isEmpty()){
+    public boolean newRound() {
+        if (mSession.mSessionQuestions.isEmpty()) {
             return false;
         } else {
             return true;
@@ -150,34 +133,27 @@ public class SessionManager {
     }
 
 
-
-
-
-
     private int timer;
-    Handler myHandler = new Handler();
+    Handler myHandler;
     Timer mTimer;
-
 
 
     final Runnable myRunnable = new Runnable() {
         public void run() {
-            if(timer >= 11 || mSession.bothPlayersAreAnswered()){
+            if (timer >= 11 || mSession.bothPlayersAreAnswered()) {
                 mCallbackOnView.closeRound();
                 mCallbackOnView.openRound();
                 timer = 0;
             }
 
 
-            if(!online) {
+            if (!online) {
                 if (timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
-                    mSession.opponentsAnswer(0,0);
+                    mSession.opponentsAnswer(0, 0);
                     mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
                 }
             }
-
             mCallbackOnView.updateTimer(timer);
-
         }
     };
 
@@ -185,15 +161,17 @@ public class SessionManager {
     // The callback interface
     public interface CallbackOnView {
         void updateTimer(int i);
+
         void closeRound();
+
         void openRound();
+
         void opponentChooseAnswer(int i);
 
     }                                                                                                           //CALLBACK
 
     // The class that takes the callback
     public CallbackOnView mCallbackOnView;
-
 
 
 }

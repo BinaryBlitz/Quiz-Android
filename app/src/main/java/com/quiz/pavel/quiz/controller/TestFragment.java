@@ -62,35 +62,23 @@ import static com.quiz.pavel.quiz.R.id.variant_a_button;
 public class TestFragment extends Fragment {
     private static String TAG = "TestFragment";
 
-    @InjectView(R.id.variant_a_button)
-    Button mVariantA;
-    @InjectView(R.id.variant_b_button)
-    Button mVariantB;
-    @InjectView(R.id.variant_c_button)
-    Button mVariantC;
-    @InjectView(R.id.variant_d_button)
-    Button mVariantD;
+    @InjectView(R.id.variant_a_button) Button mVariantA;
+    @InjectView(R.id.variant_b_button) Button mVariantB;
+    @InjectView(R.id.variant_c_button) Button mVariantC;
+    @InjectView(R.id.variant_d_button) Button mVariantD;
 
-    @InjectView(R.id.question_text_view)
-    TextView mQuestionTextView;
-    @InjectView(R.id.timer_textView)
-    TextView mTimerTextView;
+    @InjectView(R.id.question_text_view) TextView mQuestionTextView;
+    @InjectView(R.id.timer_textView) TextView mTimerTextView;
 
-    @InjectView(R.id.my_points_textView)
-    TextView mMyPointsTextView;
-    @InjectView(R.id.opponents_points_textView)
-    TextView mOpponentsPointsTextView;
+    @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
+    @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
 
-    @InjectView(R.id.buttons_broad)
-    LinearLayout mButtonsBroad;
+    @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
 
-    @InjectView(R.id.broad_my_profile)
-    LinearLayout mMyProfileBroad;
-    @InjectView(R.id.broad_opponent_profile)
-    LinearLayout mOpponentProfileBroad;
+    @InjectView(R.id.broad_my_profile) LinearLayout mMyProfileBroad;
+    @InjectView(R.id.broad_opponent_profile) LinearLayout mOpponentProfileBroad;
 
-    @InjectView(R.id.round_shower)
-    TextView mRoundShowerTextView;
+    @InjectView(R.id.round_shower) TextView mRoundShowerTextView;
 
     private Button mLastPushedButton; //TODO: delete this line
 
@@ -137,13 +125,14 @@ public class TestFragment extends Fragment {
 
             @Override
             public void callbackCallOpponent(int i) {
-                mOpponentsPointsTextView.setText(String.valueOf(i));
+                Log.d(TAG, "i = " + i);
+                try {
+                    mOpponentsPointsTextView.setText(String.valueOf(i));
+                } catch(Exception ex) {
+
+                }
             }
 
-//            @Override
-//            public void downloadCompleted(){
-//                beginGame();
-//            }
         };
 
         mSessionManager.mCallbackOnView = new SessionManager.CallbackOnView() {
@@ -188,7 +177,7 @@ public class TestFragment extends Fragment {
 
         mSessionManager.stopTimer();
 
-        Log.d(TAG, "HERE1 mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
+        Log.d(TAG, "onCloseRound, mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
             case 0:
                 mVariantA.setTextColor(Color.RED);
@@ -204,7 +193,7 @@ public class TestFragment extends Fragment {
                 break;
 
         }
-        Log.d(TAG, "HERE1 mCorrectAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
+        Log.d(TAG, "onCloseRound, mCorrectAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
             case 0:
                 mVariantA.setTextColor(Color.GREEN);
@@ -228,7 +217,7 @@ public class TestFragment extends Fragment {
 
     private void hideIncorrectAnswerVariants() {
 
-        Log.d(TAG, "HERE1 mCorrectAnswer= " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
+        Log.d(TAG, "hideIncorrectAnswerVariants, mCorrectAnswer= " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
             case 0:
                 b1 = mVariantB;
@@ -578,21 +567,6 @@ public class TestFragment extends Fragment {
             }
         }).playOn(mVariantD);
 
-
-//        mButtonsBroad.animate()
-//                .alpha(1f)
-//                .setDuration(1000)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(android.animation.Animator animation) {
-//                        mSessionManager.startTimer(0);
-//                        mVariantA.setAlpha(1f);
-//                        mVariantB.setAlpha(1f);
-//                        mVariantC.setAlpha(1f);
-//                        mVariantD.setAlpha(1f);
-//
-//                    }
-//                });
     }
 
     private void updateGUI() {
@@ -627,7 +601,7 @@ public class TestFragment extends Fragment {
             str = "you are winner";
         }
         Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
-        SessionManager.deleteInstance();
+        mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
 
         //TODO: perhaps, recomment
@@ -642,7 +616,6 @@ public class TestFragment extends Fragment {
 //                    @Override
 //                    public void onResponse(JSONObject response) {
 //
-//                        //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
 //                    }
 //                }
 //                , new Response.ErrorListener() {

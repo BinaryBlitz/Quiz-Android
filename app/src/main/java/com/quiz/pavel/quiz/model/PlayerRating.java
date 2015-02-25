@@ -20,7 +20,7 @@ public class PlayerRating {
     public int mPosition;
     public boolean mI;
 
-    public PlayerRating(JSONObject json, int position, boolean a){
+    public PlayerRating(JSONObject json, int position, boolean a) {
         try {
             mName = json.getString("name");
             mPoints = json.getInt("points");
@@ -31,12 +31,13 @@ public class PlayerRating {
 
     }
 
-    public PlayerRating(int position, String name, boolean a){
+    public PlayerRating(int position, String name, boolean a) {
         mName = name;
         mPoints = -1;
         mI = a;
     }
-    public String getTitle(){
+
+    public String getTitle() {
         return mName;
     }
 }

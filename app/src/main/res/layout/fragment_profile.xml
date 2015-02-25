@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingTop="10dp">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -17,18 +18,29 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
             >
-            <ImageView
+            <com.makeramen.RoundedImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerInside"
                 android:background="@android:color/darker_gray"
                 android:cropToPadding="true"
-                android:id="@+id/crime_imageView"/>
-            <ImageButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_camera"
-                android:id="@+id/crime_imageButton"/>
+                android:id="@+id/my_photo_imageView"
+                app:riv_corner_radius="30dip"
+                app:riv_border_width="2dip"
+                app:riv_border_color="#333333"
+                app:riv_mutate_background="true"
+                app:riv_tile_mode="repeat"
+                app:riv_oval="true"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                app:border_width="2dp"
+                app:border_color="#FF033DDD"
+                android:layout_marginTop="84dp" />
+
         </LinearLayout>
         <LinearLayout
             android:orientation="vertical"
@@ -58,16 +70,9 @@
         />
     <Button android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/crime_date"
+        android:id="@+id/logout"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        />
-    <CheckBox android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/crime_solved"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:text="string/crime_solved_label"
         />
 
 

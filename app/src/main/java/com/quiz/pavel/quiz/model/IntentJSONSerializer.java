@@ -30,35 +30,23 @@ public class IntentJSONSerializer {
     private static final String FILENAME1 = "quiz.json";
     private static final String FILENAME2 = "quiz2.json";
 
-    public static IntentJSONSerializer getInitialize(){
-        if(mIntentJSONSerializer == null){
+    public static IntentJSONSerializer getInitialize() {
+        if (mIntentJSONSerializer == null) {
             mIntentJSONSerializer = new IntentJSONSerializer();
         }
         return mIntentJSONSerializer;
     }
 
-    public void setContext(Context c){
+    public void setContext(Context c) {
         mContext = c;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public void saveCatTopicJsonAr(JSONArray jsonArray)
             throws IOException {
 
         Writer writer = null;
-        try{
+        try {
             OutputStream out = mContext
                     .openFileOutput(FILENAME2, Context.MODE_PRIVATE);
             writer = new OutputStreamWriter(out);
@@ -69,6 +57,7 @@ public class IntentJSONSerializer {
             }
         }
     }
+
     public ArrayList<Category> loadCatArray() throws IOException, JSONException {
 
         BufferedReader reader = null;
@@ -83,7 +72,7 @@ public class IntentJSONSerializer {
             }
             json = (JSONArray) new JSONTokener(jsonString.toString()).nextValue();
 
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
 
         } finally {
             if (reader != null) {

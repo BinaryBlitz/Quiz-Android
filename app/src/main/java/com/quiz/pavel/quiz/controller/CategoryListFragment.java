@@ -85,11 +85,7 @@ public class CategoryListFragment extends ListFragment {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "categories: " + response);
-                        try {
-                            IntentJSONSerializer.getInitialize().saveCatTopicJsonAr(response);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Mine.getInstance(getActivity()).saveCatTopicJsonAr(getActivity(),response);
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 mCategories.add(new Category(response.getJSONObject(i)));

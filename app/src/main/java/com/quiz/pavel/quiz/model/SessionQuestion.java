@@ -29,28 +29,28 @@ public class SessionQuestion {
     public int mOpponentAnswer;
 
 
-    public Question getQuestion(){
+    public Question getQuestion() {
         return mQuestion;
     }
 
 
-    public SessionQuestion(JSONObject json){
+    public SessionQuestion(JSONObject json) {
         try {
             mQuestion = new Question(json.getJSONObject("question"));
             for (int i = 0; i < 4; i++) {
-                if( mQuestion.getAnswers()[i].mIsCorrect == true){
+                if (mQuestion.getAnswers()[i].mIsCorrect == true) {
                     mCorrectAnswer = i;
                 }
             }
-            if (!json.isNull("opponent_answer_id")){
+            if (!json.isNull("opponent_answer_id")) {
                 int opponent_answer_id = json.getInt("opponent_answer_id");
                 for (int i = 0; i < 4; i++) {
-                    if( mQuestion.getAnswers()[i].mId == opponent_answer_id){
+                    if (mQuestion.getAnswers()[i].mId == opponent_answer_id) {
                         mOpponentAnswer = i;
                     }
                 }
                 mOpponentTimeOfAnswer = json.getInt("opponent_time");
-            } else{
+            } else {
                 mOpponentTimeOfAnswer = -1;
                 mOpponentAnswer = -1;
             }
@@ -58,23 +58,20 @@ public class SessionQuestion {
 
 
         } catch (JSONException e) {
-            Log.d(TAG,"Error, parsing in the constructor of sessionQuestion" );
+            Log.d(TAG, "Error, parsing in the constructor of sessionQuestion");
 
             e.printStackTrace();
         }
     }
 
-    public int searchNubById(int id){
+    public int searchNubById(int id) {
         for (int i = 0; i < mQuestion.getAnswers().length; i++) {
-            if (id == mQuestion.getAnswers()[i].mId){
+            if (id == mQuestion.getAnswers()[i].mId) {
                 return i;
             }
         }
         return 0;
     }
-
-
-
 
 
 }

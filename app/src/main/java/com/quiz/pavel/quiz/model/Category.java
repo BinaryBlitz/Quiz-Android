@@ -20,7 +20,7 @@ public class Category {
     public ArrayList<Topic> mTopics;
     public JSONArray mJsonTopics;
 
-    public Category(JSONObject json){
+    public Category(JSONObject json) {
         try {
             mText = json.getString("name");
 
@@ -37,11 +37,12 @@ public class Category {
             Log.d(TAG, "Error, JSONException");
         }
     }
-    public String getJsonTopics(){
+
+    public String getJsonTopics() {
         return mJsonTopics.toString();
     }
 
-    public static ArrayList<Topic> stringToArray(String jsonAr){
+    public static ArrayList<Topic> stringToArray(String jsonAr) {
         JSONArray ar;
         try {
             ar = new JSONArray(jsonAr);
@@ -57,19 +58,17 @@ public class Category {
         return null;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return mText;
     }
 
-    public String getTitleTopics(){
+    public String getTitleTopics() {
         String str = "";
         for (Topic topic : mTopics) {
             str += " " + topic.getTitle();
         }
         return str;
     }
-
-
 
 
 }

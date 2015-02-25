@@ -14,11 +14,12 @@ public class Answer {
     public boolean mIsCorrect;
     public int mId;
 
-    public Answer(String text, boolean isCorrect){
+    public Answer(String text, boolean isCorrect) {
         mText = text;
         mIsCorrect = isCorrect;
     }
-    public Answer(JSONObject json){
+
+    public Answer(JSONObject json) {
         try {
             mText = json.getString("content");
             mIsCorrect = json.getBoolean("correct");

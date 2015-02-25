@@ -6,10 +6,13 @@ import android.util.Log;
 
 import com.android.volley.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by pavelkozemirov on 18.02.15.
@@ -17,9 +20,10 @@ import java.io.IOException;
 public class Mine {
     private static Mine sMine;
 
+    private static final String TAG= "Mine";
+
     public static final String URL = "https://protected-atoll-5061.herokuapp.com";
 //    public static final String URL = "https://192.168.1.39:3000";
-
 
 
     public static final String PREFS_NAME = "MyPrefsFile";
@@ -30,6 +34,7 @@ public class Mine {
     private int mId;
 
     private Mine(Context c, JSONObject json) throws JSONException {
+
         mName = json.getString("name");
         mEmail = json.getString("email");
         mToken = json.getString("token");
@@ -42,42 +47,41 @@ public class Mine {
         editor.putString("token", mToken);
         editor.putBoolean("signin", true);
         editor.putInt("id", mId);
-        Log.d("MINE", "name= " + mName + "emal ="+ mEmail + "token= "+ mToken + "id= "+mId);
+        Log.d("MINE", "name= " + mName + "emal =" + mEmail + "token= " + mToken + "id= " + mId);
 
         // Commit the edits!
         editor.commit();
-
     }
-    private Mine(Context c){
-            SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
 
-            mName = settings.getString("name", "");
-            mEmail = settings.getString("email", "");
-            mToken = settings.getString("token", "");
-            mId = settings.getInt("id",1);
-            Log.d("MINE", "name= " + mName + "emal ="+ mEmail + "token= "+ mToken + "id= "+mId);
+    private Mine(Context c) {
 
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
 
+        mName = settings.getString("name", "");
+        mEmail = settings.getString("email", "");
+        mToken = settings.getString("token", "");
+        mId = settings.getInt("id", 1);
+        Log.d("MINE", "name= " + mName + "emal =" + mEmail + "token= " + mToken + "id= " + mId);
 
     }
 
     public static Mine getInstance(Context c, JSONObject json) throws JSONException {
 
-        if(sMine == null){
-            sMine = new Mine(c,json);
+        if (sMine == null) {
+            sMine = new Mine(c, json);
         }
         return sMine;
     }
 
-    public static Mine getInstance(Context c){
-        if(sMine == null){
+    public static Mine getInstance(Context c) {
+        if (sMine == null) {
             sMine = new Mine(c);
         }
         return sMine;
     }
-    public static void newInstance(Context c, JSONObject json) throws JSONException {
 
-            sMine = new Mine(c,json);
+    public static void newInstance(Context c, JSONObject json) throws JSONException {
+        sMine = new Mine(c, json);
     }
 
     public String getName() {
@@ -112,18 +116,43 @@ public class Mine {
         mId = id;
     }
 
-    public boolean isSignIn(Context c){
+    public boolean isSignIn(Context c) {
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
         return settings.getBoolean("signin", false);
     }
 
-    public void logOut(Context c){
+    public void logOut(Context c) {
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("signin", false);
 
         // Commit the edits!
         editor.commit();
+    }
+
+    public void saveCatTopicJsonAr(Context c, JSONArray jsonArray) {
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("arrayCat", jsonArray.toString());
+
+        editor.commit();
+    }
+
+    public ArrayList<Category> loadCategoryAr(Context c) {
+
+        SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
+        ArrayList<Category> ar = new ArrayList<>();
+        String temp = settings.getString("arrayCat","");
+        try {
+            JSONArray json = (JSONArray) new JSONTokener(temp.toString()).nextValue();
+            for (int i = 0; i < json.length(); i++) {
+                ar.add(new Category(json.getJSONObject(i)));
+            }
+        } catch (JSONException e) {
+            Log.d(TAG, "Error with json parsing");
+        }
+        return ar;
+
     }
 
 }

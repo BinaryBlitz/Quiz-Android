@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -8,10 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.makeramen.RoundedTransformationBuilder;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,8 +32,9 @@ import butterknife.OnClick;
  */
 public class ProfileFragment extends Fragment {
 
-    @InjectView(R.id.crime_date)
-    Button mButton;
+    @InjectView(R.id.logout) Button mLogoutButton;
+    @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
+    @InjectView(R.id.profile_image) ImageView mPhoto1;
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -41,8 +47,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        UUID crimeId = (UUID)getArguments().getSerializable(EXTRA_CRIME_ID);
-//        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         setHasOptionsMenu(true);
 
     }
@@ -56,6 +60,27 @@ public class ProfileFragment extends Fragment {
         if (NavUtils.getParentActivityName(getActivity()) != null) {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Transformation transformation = new RoundedTransformationBuilder()
+                .scaleType(ImageView.ScaleType.CENTER)
+                .borderColor(Color.BLACK)
+                .borderWidthDp(1)
+                .cornerRadiusDp(30)
+                .oval(false)
+                .build();
+
+        Picasso.with(getActivity())
+                .load(R.drawable.pic1)
+                .fit()
+                .transform(transformation)
+                .into(mPhoto);
+
+        Picasso.with(getActivity())
+                .load(R.drawable.pic1)
+                .fit()
+                .transform(transformation)
+                .into(mPhoto1);
+
 
         return v;
     }

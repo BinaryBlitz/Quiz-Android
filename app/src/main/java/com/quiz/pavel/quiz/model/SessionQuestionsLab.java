@@ -12,11 +12,11 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class SessionQuestionsLab {
 
-    public SessionQuestionsLab(){
+    public SessionQuestionsLab() {
 
     }
 
-    public static LinkedList<SessionQuestion> getSessionsQuestionArray(){
+    public static LinkedList<SessionQuestion> getSessionsQuestionArray() {
 
         LinkedList<SessionQuestion> list = new LinkedList<SessionQuestion>();
 
