@@ -125,12 +125,13 @@ public class TestFragment extends Fragment {
 
             @Override
             public void callbackCallOpponent(int i) {
-                Log.d(TAG, "i = " + i);
-                try {
+//                Log.d(TAG, "i = " + i);
+//                try {
                     mOpponentsPointsTextView.setText(String.valueOf(i));
-                } catch(Exception ex) {
+//                } catch(Exception ex) {
+//
+//                }
 
-                }
             }
 
         };

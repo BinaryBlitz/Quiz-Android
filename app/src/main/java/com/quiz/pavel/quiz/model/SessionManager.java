@@ -61,11 +61,14 @@ public class SessionManager {
                 try {
                     Log.d(TAG, "DATA: " + data);
                     JSONObject json = new JSONObject(data);
-                    int answer = json.getInt("answer_id");
 
-                    int time = json.getInt("answer_time");
+                    mSession.mCurrentSessionQuestion.mOpponentAnswer =
+                            mSession.mCurrentSessionQuestion.searchNubById(json.getInt("answer_id"));
 
-                    mSession.opponentsAnswer(mSession.mCurrentSessionQuestion.searchNubById(answer), time);
+                    mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer = json.getInt("answer_time");
+
+                    handler.sendEmptyMessage(1);
+
                 } catch (JSONException e) {
                     Log.d(TAG, "Problem with parsing data sended via pusher");
                 }
@@ -74,6 +77,15 @@ public class SessionManager {
         myHandler = new Handler();
 
     }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(android.os.Message msg){
+            mSession.opponentsAnswer(0,0);
+            mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
+        }
+    };
+
 
     public static SessionManager getInstance(Context c) {
         if (sSessionManager == null) {
@@ -89,7 +101,6 @@ public class SessionManager {
     }
 
     public void startTimer(int delay) {
-        //TODO: change on scheduleAtFixedRated
         mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -148,7 +159,7 @@ public class SessionManager {
 
 
             if (!online) {
-                if (timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
+                if (timer >= mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
                     mSession.opponentsAnswer(0, 0);
                     mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
                 }
