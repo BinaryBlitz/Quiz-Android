@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.makeramen.RoundedTransformationBuilder;
 import com.quiz.pavel.quiz.R;
@@ -34,7 +35,7 @@ public class ProfileFragment extends Fragment {
 
     @InjectView(R.id.logout) Button mLogoutButton;
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
-    @InjectView(R.id.profile_image) ImageView mPhoto1;
+    @InjectView(R.id.name) TextView mTextViewName;
 
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,31 +62,25 @@ public class ProfileFragment extends Fragment {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Transformation transformation = new RoundedTransformationBuilder()
-                .scaleType(ImageView.ScaleType.CENTER)
-                .borderColor(Color.BLACK)
-                .borderWidthDp(1)
-                .cornerRadiusDp(30)
-                .oval(false)
-                .build();
+//        Transformation transformation = new RoundedTransformationBuilder()
+//                .scaleType(ImageView.ScaleType.CENTER)
+//                .borderColor(Color.BLACK)
+//                .borderWidthDp(1)
+//                .cornerRadiusDp(30)
+//                .oval(false)
+//                .build();
 
         Picasso.with(getActivity())
                 .load(R.drawable.pic1)
                 .fit()
-                .transform(transformation)
+//                .transform(transformation)
                 .into(mPhoto);
-
-        Picasso.with(getActivity())
-                .load(R.drawable.pic1)
-                .fit()
-                .transform(transformation)
-                .into(mPhoto1);
-
+        mTextViewName.setText(Mine.getInstance(getActivity()).getName());
 
         return v;
     }
 
-    @OnClick(R.id.crime_date)
+    @OnClick(R.id.logout)
     public void onClick() {
 
         Mine.getInstance(getActivity()).logOut(getActivity());

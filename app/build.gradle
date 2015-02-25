@@ -36,4 +36,5 @@ dependencies {
     compile 'com.makeramen:roundedimageview:1.5.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'de.hdodenhof:circleimageview:1.1.0'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
 }

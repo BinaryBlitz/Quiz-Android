@@ -18,59 +18,88 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="4dp"
             >
-            <com.makeramen.RoundedImageView
+
+            <com.github.siyamed.shapeimageview.CircularImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:scaleType="centerInside"
-                android:background="@android:color/darker_gray"
-                android:cropToPadding="true"
                 android:id="@+id/my_photo_imageView"
-                app:riv_corner_radius="30dip"
-                app:riv_border_width="2dip"
-                app:riv_border_color="#333333"
-                app:riv_mutate_background="true"
-                app:riv_tile_mode="repeat"
-                app:riv_oval="true"/>
+                app:siBorderWidth="2dp"
+                app:siBorderColor="#FF000000"
+                app:siSquare="true"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                app:border_width="2dp"
-                app:border_color="#FF033DDD"
-                android:layout_marginTop="84dp" />
+
 
         </LinearLayout>
         <LinearLayout
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1">
-            <TextView android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="string/crime_title_label"
-                style="?android:listSeparatorTextViewStyle"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                />
-            <EditText android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/crime_title"
-                android:hint="string/crime_title_hint"
-                />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/points_numder"
+                    style="?android:textViewStyle"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="18dp"/>
+
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/points_word"
+                          style="?android:textViewStyle"
+                          android:gravity="center"
+                          android:autoText="false"
+                          android:textSize="16dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/points_numder"
+                          style="?android:textViewStyle"
+                          android:gravity="center"
+                          android:textStyle="bold"
+                          android:id="@+id/number_of_friends"
+                          android:textSize="18dp"/>
+                <TextView android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:text="@string/friends_word"
+                          style="?android:textViewStyle"
+                          android:gravity="center"
+                          android:textSize="16dp"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
+
     <TextView android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="string/crime_details_label"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        style="?android:listSeparatorTextViewStyle"
-        />
+        android:text="@string/name"
+        android:id="@+id/name"
+        style="?android:textViewStyle"
+        android:textSize="20dp"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"/>
+
     <Button android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/logout"
+        android:text="@string/logout"
+        android:paddingTop="20dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         />
