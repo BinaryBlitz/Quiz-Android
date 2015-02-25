@@ -24,5 +24,6 @@
     <string name="friends_word">Друзей</string>
     <string name="name">Имя</string>
     <string name="logout">Выйти из аккаунта</string>
+    <string name="settings_profile">Настройки</string>
 
 </resources>

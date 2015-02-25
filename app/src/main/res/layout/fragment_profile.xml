@@ -93,13 +93,21 @@
         style="?android:textViewStyle"
         android:textSize="20dp"
         android:paddingTop="20dp"
-        android:paddingLeft="20dp"/>
+        android:paddingLeft="20dp"
+        android:padding="20dp"/>
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settings_profile"
+            android:text="@string/settings_profile"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+        />
 
     <Button android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/logout"
         android:text="@string/logout"
-        android:paddingTop="20dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         />

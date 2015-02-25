@@ -37,9 +37,9 @@ public class ProfileFragment extends Fragment {
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
     @InjectView(R.id.name) TextView mTextViewName;
 
+
     public static ProfileFragment newInstance() {
         Bundle args = new Bundle();
-//        args.putSerializable(EXTRA_CRIME_ID, crimeId);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
 //                .build();
 
         Picasso.with(getActivity())
-                .load(R.drawable.pic1)
+                .load(R.drawable.strawberry)
                 .fit()
 //                .transform(transformation)
                 .into(mPhoto);
@@ -87,6 +87,12 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(getActivity(), ChoiceSignUpLogIn.class);
         startActivity(intent);
         getActivity().finish();
+    }
+
+    @OnClick(R.id.settings_profile)
+    public void onClickSettings() {
+
+
     }
 
 }
