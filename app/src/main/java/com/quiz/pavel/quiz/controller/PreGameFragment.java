@@ -44,7 +44,6 @@ public class PreGameFragment extends Fragment {
 
 
     Timer mTimer;
-    Handler myHandler = new Handler();
 
     public int mTopicId;
     private String mId;
@@ -61,7 +60,6 @@ public class PreGameFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
-        Log.d(TAG, "(ONCREATE()) here calls createLobby() , mTopicId = after bundle" + mTopicId);
         createLobby();
     }
 
@@ -75,21 +73,22 @@ public class PreGameFragment extends Fragment {
     public void startTimer() {
 
         mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
+        mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                myHandler.post(myRunnable);
+//                myHandler.post(myRunnable);
+                sendReq();   // Question
             }
         }, 0, 2000);
 
     }
 
 
-    final Runnable myRunnable = new Runnable() {
-        public void run() {
-            sendReq();
-        }
-    };
+//    final Runnable myRunnable = new Runnable() {
+//        public void run() {
+//            sendReq();
+//        }
+//    };
 
 
     private void createLobby() {
@@ -102,7 +101,6 @@ public class PreGameFragment extends Fragment {
         Log.d(TAG, "mTopicID = " + mTopicId);
         try {
             JSONObject par = new JSONObject();
-            //TODO: change constant id on value from previous activity
             par.put("topic_id", mTopicId);
 
             params.put("lobby", par);
@@ -110,7 +108,7 @@ public class PreGameFragment extends Fragment {
             params.put("token", Mine.getInstance(getActivity()).getToken());
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG,"Problem with parsing json(Intent)");
         }
 
         // Request a string response from the provided URL.
@@ -149,7 +147,13 @@ public class PreGameFragment extends Fragment {
     }
 
     SessionManager sm;
-    boolean flag;
+    boolean flagEvent;
+    boolean flagResponse;
+
+
+
+    Handler myHandler = new Handler();
+
 
     private void sendReq() {
 
@@ -162,7 +166,19 @@ public class PreGameFragment extends Fragment {
         sm.mChannel.bind("game-start", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channel, String event, String data) {
-                flag = true;
+                flagEvent = true;
+
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(flagEvent && flagResponse) {
+                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                            startActivity(i);
+                        } else {
+                            sm.mPusher.disconnect();
+                        }
+                    }
+                }, 1000);
             }
         });
 
@@ -177,30 +193,25 @@ public class PreGameFragment extends Fragment {
 
                         try {
                             sm.online = !response.getBoolean("offline");
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        if(sm.online && flag){
+                        flagResponse = true;
 
-                                    Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                                    startActivity(i);
-
-
-                        } else {
+                        if(!sm.online) {
                             Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
                             startActivity(i);
+                            sm.mPusher.disconnect();
 
                         }
-
 
                         if (mTimer == null) {
                             return;
                         }
                         mTimer.cancel();
                         mTimer.purge();
-
-
                     }
                 }
                 , new Response.ErrorListener() {

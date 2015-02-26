@@ -101,6 +101,8 @@ public class Session {
 
     public void opponentsAnswer(int answer, int time) {
 
+        mOpponentIsAnwered = true;
+
         Log.d(TAG, "opponentAnswer(): answer= " + answer + "; time = " + time);
         Log.d(TAG, "opponentAnswer(): correctAnswer = " + mCurrentSessionQuestion.mCorrectAnswer);
 
@@ -112,7 +114,6 @@ public class Session {
 
 
 
-        mOpponentIsAnwered = true;
         Log.d(TAG, "mCurrentSessionQuestion.mCorrectAnswer = " + mCurrentSessionQuestion.mCorrectAnswer +
                 " mCurrentSessionQuestion.mOpponentAnswer = " + mCurrentSessionQuestion.mOpponentAnswer);
         if (mCurrentSessionQuestion.mCorrectAnswer == mCurrentSessionQuestion.mOpponentAnswer) {
@@ -122,12 +123,12 @@ public class Session {
     }
 
     public void addPointsMe(int time) {
-        pointsMine += (150 - 10 * time);
+        pointsMine += (10 + time);
         callback.callbackCallMine(pointsMine);
     }
 
     public void addPointsOpponent(int time) {
-        pointsOpponent += (150 - 10 * time);
+        pointsOpponent += (10 + time);
         Log.d(TAG, "pointOpponent = " + pointsOpponent);
         callback.callbackCallOpponent(pointsOpponent);
     }
@@ -164,20 +165,22 @@ public class Session {
         } catch (JSONException e) {
 
         }
-
+        Log.d(TAG, "PREPARING TO SEND PATCH");
         // Request a string response from the provided URL.
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
                 Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "We has got response on patch request");
+                        Log.d(TAG, "PATCH HAS SEND");
+
                         //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "PATCH HAS SEND, MAYBE");
                 NetworkResponse response = error.networkResponse;
                 if (response != null && response.data != null) {
                     switch (response.statusCode) {
