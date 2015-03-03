@@ -39,10 +39,10 @@ import butterknife.OnClick;
 public class SignUpActivity extends Activity {
     private static String TAG = "LoginSignupActivity";
 
-    // Declare Variables
     String usernametxt;
     String passwordtxt;
     String mailtxt;
+
     @InjectView(R.id.signup)
     Button mSignUp;
     @InjectView(R.id.username)
