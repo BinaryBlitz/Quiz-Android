@@ -56,6 +56,11 @@ public class Session {
 
     public SessionQuestion mCurrentSessionQuestion;
 
+    private String mMyName = "Я";
+    private String mOpponentsName = "Оппонент";
+
+
+
     public LinkedList<SessionQuestion> mSessionQuestions;
 
     private boolean mOpponentIsAnwered;
@@ -68,6 +73,14 @@ public class Session {
 
     public Session(JSONObject response) {
         mSessionQuestions = new LinkedList<SessionQuestion>();
+
+
+        try {
+            mMyName = response.getString("host_name");
+            mOpponentsName = response.getString("opponent_name");
+        } catch (JSONException ex) {
+
+        }
 
         try {
             JSONArray sqs = response.getJSONArray("game_session_questions");
@@ -83,6 +96,14 @@ public class Session {
         }
 
         moveCurrentSessionQuestion();
+    }
+
+    public String getMyName() {
+        return mMyName;
+    }
+
+    public String getOpponentsName() {
+        return mOpponentsName;
     }
 
     public MyCallback callback;

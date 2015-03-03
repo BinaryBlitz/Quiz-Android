@@ -52,6 +52,10 @@ public class TestFragment extends Fragment {
 
     @InjectView(R.id.round_shower) TextView mRoundShowerTextView;
 
+    @InjectView(R.id.my_name) TextView mMyName;
+    @InjectView(R.id.opponents_name) TextView mOpponentsName;
+
+
     private Button mLastPushedButton; //TODO: delete this line
 
 
@@ -78,14 +82,12 @@ public class TestFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this, v);
 
-        
+
         mSessionManager = SessionManager.getInstance(getActivity());
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
 
-
-        
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
             @Override
@@ -95,13 +97,7 @@ public class TestFragment extends Fragment {
 
             @Override
             public void callbackCallOpponent(int i) {
-//                Log.d(TAG, "i = " + i);
-//                try {
                     mOpponentsPointsTextView.setText(String.valueOf(i));
-//                } catch(Exception ex) {
-//
-//                }
-
             }
 
         };
@@ -131,33 +127,10 @@ public class TestFragment extends Fragment {
             }
         };
 
-
         mSessionManager.listenEvent();
 
-//        if(mSessionManager.online) {
-//
-//            mSessionManager.mChannel.bind("opponent-answer", new SubscriptionEventListener() {
-//                @Override
-//                public void onEvent(String channel, String event, String data) {
-//                    try {
-//                        Log.d(TAG, "DATA: " + data);
-//                        JSONObject json = new JSONObject(data);
-//
-//                        mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer =
-//                                mSessionManager.mSession.mCurrentSessionQuestion.searchNubById(json.getInt("answer_id"));
-//
-//                        mSessionManager.mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer = json.getInt("answer_time");
-//
-//                        mSessionManager.mSession.opponentsAnswer(0,0);
-//                        mSessionManager.mCallbackOnView.opponentChooseAnswer(mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
-//
-//                    } catch (JSONException e) {
-//                        Log.d(TAG, "Problem with parsing data sended via pusher");
-//                    }
-//                }
-//            });
-//        }
-
+        mMyName.setText(mSessionManager.mSession.getMyName());
+        mOpponentsName.setText(mSessionManager.mSession.getOpponentsName());
 
         beginGame();
         return v;
@@ -166,7 +139,6 @@ public class TestFragment extends Fragment {
     private void beginGame() {
 
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
-
         updateGUI();
     }
 

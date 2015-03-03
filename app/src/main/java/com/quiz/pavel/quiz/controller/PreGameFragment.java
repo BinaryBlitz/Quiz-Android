@@ -92,7 +92,6 @@ public class PreGameFragment extends Fragment {
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-//                myHandler.post(myRunnable);
                 Log.d(TAG, "executing action from schedule");
                 sendReq();   // Question
                 limit++;
@@ -114,14 +113,6 @@ public class PreGameFragment extends Fragment {
                     Toast.LENGTH_SHORT);
         }
     };
-
-
-//    final Runnable myRunnable = new Runnable() {
-//        public void run() {
-//            sendReq();
-//        }
-//    };
-
 
     private void createLobby() {
 
@@ -145,48 +136,18 @@ public class PreGameFragment extends Fragment {
             Log.d(TAG,"Problem with parsing json(Intent)");
         }
 
-        // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies", params,
-                new Response.Listener<JSONObject>() {
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies",
+                params, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, "LOBBY HAS BEEN CREATED");
                         try {
-                            mId = response.getString("id");////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                            mId = response.getString("id");
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
-                            @Override
-                            public void onEvent(String channel, String event, String data) {
-                                Log.d(TAG, "EVENT HAS BEEN SEND!!!");
-                                myHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Log.d(TAG, "onEvent has handled");
-                                        if(flagResponse) {
-                                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                                            startActivity(i);
-                                            sm.online = true;
-
-                                            Log.d(TAG, "launch a game");
-                                        } else {
-                                            myCallbackOnResponse = new OnResponse() {
-                                                @Override
-                                                public void responseWasGot() {
-                                                    Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                                                    startActivity(i);
-                                                    sm.online = true;
-                                                    Log.d(TAG, "launch a game");
-
-                                                }
-                                            };
-                                        }
-                                    }
-                                }, 1000);
-                            }
-                        });
+                        listenEventChannel();
 
                         startTimer();
                     }
@@ -207,8 +168,41 @@ public class PreGameFragment extends Fragment {
                 return params;
             }
         };
-        // Add the request to the RequestQueue.
+
         queue.add(stringRequest);
+    }
+
+    private void listenEventChannel() {
+        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
+            @Override
+            public void onEvent(String channel, String event, String data) {
+                Log.d(TAG, "EVENT HAS BEEN SEND!!!");
+                myHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "onEvent has handled");
+                        if(flagResponse) {
+                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                            startActivity(i);
+                            sm.online = true;
+
+                            Log.d(TAG, "launch a game");
+                        } else {
+                            myCallbackOnResponse = new OnResponse() {
+                                @Override
+                                public void responseWasGot() {
+                                    Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                    startActivity(i);
+                                    sm.online = true;
+                                    Log.d(TAG, "launch a game");
+
+                                }
+                            };
+                        }
+                    }
+                }, 1000);
+            }
+        });
     }
 
     private OnResponse myCallbackOnResponse;
@@ -217,38 +211,10 @@ public class PreGameFragment extends Fragment {
         void responseWasGot();
     }
 
-//    public void secondAttempt() {
-//          myHandler.postDelayed(new Runnable() {
-//              @Override
-//              public void run() {
-//                  Log.d(TAG, "onEvent has handled");
-//                  if (flagResponse) {
-//                      Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-//                      startActivity(i);
-//                      Log.d(TAG, "launch a game");
-//                  } else {
-
-
-//                      sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
-//                      sm.mPusher.disconnect();
-//                  }
-//                  if (mTimer != null) {
-//                      mTimer.cancel();
-//                  }
-//                  getActivity().finish();
-//                  Toast.makeText(getActivity(), "Подключение не состоялось", Toast.LENGTH_SHORT).show();
-//                  TODO: remove a progressBar and show statistics of a game
-//              }
-//          }, 1000);
-//    }
-
     SessionManager sm;
     boolean flagResponse;
 
-
-
     Handler myHandler = new Handler();
-
 
     private void sendReq() {
 

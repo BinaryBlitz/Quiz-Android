@@ -35,6 +35,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="myName"
+                android:id="@+id/my_name" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="0"
                 android:id="@+id/my_points_textView"/>
@@ -74,6 +81,13 @@
                 android:src="@android:drawable/ic_dialog_dialer"
                 android:background="@android:color/darker_gray"
                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="opponents name"
+                android:id="@+id/opponents_name" />
 
             <TextView
                 android:layout_width="wrap_content"
