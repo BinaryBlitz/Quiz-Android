@@ -16,12 +16,13 @@ public class Category {
     public static final String TAG = "Category";
 
     public String mText;
-    public UUID mId;
+    public int mId;
     public ArrayList<Topic> mTopics;
     public JSONArray mJsonTopics;
 
     public Category(JSONObject json) {
         try {
+            mId = json.getInt("id");
             mText = json.getString("name");
 
             JSONArray ar = json.getJSONArray("topics");
@@ -60,6 +61,10 @@ public class Category {
 
     public String getTitle() {
         return mText;
+    }
+
+    public int getId() {
+        return mId;
     }
 
     public String getTitleTopics() {

@@ -2,6 +2,7 @@ package com.quiz.pavel.quiz.controller;
 
 import java.util.Locale;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,18 +11,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.quiz.pavel.quiz.R;
 
 public class RatingActivity extends ActionBarActivity implements ActionBar.TabListener {
 
+    private static final String TAG = "RatingFragment";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -75,7 +76,27 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+
+        getIntentFrom();
     }
+
+    private void getIntentFrom() {
+
+
+        if(getIntent().getBooleanExtra("by_topic", false)) {
+            int n = getIntent().getIntExtra("topic_id", 0);
+            mSpec = 1;
+            mId = n;
+        }
+        if(getIntent().getBooleanExtra("by_category", false)) {
+            int n = getIntent().getIntExtra("category_id", 0);
+            mSpec = 1;
+            mId = n;
+        }
+    }
+
+    int mSpec = 0;
+    int mId = 0;
 
 
     @Override
@@ -94,6 +115,8 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, ChoiceCatOrTopicActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -127,13 +150,15 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
 
         @Override
         public Fragment getItem(int position) {
+
+
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new RatingFragment("general");
+                    return new RatingFragment("general", mSpec, mId);
                 case 1:
-                    return new RatingFragment("weekly");
+                    return new RatingFragment("weekly", mSpec, mId);
 
 
             }

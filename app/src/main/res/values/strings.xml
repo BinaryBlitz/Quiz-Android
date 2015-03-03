@@ -25,5 +25,12 @@
     <string name="name">Имя</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="settings_profile">Настройки</string>
+    <string name="others_ratings">Другие</string>
+    <string name="title_activity_choise_rating_cat_or_topic">ChoiseRatingCatOrTopic</string>
+    <string name="titile_section_topics">Темы</string>
+    <string name="title_section_categoryies">Категории</string>
+    <string name="title_activity_choice_cat_or_topic">ChoiceCatOrTopicActivity</string>
+    <string name="title_section_topics">Тема</string>
+    <string name="signupVkBtn">vk sign in</string>
 
 </resources>

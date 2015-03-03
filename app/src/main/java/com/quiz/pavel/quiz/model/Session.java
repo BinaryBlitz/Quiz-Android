@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,18 +11,33 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -32,15 +48,11 @@ import java.util.UUID;
  * Created by pavelkozemirov on 13.12.14.
  */
 public class Session {
+
     private static final String TAG = "Session";
-
-
-    String mToken;
-
 
     public int pointsMine;
     public int pointsOpponent;
-
 
     public SessionQuestion mCurrentSessionQuestion;
 
@@ -71,29 +83,23 @@ public class Session {
         }
 
         moveCurrentSessionQuestion();
-
-        //TODO: move it at least to a single method
-        //TODO: create at least a single method for parsing JSON
-
     }
 
-    // The class that takes the callback
     public MyCallback callback;
 
-    // The callback interface
     public interface MyCallback {
         void callbackCallMine(int i);
 
         void callbackCallOpponent(int i);
-//        void downloadCompleted();
-
     }
 
     public void myAnswer(Context c, int number, int time) {
         mIIsAnswered = true;
         mCurrentSessionQuestion.mMyAnswer = number;
         mCurrentSessionQuestion.mMyTimeOfAnswer = time;
+
         sendData(c, number, time);
+
         if (mCurrentSessionQuestion.mCorrectAnswer == number) {
             addPointsMe(time);
         }
@@ -112,24 +118,38 @@ public class Session {
             mCurrentSessionQuestion.mOpponentAnswer = answer;
         }
 
-
-
         Log.d(TAG, "mCurrentSessionQuestion.mCorrectAnswer = " + mCurrentSessionQuestion.mCorrectAnswer +
                 " mCurrentSessionQuestion.mOpponentAnswer = " + mCurrentSessionQuestion.mOpponentAnswer);
+
         if (mCurrentSessionQuestion.mCorrectAnswer == mCurrentSessionQuestion.mOpponentAnswer) {
             Log.d(TAG, "opponentAnswer() = " + String.valueOf(mCurrentSessionQuestion.mOpponentTimeOfAnswer));
             addPointsOpponent(mCurrentSessionQuestion.mOpponentTimeOfAnswer);
         }
     }
 
+    /**
+     *
+     * @param time how much time I spend
+     */
     public void addPointsMe(int time) {
-        pointsMine += (10 + time);
+        if (!mSessionQuestions.isEmpty()) {
+            pointsMine += (20 - time);
+        } else {
+            pointsMine = pointsMine * 2;
+        }
         callback.callbackCallMine(pointsMine);
     }
 
+    /**
+     *
+     * @param time how much time opponent spends
+     */
     public void addPointsOpponent(int time) {
-        pointsOpponent += (10 + time);
-        Log.d(TAG, "pointOpponent = " + pointsOpponent);
+        if (!mSessionQuestions.isEmpty()) {
+            pointsOpponent += (20 - time);
+        } else {
+            pointsOpponent = pointsOpponent * 2;
+        }
         callback.callbackCallOpponent(pointsOpponent);
     }
 
@@ -151,28 +171,30 @@ public class Session {
 
     public void sendData(Context c, int number, int time) {
 
-        // Instantiate the RequestQueue.
+
+//        Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
 
-        JSONObject params = new JSONObject();
+        final JSONObject params = new JSONObject();
         try {
             JSONObject par = new JSONObject();
-            par.put("answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
             par.put("time", time);
-            params.put("game_session_question", par);
+            par.put("answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
             params.put("token", Mine.getInstance(c).getToken());
+            params.put("game_session_question", par);
 
         } catch (JSONException e) {
 
         }
         Log.d(TAG, "PREPARING TO SEND PATCH");
+        Log.d(TAG, "PREPARING, json: " + params.toString());
         // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
                 Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId, params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "PATCH HAS SEND");
+                        Log.d(TAG, "PATCH HAS SEND, response: " + response.toString());
 
                         //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
                     }
@@ -180,8 +202,8 @@ public class Session {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "PATCH HAS SEND, MAYBE");
                 NetworkResponse response = error.networkResponse;
+//                Log.d(TAG, "PATCH HAS SEND, MAYBE, status code: " + error.networkResponse.statusCode);
                 if (response != null && response.data != null) {
                     switch (response.statusCode) {
                         case 401:
@@ -203,6 +225,56 @@ public class Session {
         };
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+//        sendReqAlter(c, number, time);
+
+    }
+
+    private void sendReqAlter(Context c, int number, int time) {
+
+        final JSONObject params = new JSONObject();
+        try {
+            JSONObject par = new JSONObject();
+            par.put("time", time);
+            par.put("answer_id", mCurrentSessionQuestion.getQuestion().getAnswer(number).mId);
+            params.put("token", Mine.getInstance(c).getToken());
+            params.put("game_session_question", par);
+
+        } catch (JSONException e) {
+
+        }
+        Thread t = new Thread() {
+
+            public void run() {
+                Looper.prepare(); //For Preparing Message Pool for the child Thread
+                HttpClient client = new DefaultHttpClient();
+                HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
+                HttpResponse response;
+                JSONObject json = new JSONObject();
+
+                try {
+                    URI uri = new URI(Mine.URL + "/game_session_questions/" + mCurrentSessionQuestion.mId);
+                    HttpClientStack.HttpPatch post = new HttpClientStack.HttpPatch(uri);
+//                    json.put("email", email);
+//                    json.put("password", pwd);
+                    StringEntity se = new StringEntity( params.toString());
+                    se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+                    post.setEntity(se);
+                    response = client.execute(post);
+
+                    /*Checking response */
+                    if(response!=null){
+                        InputStream in = response.getEntity().getContent(); //Get the data in the entity
+                    }
+
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+
+                Looper.loop(); //Loop in the message queue
+            }
+        };
+
+        t.start();
     }
 
 

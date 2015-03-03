@@ -18,42 +18,71 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name=".controller.StartActivity"
-            android:label="@string/app_name" >
+        <!--<activity-->
+            <!--android:name=".controller.StartActivity"-->
+            <!--android:label="@string/app_name"-->
+            <!-->-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
+
+        <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
+
+        <activity android:name=".controller.MainActivity" >
+        </activity>
+
+        <activity android:name=".controller.SignUpActivity" >
+        </activity>
+
+        <activity android:name=".controller.SingleFragmentActivity" >
+        </activity>
+
+        <activity android:name=".controller.ChoiceSignUpLogIn"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.MainActivity" >
-        </activity>
-        <activity android:name=".controller.SignUpActivity" >
-        </activity>
-        <activity android:name=".controller.SingleFragmentActivity" >
-        </activity>
-        <activity android:name=".controller.ChoiceSignUpLogIn" >
-        </activity>
+
         <activity android:name=".controller.PreGameActivity" >
         </activity>
+
         <activity android:name=".controller.LogInActivity" >
         </activity>
+
         <activity android:name=".controller.ProfileActivity" >
         </activity>
+
         <activity android:name=".controller.ListsActivity" >
         </activity>
+
         <activity
             android:name=".controller.RatingActivity"
             android:label="@string/title_activity_rating" >
         </activity>
+
         <activity android:name=".controller.MainTabsActivity" >
         </activity>
-
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".controller.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+
+        <activity
+            android:name=".controller.ChoiceCatOrTopicActivity"
+            android:label="@string/title_activity_choice_cat_or_topic" >
+        </activity>
+
     </application>
 
 </manifest>

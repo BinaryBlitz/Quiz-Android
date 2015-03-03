@@ -1,1 +1,1 @@
-include ':app', ':BaseGameUtils', ':pusher-java-client-0.3.3-jar-with-dependencies'
+include ':app', ':pusher-java-client-0.3.3-jar-with-dependencies',':vksdk_library'

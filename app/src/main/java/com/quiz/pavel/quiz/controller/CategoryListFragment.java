@@ -1,7 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -13,31 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
-import com.quiz.pavel.quiz.model.SessionQuestion;
-import com.quiz.pavel.quiz.model.Topic;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -46,10 +36,9 @@ import java.util.ArrayList;
 public class CategoryListFragment extends ListFragment {
     private static final String TAG = "CategoryListFragment";
 
-
-
     private ArrayList<Category> mCategories;
 
+    OnCategorySelectedListener mCallback;
 
     public static CategoryListFragment newInstance() {
         Bundle args = new Bundle();
@@ -58,9 +47,6 @@ public class CategoryListFragment extends ListFragment {
         return fragment;
     }
 
-    OnCategorySelectedListener mCallback;
-
-    // The container Activity must implement this interface so the frag can deliver messages
     public interface OnCategorySelectedListener {
         /**
          * Called by HeadlinesFragment when a list item is selected
@@ -75,8 +61,6 @@ public class CategoryListFragment extends ListFragment {
 
         mCategories = new ArrayList<Category>();
 
-        Log.d(TAG, " Have begun downloading categories");
-
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonArrayRequest stringRequest = new JsonArrayRequest(Mine.URL + "/categories" + "?token=" +
@@ -84,8 +68,8 @@ public class CategoryListFragment extends ListFragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d(TAG, "categories: " + response);
-                        Mine.getInstance(getActivity()).saveCatTopicJsonAr(getActivity(),response);
+
+                        Mine.getInstance(getActivity()).saveCatTopicJsonAr(getActivity(), response);
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 mCategories.add(new Category(response.getJSONObject(i)));
@@ -93,6 +77,7 @@ public class CategoryListFragment extends ListFragment {
                                 Log.d(TAG, "Error, JSONException");
                             }
                         }
+
                         TopicAdapter adapter = new TopicAdapter(mCategories);
                         setListAdapter(adapter);
 
@@ -102,14 +87,13 @@ public class CategoryListFragment extends ListFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity(), "Ошибка сервера", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Error Response, have no data from server");
             }
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
         //TODO: save downloaded topics and categories
-
-
     }
 
 
@@ -124,7 +108,6 @@ public class CategoryListFragment extends ListFragment {
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
             public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
             }
 
             @Override
@@ -140,7 +123,6 @@ public class CategoryListFragment extends ListFragment {
             @Override
             public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
                 return false;
-
             }
 
             @Override
@@ -156,8 +138,6 @@ public class CategoryListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception.
         try {
             mCallback = (OnCategorySelectedListener) activity;
         } catch (ClassCastException e) {
@@ -183,13 +163,6 @@ public class CategoryListFragment extends ListFragment {
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
-//            TextView titleTextView1 = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
-//            titleTextView1.setText(c.getTitleTopics());
-
-
-//            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-//            solvedCheckBox.setChecked(false);
-
 
             return convertView;
         }
@@ -198,16 +171,7 @@ public class CategoryListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-
-//        Category cr = ((TopicAdapter)getListAdapter()).getItem(position);
-//
-//        Intent i = new Intent(getActivity(), TopicListFragment.class);
-//        i.putExtra("extra", mCategories.get(position).getJsonTopics());
-//
-//        startActivity(i);
         mCallback.onCategorySelected(position);
-
-
     }
 
 }

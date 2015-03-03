@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -14,30 +15,42 @@ public class PlayerRating {
 
     private static final String TAG = "PlayerRating";
 
-    public UUID mId;
-    public String mName;
-    public int mPoints;
-    public int mPosition;
-    public boolean mI;
+    private int mId;
+    private String mName;
+    private int mPoints;
+    private int mPosition;
 
-    public PlayerRating(JSONObject json, int position, boolean a) {
+    public PlayerRating(JSONObject json, int i) {
         try {
+            mId = json.getInt("id");
             mName = json.getString("name");
             mPoints = json.getInt("points");
-            mPosition = position;
+            mPosition = i;
         } catch (JSONException e) {
             Log.d(TAG, "Error with parsing json in UserRating constructor");
         }
-
     }
 
-    public PlayerRating(int position, String name, boolean a) {
+    public PlayerRating(String name, int position, int points, int id){
+        mId = id;
         mName = name;
-        mPoints = -1;
-        mI = a;
+        mPoints = points;
+        mPosition = position;
     }
 
-    public String getTitle() {
+    public int getId() {
+        return mId;
+    }
+
+    public String getName() {
         return mName;
+    }
+
+    public int getPoints() {
+        return mPoints;
+    }
+
+    public int getPosition() {
+        return mPosition;
     }
 }

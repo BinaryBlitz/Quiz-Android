@@ -1,13 +1,17 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,22 +19,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerRating;
-import com.quiz.pavel.quiz.model.Topic;
 
-import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -42,6 +40,11 @@ public class RatingFragment extends ListFragment {
 
     private String mName;
 
+    //0 - nothing, 1 - topic, 2 - category
+    private int mId;
+
+    private int spec;
+
     private ArrayList<PlayerRating> mPlayers;
 
     public static RatingFragment newInstance(String name) {
@@ -51,8 +54,29 @@ public class RatingFragment extends ListFragment {
         fragment.setArguments(args);
         return fragment;
     }
-    public RatingFragment(String name){
+
+    public RatingFragment(String name) {
         mName = name;
+        spec = 0;
+    }
+
+    public RatingFragment(String name, int sp, int id) {
+        mName = name;
+        spec = sp;
+        mId = id;
+    }
+
+    private String getUrl() {
+        switch (spec){
+            case 0: return Mine.URL + "/rankings/" + mName + "?token="
+                    + Mine.getInstance(getActivity()).getToken();
+            case 1: return Mine.URL + "/rankings/" + mName + "?token="
+                    + Mine.getInstance(getActivity()).getToken() + "&topic_id=" + mId;
+            case 2: return Mine.URL + "/rankings/" + mName + "?token="
+                    + Mine.getInstance(getActivity()).getToken() + "&category_id=" + mId;
+        }
+        return null;
+
     }
 
     @Override
@@ -60,14 +84,12 @@ public class RatingFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-        Log.d(TAG, "token= " + Mine.getInstance(getActivity()).getToken());
+        Log.d(TAG, "url= " + getUrl());
 
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET,
-                Mine.URL + "/rankings/"+mName+"?token="
-                + Mine.getInstance(getActivity()).getToken(), null,
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -75,23 +97,10 @@ public class RatingFragment extends ListFragment {
                         mPlayers = new ArrayList<PlayerRating>();
 
                         try {
-                            JSONArray array = response.getJSONArray("rankings");
-                            for (int i = 0; i < array.length(); i++) {
-                                mPlayers.add(new PlayerRating( array.getJSONObject(i), i,false));
-                            }
-
+                            parsingPlayers(response, 7);
                         } catch (JSONException e) {
                             Log.d(TAG, "Error with parsing json response");
                         }
-                        JSONArray array1;
-                        mPlayers.add(new PlayerRating(-1, "...", false));
-                        int m=0;
-                        try {
-                             m = response.getInt("position");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        mPlayers.add(new PlayerRating(m, Mine.getInstance(getActivity()).getName(), true));
 
                         TopicAdapter adapter = new TopicAdapter(mPlayers);
                         setListAdapter(adapter);
@@ -106,11 +115,32 @@ public class RatingFragment extends ListFragment {
             }
         });
         queue.add(stringRequest);
-
-
-
     }
 
+    private void parsingPlayers(JSONObject response, int numberOfTopRating)
+            throws JSONException {
+        JSONArray array = response.getJSONArray("rankings");
+        for (int i = 0; i < numberOfTopRating; i++) {
+            mPlayers.add(new PlayerRating( array.getJSONObject(i), i + 1));
+        }
+
+        int m = 0;
+        try {
+            m = response.getInt("position");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JSONArray arrayNoTop = response.getJSONArray("player_rankings");
+
+        for (int i = 0; i < arrayNoTop.length(); i++) {
+            if (arrayNoTop.getJSONObject(i).getInt("mId") == Mine.getInstance(getActivity()).getId()) {
+                mPlayers.add(new PlayerRating("...", -1, -1, -1));
+                mPlayers.add(new PlayerRating(Mine.getInstance(getActivity()).getName(), m,
+                        arrayNoTop.getJSONObject(i).getInt("points"), Mine.getInstance(getActivity()).getId()));
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -118,7 +148,6 @@ public class RatingFragment extends ListFragment {
 
         ListView listView = (ListView) v.findViewById(android.R.id.list);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-
 
         return v;
     }
@@ -138,29 +167,29 @@ public class RatingFragment extends ListFragment {
             PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
-            titleTextView.setText(c.getTitle());
+            if(c.getId() == Mine.getInstance(getActivity()).getId()) {
+                convertView.setBackgroundColor(Color.LTGRAY);
+            }
+            titleTextView.setText(c.getName());
 
-            if(c.mI){
             TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
-            numberTextView.setText(String.valueOf(position));
+            if(c.getPosition() > 0) {
+                numberTextView.setText(String.valueOf(c.getPosition()));
+            } else {
+                numberTextView.setText("");
+            }
 
             TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
-            pointsTextView.setText("");
-                if(c.mPosition == -1) {
-                    pointsTextView.setText("");
-                }
-            }else{
-                TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
-                numberTextView.setText(String.valueOf(position + 1));
-
-                TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
-                pointsTextView.setText(String.valueOf(c.mPoints));
-                if(c.mPosition == -1) {
-                    pointsTextView.setText("");
-                }
+            if(c.getPoints() >= 0){
+                pointsTextView.setText(String.valueOf(c.getPoints()));
+            } else {
+                pointsTextView.setText("");
             }
 
             return convertView;
         }
     }
+
+
+
 }

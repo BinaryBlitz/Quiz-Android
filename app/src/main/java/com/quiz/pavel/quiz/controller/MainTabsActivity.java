@@ -39,7 +39,7 @@ public class MainTabsActivity extends TabActivity {
         TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);
 
         View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, getTabWidget(), false);
-//        TextView title = (TextView) tabIndicator.findViewById(R.id.title);
+//        TextView title = (TextView) tabIndicator.findViewById(R.mId.title);
 //        title.setText(labelId);
         ImageView icon = (ImageView) tabIndicator.findViewById(R.id.icon);
         icon.setImageResource(drawableId);

@@ -9,7 +9,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -17,15 +16,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.net.NetworkInterface;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -53,7 +49,6 @@ public class LogInActivity extends Activity {
 
 
 
-    private IntentJSONSerializer mIntentJSONSerializer;
 
     /**
      * Called when the activity is first created.
@@ -104,7 +99,6 @@ public class LogInActivity extends Activity {
                             //TODO: wrap out token from response to Intent for MainActivity...
 
 
-                            mIntentJSONSerializer = IntentJSONSerializer.getInitialize();
                             try {
                                 Mine.newInstance(getBaseContext(), response);
                             } catch (Exception e) {

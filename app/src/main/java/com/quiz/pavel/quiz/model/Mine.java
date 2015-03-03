@@ -47,7 +47,7 @@ public class Mine {
         editor.putString("token", mToken);
         editor.putBoolean("signin", true);
         editor.putInt("id", mId);
-        Log.d("MINE", "name= " + mName + "emal =" + mEmail + "token= " + mToken + "id= " + mId);
+        Log.d("MINE", "name= " + mName + "email =" + mEmail + "token= " + mToken + "id= " + mId);
 
         // Commit the edits!
         editor.commit();
@@ -61,7 +61,7 @@ public class Mine {
         mEmail = settings.getString("email", "");
         mToken = settings.getString("token", "");
         mId = settings.getInt("id", 1);
-        Log.d("MINE", "name= " + mName + "emal =" + mEmail + "token= " + mToken + "id= " + mId);
+        Log.d("MINE", "name= " + mName + "email =" + mEmail + "token= " + mToken + "id= " + mId);
 
     }
 

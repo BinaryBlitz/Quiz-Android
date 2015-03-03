@@ -3,55 +3,27 @@ package com.quiz.pavel.quiz.controller;
 import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ViewAnimator;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.tagmanager.Container;
 import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
-import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
-import com.quiz.pavel.quiz.model.SessionQuestion;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.quiz.pavel.quiz.R.id.variant_a_button;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
@@ -106,21 +78,19 @@ public class TestFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this, v);
 
-
-
+        
         mSessionManager = SessionManager.getInstance(getActivity());
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
 
 
+        
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
             @Override
             public void callbackCallMine(int i) {
-
                 mMyPointsTextView.setText(String.valueOf(i));
-
             }
 
             @Override
@@ -160,6 +130,33 @@ public class TestFragment extends Fragment {
 
             }
         };
+
+
+        mSessionManager.listenEvent();
+
+//        if(mSessionManager.online) {
+//
+//            mSessionManager.mChannel.bind("opponent-answer", new SubscriptionEventListener() {
+//                @Override
+//                public void onEvent(String channel, String event, String data) {
+//                    try {
+//                        Log.d(TAG, "DATA: " + data);
+//                        JSONObject json = new JSONObject(data);
+//
+//                        mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer =
+//                                mSessionManager.mSession.mCurrentSessionQuestion.searchNubById(json.getInt("answer_id"));
+//
+//                        mSessionManager.mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer = json.getInt("answer_time");
+//
+//                        mSessionManager.mSession.opponentsAnswer(0,0);
+//                        mSessionManager.mCallbackOnView.opponentChooseAnswer(mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
+//
+//                    } catch (JSONException e) {
+//                        Log.d(TAG, "Problem with parsing data sended via pusher");
+//                    }
+//                }
+//            });
+//        }
 
 
         beginGame();
@@ -604,6 +601,7 @@ public class TestFragment extends Fragment {
         Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
         mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
+        mSessionManager.myHandler.removeCallbacks(mSessionManager.myRunnable);
 
         //TODO: perhaps, recomment
 //        RequestQueue queue = Volley.newRequestQueue(getActivity());

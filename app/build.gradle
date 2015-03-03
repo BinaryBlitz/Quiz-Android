@@ -22,8 +22,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':BaseGameUtils')
     compile project(':pusher-java-client-0.3.3-jar-with-dependencies')
+    compile project(':vksdk_library')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.jakewharton:butterknife:6.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
@@ -37,4 +37,5 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.0'
     compile 'de.hdodenhof:circleimageview:1.1.0'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+    compile 'com.android.support:support-v4:21.0.3'
 }

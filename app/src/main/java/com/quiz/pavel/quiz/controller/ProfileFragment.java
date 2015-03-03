@@ -1,7 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
@@ -12,17 +11,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.makeramen.RoundedTransformationBuilder;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -62,20 +53,12 @@ public class ProfileFragment extends Fragment {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-//        Transformation transformation = new RoundedTransformationBuilder()
-//                .scaleType(ImageView.ScaleType.CENTER)
-//                .borderColor(Color.BLACK)
-//                .borderWidthDp(1)
-//                .cornerRadiusDp(30)
-//                .oval(false)
-//                .build();
-
         Picasso.with(getActivity())
                 .load(R.drawable.strawberry)
                 .fit()
-//                .transform(transformation)
                 .into(mPhoto);
-        mTextViewName.setText(Mine.getInstance(getActivity()).getName());
+        mTextViewName.setText(Mine.getInstance(getActivity()).getName() + " ID: " +
+               Mine.getInstance(getActivity()).getId());
 
         return v;
     }
@@ -91,8 +74,8 @@ public class ProfileFragment extends Fragment {
 
     @OnClick(R.id.settings_profile)
     public void onClickSettings() {
-
-
+        Intent i = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(i);
     }
 
 }

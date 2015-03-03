@@ -12,21 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
-import com.quiz.pavel.quiz.model.Theme;
 import com.quiz.pavel.quiz.model.Topic;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +30,7 @@ public class TopicListFragment extends ListFragment {
 
 
     private ArrayList<Topic> mTopics;
+    private int mNumberOfCategory = 0;
 
 
     public static TopicListFragment newInstance() {
@@ -51,8 +44,7 @@ public class TopicListFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-
+        mNumberOfCategory= getActivity().getIntent().getIntExtra("number_of_category", 0);
     }
 
 
@@ -64,7 +56,7 @@ public class TopicListFragment extends ListFragment {
         }
 
         mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).
-                    get(0).mTopics;
+                    get(mNumberOfCategory).mTopics;
 
 
         ListView listView = (ListView) v.findViewById(android.R.id.list);

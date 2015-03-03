@@ -8,9 +8,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/BaseGameUtils" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/pusher-java-client-0.3.3-jar-with-dependencies" />
+            <option value="$PROJECT_DIR$/vksdk_library" />
           </set>
         </option>
       </GradleProjectSettings>

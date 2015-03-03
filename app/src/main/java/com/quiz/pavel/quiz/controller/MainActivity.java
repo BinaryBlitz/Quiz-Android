@@ -1,9 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
-import java.io.IOException;
 import java.util.Locale;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -20,13 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
+/*
+* Doesn't use
+ */
 public class MainActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     /**
@@ -147,12 +143,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                     return ProfileFragment.newInstance();
                 case 2:
                     return new RatingFragment("");
-
             }
-
-
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(position + 1);
         }
 

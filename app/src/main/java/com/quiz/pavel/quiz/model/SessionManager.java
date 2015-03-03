@@ -41,19 +41,27 @@ public class SessionManager {
         mPusher = new Pusher("d982e4517caa41cf637c");
         mChannel = mPusher.subscribe("player-session-" + Mine.getInstance(c).getId());
 //        Pusher pusher = new Pusher("d982e4517caa41cf637c");
-        mPusher.connect(new ConnectionEventListener() {
-            @Override
-            public void onConnectionStateChange(ConnectionStateChange change) {
-                System.out.println("GOO State changed to " + change.getCurrentState() +
-                        " from " + change.getPreviousState());
 
-            }
 
-            @Override
-            public void onError(String message, String code, Exception e) {
-                System.out.println("GOO There was a problem connecting!");
-            }
-        }, ConnectionState.ALL);
+        sSessionManager = this;
+
+    }
+
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(android.os.Message msg){
+            mSession.opponentsAnswer(0,0);
+            mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
+        }
+    };
+
+    public void listenEvent() {
+
+        myHandler = new Handler();
+
+        if(!online) {
+            return;
+        }
 
         mChannel.bind("opponent-answer", new SubscriptionEventListener() {
             @Override
@@ -74,17 +82,7 @@ public class SessionManager {
                 }
             }
         });
-        myHandler = new Handler();
-
     }
-
-    Handler handler = new Handler(){
-        @Override
-        public void handleMessage(android.os.Message msg){
-            mSession.opponentsAnswer(0,0);
-            mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
-        }
-    };
 
 
     public static SessionManager getInstance(Context c) {
@@ -117,8 +115,6 @@ public class SessionManager {
             return;
         }
         mTimer.cancel();
-        mTimer.purge();
-
     }
 
     public void iChooseAnswer(Context c, int number) {
@@ -145,13 +141,13 @@ public class SessionManager {
 
 
     private int timer;
-    Handler myHandler;
+    public Handler myHandler;
     Timer mTimer;
 
 
-    final Runnable myRunnable = new Runnable() {
+    public final Runnable myRunnable = new Runnable() {
         public void run() {
-            if (timer >= 11 || mSession.bothPlayersAreAnswered()) {
+            if (timer == 11 || mSession.bothPlayersAreAnswered()) {
                 mCallbackOnView.closeRound();
                 mCallbackOnView.openRound();
                 timer = 0;
@@ -159,7 +155,7 @@ public class SessionManager {
 
 
             if (!online) {
-                if (timer >= mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
+                if (timer == mSession.mCurrentSessionQuestion.mOpponentTimeOfAnswer) {
                     mSession.opponentsAnswer(0, 0);
                     mCallbackOnView.opponentChooseAnswer(mSession.mCurrentSessionQuestion.mOpponentAnswer);
                 }

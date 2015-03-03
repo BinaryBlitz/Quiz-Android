@@ -158,7 +158,7 @@
                         android:id="@+id/variant_c_button"
                         android:background="@color/button_material_light"
 
-                    />
+                    android:text="C" />
 
                 <Button
                         android:layout_marginLeft="5dp"

@@ -40,7 +40,7 @@ public class ListsActivity extends FragmentActivity
         TopicListFragment newFragment = new TopicListFragment();
         Bundle args = new Bundle();
 
-        args.putInt("n", position);
+        args.putInt("number_of_category", position);
         newFragment.setArguments(args);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

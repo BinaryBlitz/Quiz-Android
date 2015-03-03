@@ -3,31 +3,30 @@ package com.quiz.pavel.quiz.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.pusher.client.Pusher;
-import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
-import com.quiz.pavel.quiz.model.IntentJSONSerializer;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,8 +39,8 @@ import java.util.TimerTask;
  * Created by pavelkozemirov on 14.02.15.
  */
 public class PreGameFragment extends Fragment {
-    private static String TAG = "PreGameFragment";
 
+    private static String TAG = "PreGameFragment";
 
     Timer mTimer;
 
@@ -59,8 +58,24 @@ public class PreGameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sm = new SessionManager(getActivity());
+        sm.mPusher.connect(new ConnectionEventListener() {
+            @Override
+            public void onConnectionStateChange(ConnectionStateChange change) {
+                System.out.println("GOO State changed to " + change.getCurrentState() +
+                        " from " + change.getPreviousState());
+
+                if(String.valueOf(change.getCurrentState()) == "CONNECTED") {
+                    createLobby();
+                }
+            }
+
+            @Override
+            public void onError(String message, String code, Exception e) {
+                System.out.println("GOO There was a problem connecting!");
+            }
+        }, ConnectionState.ALL);
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
-        createLobby();
     }
 
     @Override
@@ -70,6 +85,7 @@ public class PreGameFragment extends Fragment {
         return v;
     }
 
+    int limit = 0;
     public void startTimer() {
 
         mTimer = new Timer();
@@ -77,11 +93,27 @@ public class PreGameFragment extends Fragment {
             @Override
             public void run() {
 //                myHandler.post(myRunnable);
+                Log.d(TAG, "executing action from schedule");
                 sendReq();   // Question
+                limit++;
+                if(limit >= 12) {
+                    if (mTimer != null) {
+                        mTimer.cancel();
+                    }
+                    sm.mPusher.disconnect();
+                    handlerOnNotResponseInOnlineGame.sendEmptyMessage(0);
+                }
             }
         }, 0, 2000);
 
     }
+
+    final Handler handlerOnNotResponseInOnlineGame = new Handler() {
+        public void handleMessage(Message msg) {
+            Toast.makeText(getActivity(), "Извините, не получилось подключиться к сопернику",
+                    Toast.LENGTH_SHORT);
+        }
+    };
 
 
 //    final Runnable myRunnable = new Runnable() {
@@ -93,12 +125,14 @@ public class PreGameFragment extends Fragment {
 
     private void createLobby() {
 
+        if(getActivity() == null) {
+            return;
+        }
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        sm = SessionManager.getInstance(getActivity());
-
         JSONObject params = new JSONObject();
-        Log.d(TAG, "mTopicID = " + mTopicId);
+
         try {
             JSONObject par = new JSONObject();
             par.put("topic_id", mTopicId);
@@ -116,20 +150,51 @@ public class PreGameFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-
+                        Log.d(TAG, "LOBBY HAS BEEN CREATED");
                         try {
-                            mId = response.getString("id");
+                            mId = response.getString("id");////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        startTimer();
 
+                        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
+                            @Override
+                            public void onEvent(String channel, String event, String data) {
+                                Log.d(TAG, "EVENT HAS BEEN SEND!!!");
+                                myHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Log.d(TAG, "onEvent has handled");
+                                        if(flagResponse) {
+                                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                            startActivity(i);
+                                            sm.online = true;
+
+                                            Log.d(TAG, "launch a game");
+                                        } else {
+                                            myCallbackOnResponse = new OnResponse() {
+                                                @Override
+                                                public void responseWasGot() {
+                                                    Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                                    startActivity(i);
+                                                    sm.online = true;
+                                                    Log.d(TAG, "launch a game");
+
+                                                }
+                                            };
+                                        }
+                                    }
+                                }, 1000);
+                            }
+                        });
+
+                        startTimer();
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "FUCKOFF, Error Response, have no data from server");
+                Log.d(TAG, "Error Response, have no data from server");
             }
 
         }) {
@@ -146,8 +211,38 @@ public class PreGameFragment extends Fragment {
         queue.add(stringRequest);
     }
 
+    private OnResponse myCallbackOnResponse;
+
+    public interface OnResponse {
+        void responseWasGot();
+    }
+
+//    public void secondAttempt() {
+//          myHandler.postDelayed(new Runnable() {
+//              @Override
+//              public void run() {
+//                  Log.d(TAG, "onEvent has handled");
+//                  if (flagResponse) {
+//                      Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+//                      startActivity(i);
+//                      Log.d(TAG, "launch a game");
+//                  } else {
+
+
+//                      sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+//                      sm.mPusher.disconnect();
+//                  }
+//                  if (mTimer != null) {
+//                      mTimer.cancel();
+//                  }
+//                  getActivity().finish();
+//                  Toast.makeText(getActivity(), "Подключение не состоялось", Toast.LENGTH_SHORT).show();
+//                  TODO: remove a progressBar and show statistics of a game
+//              }
+//          }, 1000);
+//    }
+
     SessionManager sm;
-    boolean flagEvent;
     boolean flagResponse;
 
 
@@ -157,72 +252,79 @@ public class PreGameFragment extends Fragment {
 
     private void sendReq() {
 
-        if (getActivity() == null) {
+        if( getActivity() == null) {
             return;
         }
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-
-        sm.mChannel.bind("game-start", new SubscriptionEventListener() {
-            @Override
-            public void onEvent(String channel, String event, String data) {
-                flagEvent = true;
-
-                myHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(flagEvent && flagResponse) {
-                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                            startActivity(i);
-                        } else {
-                            sm.mPusher.disconnect();
-                        }
-                    }
-                }, 1000);
-            }
-        });
-
-
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
-                Mine.URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity()).getToken(), null,
+                Mine.URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity())
+                        .getToken(), null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d(TAG, "RESPONSE HAS BEEN GOT");
+                        flagResponse = true;
 
                         sm.mSession = new Session(response);
 
                         try {
                             sm.online = !response.getBoolean("offline");
-
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.d(TAG, "Problem with parsing json from response");
                         }
 
-                        flagResponse = true;
 
                         if(!sm.online) {
-                            Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
-                            startActivity(i);
-                            sm.mPusher.disconnect();
-
+                            launchOfflineGame();
                         }
 
-                        if (mTimer == null) {
-                            return;
+                        if(myCallbackOnResponse != null) {
+                            myCallbackOnResponse.responseWasGot();
                         }
-                        mTimer.cancel();
-                        mTimer.purge();
+
+                        if (mTimer != null) {
+                            mTimer.cancel();
+                        }
+
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error Response, have no data from server");
+                Log.d(TAG, "Error Response, have no data from server(Searching...)");
             }
         });
-        // Add the request to the
         queue.add(jsonRequest);
+    }
 
+    private void launchOfflineGame() {
+        Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+        startActivity(i);
+
+        sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+        sm.online = false;
+
+        sm.mPusher.disconnect();
+
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        //TODO: remove progressBar and show statistics of game
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sm.stopTimer();
+
+        if(sm.mPusher != null) {
+            sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+            sm.mPusher.disconnect();
+        }
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
     }
 
 

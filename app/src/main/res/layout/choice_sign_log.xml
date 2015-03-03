@@ -24,6 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/signupBtn" />
+
+        <Button
+            android:id="@+id/vk_sighin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signupVkBtn" />
+
     </LinearLayout>
 
 </RelativeLayout>
