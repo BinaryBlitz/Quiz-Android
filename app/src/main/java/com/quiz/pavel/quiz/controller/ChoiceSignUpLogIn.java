@@ -53,7 +53,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
             VKScope.FRIENDS,
             VKScope.WALL,
             VKScope.PHOTOS,
-            VKScope.NOHTTPS,
             VKScope.OFFLINE
     };
 
@@ -134,7 +133,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
     @OnClick(R.id.vk_sighin)
     public void onClick3() {
-        VKSdk.authorize(sMyScope);
+        VKSdk.authorize(sMyScope, true, true);
     }
 
     private final VKSdkListener sdkListener = new VKSdkListener() {
