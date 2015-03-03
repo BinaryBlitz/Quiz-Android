@@ -128,7 +128,8 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
     @OnClick(R.id.vk_sighin)
     public void onClick3() {
-        VKSdk.authorize(sMyScope, true, true);
+//        VKSdk.authorize(sMyScope, true, true);
+        VKSdk.authorize(sMyScope);
     }
 
     private final VKSdkListener sdkListener = new VKSdkListener() {
