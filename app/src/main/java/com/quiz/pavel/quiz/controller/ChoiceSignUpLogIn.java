@@ -68,11 +68,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
             return;
         }
 
-//        if (VKSdk.wakeUpSession()) {
-//           startApp();
-//           return;
-//        }
-
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
         Log.d("Fingerprint", fingerprint[0]);
     }
