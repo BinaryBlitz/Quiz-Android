@@ -187,7 +187,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d(TAG, "RESPONCSE: " + response);
                         try {
                             Mine.newInstance(getBaseContext(), response);
                         } catch (JSONException e) {
@@ -212,7 +211,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
                 return params;
             }
         };
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 }
