@@ -188,7 +188,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
                             e.printStackTrace();
                         }
 
-                        startApp();
                     }
                 }
                 , new Response.ErrorListener() {
