@@ -30,6 +30,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="wrap_content"
@@ -95,6 +96,17 @@
         android:paddingTop="20dp"
         android:paddingLeft="20dp"
         android:padding="20dp"/>
+
+    <org.lucasr.twowayview.TwoWayView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/lvItems"
+        style="@style/TwoWayView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:drawSelectorOnTop="false"
+        tools:context=".MainActivity" />
 
     <Button android:layout_width="match_parent"
             android:layout_height="wrap_content"

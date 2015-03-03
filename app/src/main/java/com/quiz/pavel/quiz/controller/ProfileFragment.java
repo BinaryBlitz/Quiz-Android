@@ -7,13 +7,20 @@ import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.games.achievement.Achievement;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.squareup.picasso.Picasso;
+
+import org.lucasr.twowayview.TwoWayView;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,11 +50,36 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    ArrayList<String> items = new ArrayList<String>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
 
         ButterKnife.inject(this, v);
+
+        items.add("Item 1");
+        items.add("Item 2");
+        items.add("Item 3");
+        items.add("Item 4");
+        items.add("Item 1");
+        items.add("Item 2");
+        items.add("Item 3");
+        items.add("Item 4");
+        items.add("Item 1");
+        items.add("Item 2");
+        items.add("Item 3");
+        items.add("Item 4");
+
+//        ArrayAdapter<String> aItems = new ArrayAdapter<String>(getActivity(), R.layout.simple_horizontal_list_item, items);
+//        TwoWayView lvTest = (TwoWayView) v.findViewById(R.id.lvItems);
+//        lvTest.setAdapter(aItems);
+
+        AchievementAdapter adapter = new AchievementAdapter(items);
+        TwoWayView lvTest = (TwoWayView) v.findViewById(R.id.lvItems);
+        lvTest.setAdapter(adapter);
+
+//        setListAdapter(adapter);
 
         if (NavUtils.getParentActivityName(getActivity()) != null) {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,5 +109,29 @@ public class ProfileFragment extends Fragment {
         Intent i = new Intent(getActivity(), SettingsActivity.class);
         startActivity(i);
     }
+
+    private class AchievementAdapter extends ArrayAdapter<String> {
+        public AchievementAdapter(ArrayList<String> achievements) {
+            super(getActivity(), R.layout.simple_horizontal_list_item, achievements);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.simple_horizontal_list_item, null);
+            }
+
+
+
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.achievements_name);
+            titleTextView.setText(items.get(position));
+
+
+            return convertView;
+        }
+    }
+
 
 }
