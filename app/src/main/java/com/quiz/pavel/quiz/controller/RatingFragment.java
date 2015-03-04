@@ -97,7 +97,7 @@ public class RatingFragment extends ListFragment {
                         mPlayers = new ArrayList<PlayerRating>();
 
                         try {
-                            parsingPlayers(response, 7);
+                            parsingPlayers(response, 10);
                         } catch (JSONException e) {
                             Log.d(TAG, "Error with parsing json response");
                         }

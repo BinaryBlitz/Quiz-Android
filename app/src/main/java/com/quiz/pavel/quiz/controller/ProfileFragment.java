@@ -9,16 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.games.achievement.Achievement;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.squareup.picasso.Picasso;
-
-import org.lucasr.twowayview.TwoWayView;
 
 import java.util.ArrayList;
 
@@ -71,15 +73,32 @@ public class ProfileFragment extends Fragment {
         items.add("Item 3");
         items.add("Item 4");
 
-//        ArrayAdapter<String> aItems = new ArrayAdapter<String>(getActivity(), R.layout.simple_horizontal_list_item, items);
-//        TwoWayView lvTest = (TwoWayView) v.findViewById(R.id.lvItems);
-//        lvTest.setAdapter(aItems);
 
-        AchievementAdapter adapter = new AchievementAdapter(items);
-        TwoWayView lvTest = (TwoWayView) v.findViewById(R.id.lvItems);
-        lvTest.setAdapter(adapter);
+        LinearLayout mGallery = (LinearLayout) v.findViewById(R.id.id_gallery);
 
-//        setListAdapter(adapter);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+
+        for (int i = 0; i < 12; i++)
+        {
+            View view = mInflater.inflate(R.layout.simple_horizontal_list_item, mGallery, false);
+
+            TextView txt = (TextView) view.findViewById(R.id.item_name);
+            txt.setText(items.get(i));
+            mGallery.addView(view);
+
+            ImageView imageButton = (ImageView) view.findViewById(R.id.imageButton);
+            Picasso.with(getActivity())
+                    .load(R.drawable.strawberry)
+                    .fit()
+                    .into(imageButton);
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         if (NavUtils.getParentActivityName(getActivity()) != null) {
             getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,11 +108,17 @@ public class ProfileFragment extends Fragment {
                 .load(R.drawable.strawberry)
                 .fit()
                 .into(mPhoto);
+
         mTextViewName.setText(Mine.getInstance(getActivity()).getName() + " ID: " +
                Mine.getInstance(getActivity()).getId());
 
         return v;
     }
+
+
+
+
+
 
     @OnClick(R.id.logout)
     public void onClick() {
@@ -110,28 +135,6 @@ public class ProfileFragment extends Fragment {
         startActivity(i);
     }
 
-    private class AchievementAdapter extends ArrayAdapter<String> {
-        public AchievementAdapter(ArrayList<String> achievements) {
-            super(getActivity(), R.layout.simple_horizontal_list_item, achievements);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.simple_horizontal_list_item, null);
-            }
-
-
-
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.achievements_name);
-            titleTextView.setText(items.get(position));
-
-
-            return convertView;
-        }
-    }
 
 
 }

@@ -38,5 +38,4 @@ dependencies {
     compile 'de.hdodenhof:circleimageview:1.1.0'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile 'com.android.support:support-v4:21.0.3'
-    compile 'org.lucasr.twowayview:twowayview:0.1.4'
 }
