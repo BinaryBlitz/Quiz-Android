@@ -232,7 +232,7 @@ public class PreGameFragment extends Fragment {
                         Log.d(TAG, "RESPONSE HAS BEEN GOT");
                         flagResponse = true;
 
-                        sm.mSession = new Session(response);
+                        sm.mSession = new Session(getActivity(), response);
 
                         try {
                             sm.online = !response.getBoolean("offline");

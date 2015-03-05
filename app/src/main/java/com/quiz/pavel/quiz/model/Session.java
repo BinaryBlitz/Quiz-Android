@@ -71,13 +71,19 @@ public class Session {
     }
 
 
-    public Session(JSONObject response) {
+    public Session(Context c, JSONObject response) {
         mSessionQuestions = new LinkedList<SessionQuestion>();
 
-
         try {
-            mMyName = response.getString("host_name");
-            mOpponentsName = response.getString("opponent_name");
+            int host_id = response.getInt("host_id");
+            if(host_id == Mine.getInstance(c).getId()) {
+                mMyName = response.getString("host_name");
+                mOpponentsName = response.getString("opponent_name");
+            } else {
+                mMyName = response.getString("opponent_name");
+                mOpponentsName = response.getString("host_name");
+            }
+
         } catch (JSONException ex) {
 
         }
