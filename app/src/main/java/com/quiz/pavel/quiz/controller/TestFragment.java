@@ -3,6 +3,7 @@ package com.quiz.pavel.quiz.controller;
 import android.animation.AnimatorListenerAdapter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -132,7 +133,14 @@ public class TestFragment extends Fragment {
         mMyName.setText(mSessionManager.mSession.getMyName());
         mOpponentsName.setText(mSessionManager.mSession.getOpponentsName());
 
-        beginGame();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable(){
+            @Override
+            public void run(){
+                beginGame();
+            }
+        }, 1000);
+
         return v;
     }
 
@@ -211,74 +219,83 @@ public class TestFragment extends Fragment {
                 break;
         }
         b1.setAlpha(1f);
-        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        YoYo.with(Techniques.FadeOut)
+                .delay(1000)
+                .duration(500)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                b1.setAlpha(0f);
-                hideCorrectQuestion();
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        b1.setAlpha(0f);
+                        hideCorrectQuestion();
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(b1);
+                    }
+                }).playOn(b1);
 
         b2.setAlpha(1f);
-        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        YoYo.with(Techniques.FadeOut)
+                .delay(1000)
+                .duration(500)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                b2.setAlpha(0f);
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        b2.setAlpha(0f);
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(b2);
+                    }
+                }).playOn(b2);
 
         b3.setAlpha(1f);
-        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        YoYo.with(Techniques.FadeOut)
+                .delay(1000)
+                .duration(500)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                b3.setAlpha(0f);
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        b3.setAlpha(0f);
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(b3);
+                    }
+                }).playOn(b3);
 
 
     }
@@ -306,50 +323,56 @@ public class TestFragment extends Fragment {
                 b4 = mVariantD;
                 break;
         }
-        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+        YoYo.with(Techniques.FadeOut)
+                .delay(500)
+                .duration(900)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                tv.setAlpha(0f);
-                updateData();
-                updateGUI();
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        tv.setAlpha(0f);
+                        updateData();
+                        updateGUI();
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(tv);
-        YoYo.with(Techniques.FadeOut).delay(1000).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+                    }
+                }).playOn(tv);
+        YoYo.with(Techniques.FadeOut)
+                .delay(500)
+                .duration(900)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                b4.setAlpha(0f);
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        b4.setAlpha(0f);
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(b4);
+                    }
+                }).playOn(b4);
     }
 
     /**
@@ -370,6 +393,8 @@ public class TestFragment extends Fragment {
     }
 
     private void showRoundTable() {
+
+        Log.d(TAG, "SHOW TABLE");
         mSessionManager.stopTimer();
 
         mRoundShowerTextView.setAlpha(0f);
@@ -377,39 +402,22 @@ public class TestFragment extends Fragment {
 
         mRoundShowerTextView.animate()
                 .alpha(1f)
-                .setDuration(1000)
+                .setDuration(500)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
                         hideRoundTable();
                     }
                 });
-//
-//        mQuestionShower.animate()
-//                .alpha(0f)
-//                .setDuration(1000)
-//                .setListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(android.animation.Animator animation) {
-//                        mQuestionShower.setVisibility(View.GONE);
-//                        hideRoundTable();
-//                    }
-//                });
 
     }
 
     private void hideRoundTable() {
-//        mQuestionShower.setAlpha(0f);
-//        mQuestionShower.setVisibility(View.VISIBLE);
-
-//        mQuestionShower.animate()
-//                .alpha(1f)
-//                .setDuration(1000)
-//                .setListener(null);
 
         mRoundShowerTextView.animate()
                 .alpha(0f)
-                .setDuration(1000)
+                .setStartDelay(200)
+                .setDuration(500)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
@@ -426,7 +434,7 @@ public class TestFragment extends Fragment {
 
         mQuestionTextView.animate()
                 .alpha(1f)
-                .setDuration(1000)
+                .setDuration(200)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(android.animation.Animator animation) {
@@ -451,91 +459,101 @@ public class TestFragment extends Fragment {
         mVariantD.setAlpha(0f);
 
 
-        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
+        YoYo.with(Techniques.FadeIn)
+                .duration(1100)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mSessionManager.startTimer(0);
-                mVariantA.setAlpha(1f);
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mSessionManager.startTimer(0);
+                        mVariantA.setAlpha(1f);
 
-            }
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            }
-        }).playOn(mVariantA);
-        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
+                    }
+                }).playOn(mVariantA);
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mVariantB.setAlpha(1f);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1100)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mVariantB.setAlpha(1f);
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    }
 
-            }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    }
 
-            }
-        }).playOn(mVariantB);
-        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mVariantC.setAlpha(1f);
+                    }
+                }).playOn(mVariantB);
+        YoYo.with(Techniques.FadeIn)
+                .duration(1100)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-            }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mVariantC.setAlpha(1f);
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    }
 
-            }
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    }
 
-            }
-        }).playOn(mVariantC);
-        YoYo.with(Techniques.FadeIn).duration(1000).withListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mVariantD.setAlpha(1f);
+                    }
+                }).playOn(mVariantC);
 
-            }
+        YoYo.with(Techniques.FadeIn)
+                .duration(1100)
+                .withListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mVariantD.setAlpha(1f);
 
-            }
+                    }
 
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
 
-            }
-        }).playOn(mVariantD);
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }).playOn(mVariantD);
 
     }
 
