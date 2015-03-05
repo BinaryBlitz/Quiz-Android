@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -147,7 +148,9 @@ public class RatingFragment extends ListFragment {
         View v = super.onCreateView(inflater, parent, savedInstanceState);
 
         ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        listView.setChoiceMode(ListView.INVISIBLE);
+        listView.setClickable(false);
+        listView.setFocusable(false);
 
         return v;
     }
@@ -188,6 +191,13 @@ public class RatingFragment extends ListFragment {
 
             return convertView;
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    { //here u set u rute
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.login, menu);
     }
 
 
