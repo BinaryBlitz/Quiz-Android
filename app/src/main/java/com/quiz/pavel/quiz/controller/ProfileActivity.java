@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.quiz.pavel.quiz.R;
 
 /**
  * Created by pavelkozemirov on 15.02.15.
  */
-public class ProfileActivity extends FragmentActivity {
+public class ProfileActivity extends FragmentActivity
+        implements ProfileFragment.OnAddNewFragmentCallback{
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,21 @@ public class ProfileActivity extends FragmentActivity {
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
+    }
 
 
+
+    @Override
+    public void addFragment(int position) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        ProfileFragment fragment = new ProfileFragment();
+
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        ft.add(R.id.fragmentContainer, fragment);
+
+        ft.addToBackStack(null);
+        ft.commit();
     }
 }

@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -95,7 +96,7 @@ public class ProfileFragment extends Fragment {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getActivity(), "click", Toast.LENGTH_SHORT).show();
+                    mCallback.addFragment(1);
                 }
             });
         }
@@ -132,5 +133,22 @@ public class ProfileFragment extends Fragment {
     }
 
 
+    public interface OnAddNewFragmentCallback {
+        public void addFragment(int position);
+    }
+
+    OnAddNewFragmentCallback mCallback;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (OnAddNewFragmentCallback) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
 }
