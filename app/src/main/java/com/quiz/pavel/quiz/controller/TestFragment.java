@@ -112,7 +112,7 @@ public class TestFragment extends Fragment {
 
             @Override
             public void closeRound() {
-
+                blockOfButtons = true;
                 onCloseRound();
 
             }
