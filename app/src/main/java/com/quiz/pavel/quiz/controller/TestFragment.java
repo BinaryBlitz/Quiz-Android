@@ -389,13 +389,16 @@ public class TestFragment extends Fragment {
             Intent intent = new Intent(getActivity(), PostGameActivity.class);
             intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
             startActivity(intent);
-            
+            finish = true;
+
             getActivity().finish();
             return;
         }
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
     }
+
+    boolean finish = false;
 
     private void showRoundTable() {
 
@@ -591,6 +594,12 @@ public class TestFragment extends Fragment {
         String str = "you are loser";
         mSessionManager.stopTimer();
 
+        // game was aborted by back button
+        if(!finish) {
+            Intent intent = new Intent(getActivity(), PostGameActivity.class);
+            intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+            startActivity(intent);
+        }
 
         mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
