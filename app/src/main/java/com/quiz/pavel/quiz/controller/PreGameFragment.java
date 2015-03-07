@@ -282,10 +282,13 @@ public class PreGameFragment extends Fragment {
         super.onDestroy();
         sm.stopTimer();
 
-        if(sm.mPusher != null) {
-            sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
-            sm.mPusher.disconnect();
+        if(!sm.online) {
+            if (sm.mPusher != null) {
+                sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+                sm.mPusher.disconnect();
+            }
         }
+
         if (mTimer != null) {
             mTimer.cancel();
             mTimer.purge();
@@ -293,7 +296,7 @@ public class PreGameFragment extends Fragment {
     }
 
     private void closeThis() {
-        getActivity().finish();
+               getActivity().finish();
     }
 
 

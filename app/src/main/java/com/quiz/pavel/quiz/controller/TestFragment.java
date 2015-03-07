@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -583,13 +584,10 @@ public class TestFragment extends Fragment {
         mVariantB.setTextColor(Color.BLACK);
         mVariantC.setTextColor(Color.BLACK);
         mVariantD.setTextColor(Color.BLACK);
-
-
     }
 
-
     @Override
-    public void onDestroy() {                            //TODO: add launching new fragment with results of game
+    public void onDestroy() {
         super.onDestroy();
         String str = "you are loser";
         mSessionManager.stopTimer();
