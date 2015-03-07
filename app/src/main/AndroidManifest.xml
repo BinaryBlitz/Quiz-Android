@@ -58,6 +58,9 @@
         <activity android:name=".controller.PreGameActivity" >
         </activity>
 
+        <activity android:name=".controller.PostGameActivity" >
+        </activity>
+
         <activity android:name=".controller.LogInActivity" >
         </activity>
 

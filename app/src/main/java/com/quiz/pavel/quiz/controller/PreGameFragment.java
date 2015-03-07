@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,6 +181,7 @@ public class PreGameFragment extends Fragment {
                             sm.online = true;
 
                             Log.d(TAG, "launch a game");
+                            closeThis();
                         } else {
                             myCallbackOnResponse = new OnResponse() {
                                 @Override
@@ -188,7 +190,7 @@ public class PreGameFragment extends Fragment {
                                     startActivity(i);
                                     sm.online = true;
                                     Log.d(TAG, "launch a game");
-
+                                    closeThis();
                                 }
                             };
                         }
@@ -272,7 +274,7 @@ public class PreGameFragment extends Fragment {
             mTimer.cancel();
             mTimer.purge();
         }
-        //TODO: remove progressBar and show statistics of game
+        closeThis();
     }
 
     @Override
@@ -289,6 +291,12 @@ public class PreGameFragment extends Fragment {
             mTimer.purge();
         }
     }
+
+    private void closeThis() {
+        getActivity().finish();
+    }
+
+
 
 
 }

@@ -123,11 +123,14 @@ public class SessionManager {
     }
 
 
-    public boolean amIWinner() {
+    public int amIWinner() {
         if (mSession.pointsMine > mSession.pointsOpponent) {
-            return true;                                                                                //BULLSHIT
+            return 1;
+        } else if (mSession.pointsMine < mSession.pointsOpponent) {
+            return -1;
+        } else {
+            return 0;
         }
-        return false;
     }
 
 

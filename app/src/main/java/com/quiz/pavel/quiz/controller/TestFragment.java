@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -585,13 +586,15 @@ public class TestFragment extends Fragment {
         super.onDestroy();
         String str = "you are loser";
         mSessionManager.stopTimer();
-        if (mSessionManager.amIWinner()) {
-            str = "you are winner";
-        }
-        Toast.makeText(getActivity(), str, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(getActivity(), PostGameActivity.class);
+        intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+
         mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
         mSessionManager.myHandler.removeCallbacks(mSessionManager.myRunnable);
+
+        startActivity(intent);
 
         //TODO: perhaps, recomment
 //        RequestQueue queue = Volley.newRequestQueue(getActivity());
