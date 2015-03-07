@@ -45,6 +45,7 @@ public class ChoiceCatOrTopicActivity extends ActionBarActivity implements Actio
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setTitle("Выбрать тему или категорию");
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -81,7 +82,6 @@ public class ChoiceCatOrTopicActivity extends ActionBarActivity implements Actio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_choice_cat_or_topic, menu);
         return true;
     }
 
@@ -90,12 +90,8 @@ public class ChoiceCatOrTopicActivity extends ActionBarActivity implements Actio
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

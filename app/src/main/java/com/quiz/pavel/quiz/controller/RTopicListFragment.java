@@ -132,9 +132,10 @@ public class RTopicListFragment extends ListFragment {
 
         Topic topic = ((TopicAdapter) getListAdapter()).getItem(position);
 
-        Intent i = new Intent(getActivity(), RatingActivity.class);
+        Intent i = new Intent(getActivity(), RRatingActivity.class);
         i.putExtra("by_topic", true);
         i.putExtra("topic_id", topic.getId());
+        i.putExtra(RRatingActivity.EXTRA_NAME_OF_TOPIC, topic.getTitle());
 
         startActivity(i);
     }

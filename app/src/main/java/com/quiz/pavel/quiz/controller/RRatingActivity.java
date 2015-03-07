@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 
 import com.quiz.pavel.quiz.R;
 
-public class RatingActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class RRatingActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     private static final String TAG = "RatingFragment";
     /**
@@ -38,15 +38,19 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
      */
     ViewPager mViewPager;
 
+    public static final String EXTRA_NAME_OF_TOPIC = "com.quiz.pavel.quiz.controller.name_of_topic";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
 
+
+
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle("Общий рейтинг");
+        actionBar.setTitle(getIntent().getCharSequenceExtra(EXTRA_NAME_OF_TOPIC));
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -103,7 +107,6 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_rating, menu);
         return true;
     }
 
@@ -112,14 +115,14 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_more) {
-            Intent intent = new Intent(this, ChoiceCatOrTopicActivity.class);
-            startActivity(intent);
-            return true;
-        }
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_more) {
+//            Intent intent = new Intent(this, ChoiceCatOrTopicActivity.class);
+//            startActivity(intent);
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

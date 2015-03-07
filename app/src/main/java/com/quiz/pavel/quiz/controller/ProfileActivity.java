@@ -80,7 +80,7 @@ public class ProfileActivity extends ActionBarActivity
 
         ft.addToBackStack(null);
         ft.commit();
-    }
+    } 
 
     private void update() {
         if(fm.getBackStackEntryCount() == 0) {
