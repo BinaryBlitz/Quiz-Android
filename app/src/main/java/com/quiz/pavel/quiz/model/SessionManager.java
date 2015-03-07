@@ -115,6 +115,7 @@ public class SessionManager {
             return;
         }
         mTimer.cancel();
+        mTimer.purge();
     }
 
     public void iChooseAnswer(Context c, int number) {

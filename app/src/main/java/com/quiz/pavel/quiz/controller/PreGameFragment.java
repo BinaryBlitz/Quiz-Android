@@ -85,34 +85,26 @@ public class PreGameFragment extends Fragment {
         return v;
     }
 
-    int limit = 0;
+    int limit;
     public void startTimer() {
-
         mTimer = new Timer();
+        limit = 0;
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Log.d(TAG, "executing action from schedule");
+                Log.d(TAG, "executing action from schedule: " + limit);
                 sendReq();   // Question
                 limit++;
                 if(limit >= 12) {
                     if (mTimer != null) {
                         mTimer.cancel();
+                        mTimer.purge();
                     }
                     sm.mPusher.disconnect();
-                    handlerOnNotResponseInOnlineGame.sendEmptyMessage(0);
                 }
             }
         }, 0, 2000);
-
     }
-
-    final Handler handlerOnNotResponseInOnlineGame = new Handler() {
-        public void handleMessage(Message msg) {
-            Toast.makeText(getActivity(), "Извините, не получилось подключиться к сопернику",
-                    Toast.LENGTH_SHORT);
-        }
-    };
 
     private void createLobby() {
 
@@ -173,6 +165,7 @@ public class PreGameFragment extends Fragment {
     }
 
     private void listenEventChannel() {
+        if(sm.mPusher.getConnection().getState() == ConnectionState.CONNECTED) {
         sm.mChannel.bind("game-start", new SubscriptionEventListener() {
             @Override
             public void onEvent(String channel, String event, String data) {
@@ -203,6 +196,7 @@ public class PreGameFragment extends Fragment {
                 }, 1000);
             }
         });
+        }
     }
 
     private OnResponse myCallbackOnResponse;
@@ -251,6 +245,7 @@ public class PreGameFragment extends Fragment {
 
                         if (mTimer != null) {
                             mTimer.cancel();
+                            mTimer.purge();
                         }
 
                     }
@@ -275,6 +270,7 @@ public class PreGameFragment extends Fragment {
 
         if (mTimer != null) {
             mTimer.cancel();
+            mTimer.purge();
         }
         //TODO: remove progressBar and show statistics of game
     }
@@ -290,6 +286,7 @@ public class PreGameFragment extends Fragment {
         }
         if (mTimer != null) {
             mTimer.cancel();
+            mTimer.purge();
         }
     }
 
