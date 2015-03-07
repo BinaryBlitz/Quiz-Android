@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -21,6 +24,7 @@ import com.google.android.gms.games.achievement.Achievement;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,6 +47,8 @@ public class ProfileFragment extends Fragment {
         Bundle args = new Bundle();
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
+        fragment.pp = new PlayerProfile();
+        fragment.pp.setName("Паша Коземиров");
         return fragment;
     }
 
@@ -52,6 +58,14 @@ public class ProfileFragment extends Fragment {
         setHasOptionsMenu(true);
 
     }
+
+    public PlayerProfile pp;
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        mCallback.setTitle(pp.getName());
+//    }
 
     ArrayList<String> items = new ArrayList<String>();
 
@@ -75,6 +89,7 @@ public class ProfileFragment extends Fragment {
         items.add("Item 4");
 
 
+
         LinearLayout mGallery = (LinearLayout) v.findViewById(R.id.id_gallery);
 
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
@@ -96,7 +111,7 @@ public class ProfileFragment extends Fragment {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.addFragment(1);
+                    mCallback.addFragment(new PlayerProfile());
                 }
             });
         }
@@ -134,7 +149,9 @@ public class ProfileFragment extends Fragment {
 
 
     public interface OnAddNewFragmentCallback {
-        public void addFragment(int position);
+        public void addFragment(PlayerProfile player);
+        public void removeFragment();
+        public void setTitle(String str);
     }
 
     OnAddNewFragmentCallback mCallback;
@@ -143,12 +160,28 @@ public class ProfileFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+
         try {
             mCallback = (OnAddNewFragmentCallback) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
+        super.onCreateOptionsMenu(menu, inflator);
+        inflator.inflate(R.menu.menu_profile_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                mCallback.removeFragment();
+        }
+        return true;
     }
 
 }

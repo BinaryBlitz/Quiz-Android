@@ -1,10 +1,12 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.ActionBar;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -22,13 +24,15 @@ public class MainTabsActivity extends TabActivity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.main);
+
+
         setTabs();
     }
 
     private void setTabs() {
         addTab("", android.R.drawable.ic_menu_view, ListsActivity.class);
-
         addTab("Home", android.R.drawable.ic_menu_zoom, ProfileActivity.class);
         addTab("Search", android.R.drawable.ic_menu_gallery, RatingActivity.class);
     }

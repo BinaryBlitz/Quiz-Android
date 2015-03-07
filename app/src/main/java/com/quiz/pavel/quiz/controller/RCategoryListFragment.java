@@ -160,8 +160,9 @@ public class RCategoryListFragment extends ListFragment {
 
         Category category = ((TopicAdapter) getListAdapter()).getItem(position);
 
-        Intent i = new Intent(getActivity(), RatingActivity.class);
+        Intent i = new Intent(getActivity(), RRatingActivity.class);
         i.putExtra("by_category", true);
+        i.putExtra(RRatingActivity.EXTRA_NAME_OF_TOPIC, category.getTitle());
 
         i.putExtra("category_id", category.getId());
 

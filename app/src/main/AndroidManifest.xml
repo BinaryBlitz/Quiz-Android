@@ -49,9 +49,6 @@
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
 
-        <activity android:name=".controller.MainActivity" >
-        </activity>
-
         <activity android:name=".controller.SignUpActivity" >
         </activity>
 
@@ -73,6 +70,10 @@
         <activity
             android:name=".controller.RatingActivity"
             android:label="@string/title_activity_rating" >
+        </activity>
+
+        <activity
+            android:name=".controller.RRatingActivity">
         </activity>
 
         <activity android:name=".controller.MainTabsActivity" >
