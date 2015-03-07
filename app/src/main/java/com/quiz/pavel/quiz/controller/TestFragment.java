@@ -386,6 +386,10 @@ public class TestFragment extends Fragment {
             if (getActivity() == null) {
                 return;
             }
+            Intent intent = new Intent(getActivity(), PostGameActivity.class);
+            intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+            startActivity(intent);
+            
             getActivity().finish();
             return;
         }
@@ -587,14 +591,11 @@ public class TestFragment extends Fragment {
         String str = "you are loser";
         mSessionManager.stopTimer();
 
-        Intent intent = new Intent(getActivity(), PostGameActivity.class);
-        intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
 
         mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
         mSessionManager.myHandler.removeCallbacks(mSessionManager.myRunnable);
 
-        startActivity(intent);
 
         //TODO: perhaps, recomment
 //        RequestQueue queue = Volley.newRequestQueue(getActivity());
