@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,12 @@ public class TopicListFragment extends ListFragment {
     private ArrayList<Topic> mTopics;
     private int mNumberOfCategory = 0;
 
+    public interface OnEventTopicListListener {
+        public void back();
+    }
+
+    OnEventTopicListListener mCallback;
+
 
     public static TopicListFragment newInstance() {
         Bundle args = new Bundle();
@@ -45,6 +53,18 @@ public class TopicListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mNumberOfCategory= getActivity().getIntent().getIntExtra("number_of_category", 0);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (OnEventTopicListListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
 
@@ -130,5 +150,20 @@ public class TopicListFragment extends ListFragment {
         i.putExtra("topic", mTopics.get(position).getId());
 
         startActivity(i);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
+        super.onCreateOptionsMenu(menu, inflator);
+        inflator.inflate(R.menu.menu_profile_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                mCallback.back();
+        }
+        return true;
     }
 }

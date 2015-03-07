@@ -38,8 +38,6 @@ public class ProfileActivity extends ActionBarActivity
 
         fm = getSupportFragmentManager();
 
-
-
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
         if (fragment == null) {
@@ -65,7 +63,6 @@ public class ProfileActivity extends ActionBarActivity
     }
 
     FragmentManager fm;
-
     ProfileFragment currentFragment;
     FragmentTransaction ft;
 

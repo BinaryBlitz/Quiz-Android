@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class CategoryListFragment extends ListFragment {
 
     private ArrayList<Category> mCategories;
 
-    OnCategorySelectedListener mCallback;
+    OnEventCategoriListListener mCallback;
 
     public static CategoryListFragment newInstance() {
         Bundle args = new Bundle();
@@ -47,10 +48,7 @@ public class CategoryListFragment extends ListFragment {
         return fragment;
     }
 
-    public interface OnCategorySelectedListener {
-        /**
-         * Called by HeadlinesFragment when a list item is selected
-         */
+    public interface OnEventCategoriListListener {
         public void onCategorySelected(int position);
     }
 
@@ -139,7 +137,7 @@ public class CategoryListFragment extends ListFragment {
         super.onAttach(activity);
 
         try {
-            mCallback = (OnCategorySelectedListener) activity;
+            mCallback = (OnEventCategoriListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -172,6 +170,19 @@ public class CategoryListFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         mCallback.onCategorySelected(position);
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
+        super.onCreateOptionsMenu(menu, inflator);
+        inflator.inflate(R.menu.menu_profile_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        return true;
     }
 
 }

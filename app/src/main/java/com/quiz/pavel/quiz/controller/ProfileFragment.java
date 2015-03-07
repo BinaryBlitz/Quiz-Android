@@ -180,7 +180,6 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()){
             case android.R.id.home:
                 mCallback.removeFragment();
-
         }
         return true;
     }
