@@ -49,9 +49,6 @@
 
         <activity android:name="com.vk.sdk.VKOpenAuthActivity" />
 
-        <activity android:name=".controller.MainActivity" >
-        </activity>
-
         <activity android:name=".controller.SignUpActivity" >
         </activity>
 
