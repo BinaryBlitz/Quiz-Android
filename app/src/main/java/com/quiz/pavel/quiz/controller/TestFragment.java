@@ -593,11 +593,11 @@ public class TestFragment extends Fragment {
         mSessionManager.stopTimer();
 
         // game was aborted by back button
-        if(!finish) {
-            Intent intent = new Intent(getActivity(), PostGameActivity.class);
-            intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
-            startActivity(intent);
-        }
+//        if(!finish) {
+//            Intent intent = new Intent(getActivity(), PostGameActivity.class);
+//            intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+//            startActivity(intent);
+//        }
 
         mSessionManager.deleteInstance();
         mSessionManager.mPusher.disconnect();
@@ -730,6 +730,8 @@ public class TestFragment extends Fragment {
 
 
     }
+
+
 
 
 }

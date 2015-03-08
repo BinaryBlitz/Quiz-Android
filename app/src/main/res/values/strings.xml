@@ -19,9 +19,9 @@
     <string name="title_activity_rating">RatingActivity</string>
     <string name="rating_section1">Неделя</string>
     <string name="rating_section2">Месяц</string>
-    <string name="points_numder">0</string>
-    <string name="points_word">Очков</string>
-    <string name="friends_word">Друзей</string>
+    <string name="points_numder">49/57</string>
+    <string name="points_word">Достижения</string>
+    <string name="friends_word">Друзья</string>
     <string name="name">Имя</string>
     <string name="logout">Выйти из аккаунта</string>
     <string name="settings_profile">Настройки</string>
@@ -32,5 +32,7 @@
     <string name="title_activity_choice_cat_or_topic">ChoiceCatOrTopicActivity</string>
     <string name="title_section_topics">Темы</string>
     <string name="signupVkBtn">vk sign in</string>
+    <string name="open_list_view">Открыть заявки в друзья</string>
+    <string name="add_friend">Добавить в друзья</string>
 
 </resources>

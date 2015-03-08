@@ -162,7 +162,7 @@ public class Session {
         if (!mSessionQuestions.isEmpty()) {
             pointsMine += (20 - time);
         } else {
-            pointsMine = pointsMine * 2;
+            pointsMine += 40 - time * 2 ;
         }
         callback.callbackCallMine(pointsMine);
     }
@@ -175,7 +175,7 @@ public class Session {
         if (!mSessionQuestions.isEmpty()) {
             pointsOpponent += (20 - time);
         } else {
-            pointsOpponent = pointsOpponent * 2;
+            pointsOpponent += 40 - time * 2 ;
         }
         callback.callbackCallOpponent(pointsOpponent);
     }

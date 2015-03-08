@@ -87,6 +87,9 @@
         <activity android:name=".controller.MainTabsActivity" >
         </activity>
 
+        <activity android:name=".controller.ListFriendRequestsActivity" >
+        </activity>
+
         <activity
             android:name=".controller.SettingsActivity"
             android:label="@string/title_activity_settings" >

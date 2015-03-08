@@ -41,7 +41,8 @@ public class ProfileActivity extends ActionBarActivity
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
         if (fragment == null) {
-            fragment = ProfileFragment.newInstance();
+            fragment = new ProfileFragment(new PlayerProfile(this, Mine.getInstance(this).getId(),
+                    Mine.getInstance(this).getName()));
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
@@ -58,7 +59,7 @@ public class ProfileActivity extends ActionBarActivity
 
     private void method() {
         currentFragment = (ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        mActionBar.setTitle(currentFragment.pp.getName());
+        mActionBar.setTitle(currentFragment.mPlayerProfile.getName());
         Log.d(TAG, "ONBACKSTACKCHANGEDLISTENER");
     }
 
@@ -67,12 +68,15 @@ public class ProfileActivity extends ActionBarActivity
     FragmentTransaction ft;
 
     @Override
-    public void addFragment(PlayerProfile player) {
-//        FragmentManager fm = getSupportFragmentManager();
-        mActionBar.setTitle(player.getName());
+    public void addFragment(PlayerProfile p) {
 
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.pp = player;
+        mActionBar.setTitle(p.getName());
+//        Log.d(TAG, "id = " + id);
+
+        ProfileFragment fragment = new ProfileFragment(p);
+//        fragment.mPlayerProfile = player;
+
+
 
         ft = fm.beginTransaction();
         ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
