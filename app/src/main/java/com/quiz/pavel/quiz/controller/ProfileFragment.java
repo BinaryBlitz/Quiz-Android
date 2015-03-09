@@ -67,10 +67,14 @@ public class ProfileFragment extends Fragment {
     LayoutInflater mInflater;
     LinearLayout mGallery;
 
+    ArrayList<PlayerProfile> myFriendList;
+
 
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
     @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
+    @InjectView(R.id.milti_button) Button mMultiButton;
+
 
     public PlayerProfile mPlayerProfile;
 
@@ -110,7 +114,19 @@ public class ProfileFragment extends Fragment {
                 .load(R.drawable.strawberry)
                 .fit()
                 .into(mPhoto);
+        downloadMyFriends();
+
         return v;
+    }
+
+    private void setNameOfMultiButton() {
+        if(mPlayerProfile.isMe()) {
+            mMultiButton.setText("Настройки");
+        } else if(mPlayerProfile.isInMyFriends(myFriendList)) {
+            mMultiButton.setText("Убрать из друзей");
+        } else {
+            mMultiButton.setText("Добавить в друзья");
+        }
     }
 
     private void showListAndPictures() {
@@ -204,11 +220,7 @@ public class ProfileFragment extends Fragment {
         getActivity().finish();
     }
 
-    @OnClick(R.id.settings_profile)
-    public void onClickSettings() {
-        Intent i = new Intent(getActivity(), SettingsActivity.class);
-        startActivity(i);
-    }
+
 
     @OnClick(R.id.open_list)
     public void onClickOpen() {
@@ -216,36 +228,109 @@ public class ProfileFragment extends Fragment {
         startActivity(i);
     }
 
-    @OnClick(R.id.add_friend)
+//    @OnClick(R.id.settings_profile)
+//    public void onClickSettings() {
+//
+//    }
+
+    @OnClick(R.id.milti_button)
     public void onClickAdd() {
+        if(mPlayerProfile.isMe()) {
+            Intent i = new Intent(getActivity(), SettingsActivity.class);
+            startActivity(i);
+        } else if(mPlayerProfile.isInMyFriends(myFriendList)) {
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.DELETE, Mine.URL +
+                    "/friendships/unfriend?friend_id=" + mPlayerProfile.getId() + "&token=" +
+                    Mine.getInstance(getActivity()).getToken(), null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d(TAG, "deleted");
+                        }
+                    }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+
+            }) {
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Accept", "application/json");
+                    return params;
+                }
+            };
+
+            queue.add(stringRequest);
+        } else {
+            RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+            JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
+                    "/friendships?friend_id=" + mPlayerProfile.getId() + "&token=" +
+                    Mine.getInstance(getActivity()).getToken(), null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(getActivity(), "added", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                }
+
+            }) {
+
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json");
+                    params.put("Accept", "application/json");
+                    return params;
+                }
+            };
+
+            queue.add(stringRequest);
+        }
+    }
+
+    private void downloadMyFriends() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
-                "/friendships?friend_id=" + mPlayerProfile.getId() + "&token=" +
-                Mine.getInstance(getActivity()).getToken(), null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL + "/players/"
+                + Mine.getInstance(getActivity()).getId() + "/friends?token="
+                + Mine.getInstance(getActivity()).getToken(),
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(getActivity(), "added", Toast.LENGTH_SHORT).show();
+                    public void onResponse(JSONArray response) {
+                        myFriendList = new ArrayList<PlayerProfile>();
+                        for (int i = 0; i < response.length(); i++) {
+                            int id  = 0;
+                            String name = "";
+                            try {
+                                id = response.getJSONObject(i).getInt("id");
+                                name = response.getJSONObject(i).getString("name");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            myFriendList.add(new PlayerProfile(getActivity(), id, name));
+                        }
+                        setNameOfMultiButton();
                     }
-                }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
-
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                params.put("Accept", "application/json");
-                return params;
-            }
-        };
-
-        queue.add(stringRequest);
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Response");
+                    }
+                });
+        queue.add(arRequest);
     }
 
     @Override

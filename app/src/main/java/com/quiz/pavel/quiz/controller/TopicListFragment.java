@@ -155,7 +155,7 @@ public class TopicListFragment extends ListFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
         super.onCreateOptionsMenu(menu, inflator);
-        inflator.inflate(R.menu.menu_profile_fragment, menu);
+//        inflator.inflate(R.menu.menu_profile_fragment, menu);
     }
 
     @Override

@@ -1,6 +1,17 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.quiz.pavel.quiz.controller.ProfileFragment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -25,12 +36,28 @@ public class PlayerProfile {
         }
     }
 
+    public boolean isMe() {
+        return myProfile;
+    }
+
     public int getId() {
         return mId;
     }
 
     public String getName() {
         return mName;
+    }
+
+    public boolean isInMyFriends(ArrayList<PlayerProfile> list) {
+        if(isMe()) {
+            return false;
+        }
+        for (PlayerProfile playerProfile : list) {
+            if(playerProfile.getId() == mId) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

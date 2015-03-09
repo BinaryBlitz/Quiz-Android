@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,8 +14,7 @@ import com.quiz.pavel.quiz.R;
 /**
  * Created by pavelkozemirov on 14.02.15.
  */
-public class PreGameActivity extends FragmentActivity
-        {
+public class PreGameActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,24 +33,13 @@ public class PreGameActivity extends FragmentActivity
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
-
-
     }
 
-//    @Override
-//    public void launchGame() {
-//
-//        PostGameFragment postGameFragment = new PostGameFragment();
-//        FragmentManager fm = getSupportFragmentManager();
-//
-//        FragmentTransaction ft = fm.beginTransaction();
-//
-//        // Replace whatever is in the fragment_container view with this fragment,
-//        // and add the transaction to the back stack so the user can navigate back
-////        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-//
-//        ft.replace(R.id.fragmentContainer, postGameFragment);
-//
-//        ft.commit();
-//    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        PreGameFragment fragment = (PreGameFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        fragment.closeLobby();
+    }
+
 }

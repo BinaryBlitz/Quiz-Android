@@ -1,16 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.quiz.pavel.quiz.controller.RatingActivity">
 
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:id="@+id/menu_item_new_crime"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="item1"
-        />
-
-    <item android:id="@+id/menu_item_show_subtitle"
-        android:title="item2"
-        android:icon="@android:drawable/ic_menu_help"
-        />
+    <item android:id="@+id/action_search"
+          android:title="@string/action_searching"
+          android:orderInCategory="100"
+          android:icon="@android:drawable/ic_menu_search"
+          app:showAsAction="ifRoom"/>
 
 </menu>

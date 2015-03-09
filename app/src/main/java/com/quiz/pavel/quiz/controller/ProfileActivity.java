@@ -35,7 +35,6 @@ public class ProfileActivity extends ActionBarActivity
         mActionBar = getSupportActionBar();
         mActionBar.setTitle(Mine.getInstance(this).getName());
 
-
         fm = getSupportFragmentManager();
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);

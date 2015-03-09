@@ -295,6 +295,10 @@ public class PreGameFragment extends Fragment {
         }
     }
 
+    public void closeLobby() {
+        //TODO: close Lobby
+    }
+
     private void closeThis() {
                getActivity().finish();
     }
