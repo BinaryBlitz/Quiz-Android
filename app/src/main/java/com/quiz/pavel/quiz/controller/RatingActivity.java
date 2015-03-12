@@ -139,6 +139,8 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
+
+
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -220,5 +222,7 @@ public class RatingActivity extends ActionBarActivity implements ActionBar.TabLi
             return rootView;
         }
     }
+
+
 
 }

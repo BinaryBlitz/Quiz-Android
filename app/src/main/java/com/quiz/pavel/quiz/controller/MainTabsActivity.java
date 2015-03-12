@@ -75,9 +75,11 @@ public class MainTabsActivity extends TabActivity {
     }
 
     private void setTabs() {
-        addTab("", android.R.drawable.ic_menu_view, ListsActivity.class);
-        addTab("Home", android.R.drawable.ic_menu_zoom, ProfileActivity.class);
-        addTab("Search", android.R.drawable.ic_menu_gallery, RatingActivity.class);
+        addTab("Главная", android.R.drawable.ic_menu_zoom, RatingActivity.class); //MAIN
+        addTab("Темы", android.R.drawable.ic_menu_view, ListsActivity.class);
+        addTab("Профиль", android.R.drawable.ic_menu_day, ProfileActivity.class);
+        addTab("Рейтинг", android.R.drawable.ic_menu_gallery, RatingActivity.class);
+        addTab("Магазин", android.R.drawable.ic_menu_gallery, RatingActivity.class); //STORE
     }
 
     private void addTab(String labelId, int drawableId, Class<?> c) {
@@ -86,8 +88,10 @@ public class MainTabsActivity extends TabActivity {
         TabHost.TabSpec spec = tabHost.newTabSpec("tab" + labelId);
 
         View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, getTabWidget(), false);
-//        TextView title = (TextView) tabIndicator.findViewById(R.mId.title);
-//        title.setText(labelId);
+
+        TextView title = (TextView) tabIndicator.findViewById(R.id.title);
+        title.setText(labelId);
+
         ImageView icon = (ImageView) tabIndicator.findViewById(R.id.icon);
         icon.setImageResource(drawableId);
 

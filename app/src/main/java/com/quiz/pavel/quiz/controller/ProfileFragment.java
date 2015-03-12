@@ -94,6 +94,7 @@ public class ProfileFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
         ButterKnife.inject(this, v);
         mNumberOfFriends.setVisibility(View.INVISIBLE);
+        mMultiButton.setVisibility(View.INVISIBLE);
 
 
         mTextViewName.setText(mPlayerProfile.getName() + " id:" + mPlayerProfile.getId());
@@ -127,6 +128,7 @@ public class ProfileFragment extends Fragment {
         } else {
             mMultiButton.setText("Добавить в друзья");
         }
+        mMultiButton.setVisibility(View.VISIBLE);
     }
 
     private void showListAndPictures() {

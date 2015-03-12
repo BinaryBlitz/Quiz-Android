@@ -1,5 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -47,6 +48,11 @@ public class RatingFragment extends ListFragment {
     private int spec;
 
     private ArrayList<PlayerRating> mPlayers;
+
+    public interface RatingFragmentListener {
+        public void onAction();
+    }
+
 
     public static RatingFragment newInstance(String name) {
         Bundle args = new Bundle();
@@ -198,6 +204,11 @@ public class RatingFragment extends ListFragment {
     { //here u set u rute
 //        MenuInflater inflater = getMenuInflater();
 //        inflater.inflate(R.menu.login, menu);
+    }
+
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
     }
 
 
