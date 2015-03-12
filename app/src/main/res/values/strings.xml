@@ -35,5 +35,6 @@
     <string name="open_list_view">Открыть заявки в друзья</string>
     <string name="add_friend">Добавить в друзья</string>
     <string name="action_searching">Поиск</string>
+    <string name="search_title">Поиск</string>
 
 </resources>

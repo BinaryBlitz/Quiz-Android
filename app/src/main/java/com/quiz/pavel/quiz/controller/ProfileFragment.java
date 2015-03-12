@@ -2,10 +2,8 @@ package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,10 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,12 +25,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.games.achievement.Achievement;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
-import com.quiz.pavel.quiz.model.PlayerRating;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -57,9 +49,9 @@ public class ProfileFragment extends Fragment {
     public static final String TAG = "ProfileFragment";
 
     public interface OnAddNewFragmentCallback {
-        public void addFragment(PlayerProfile p);
+        public void addFragmentProfile(PlayerProfile p);
         public void removeFragment();
-        public void setTitle(String str);
+        public void search();
     }
 
     OnAddNewFragmentCallback mCallback;
@@ -153,7 +145,7 @@ public class ProfileFragment extends Fragment {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.addFragment(mPlayerProfile.list.get(id));
+                    mCallback.addFragmentProfile(mPlayerProfile.list.get(id));
                 }
             });
         }
@@ -357,6 +349,10 @@ public class ProfileFragment extends Fragment {
         switch (item.getItemId()){
             case android.R.id.home:
                 mCallback.removeFragment();
+                break;
+            case R.id.action_search:
+                mCallback.search();
+                break;
         }
         return true;
     }

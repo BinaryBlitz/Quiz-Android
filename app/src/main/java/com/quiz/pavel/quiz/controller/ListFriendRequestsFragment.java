@@ -61,7 +61,6 @@ public class ListFriendRequestsFragment extends ListFragment {
                     public void onResponse(JSONArray response) {
 
 
-                        Log.d(TAG, "response: " + response.toString());
 
 
 

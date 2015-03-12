@@ -20,7 +20,7 @@ import com.quiz.pavel.quiz.model.PlayerProfile;
  * Created by pavelkozemirov on 15.02.15.
  */
 public class ProfileActivity extends ActionBarActivity
-        implements ProfileFragment.OnAddNewFragmentCallback{
+        implements ProfileFragment.OnAddNewFragmentCallback, SearchFragment.OnAddNewFragmentCallback{
 
     private static final String TAG = "ProfileFragment";
 
@@ -57,9 +57,11 @@ public class ProfileActivity extends ActionBarActivity
     }
 
     private void method() {
-        currentFragment = (ProfileFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        mActionBar.setTitle(currentFragment.mPlayerProfile.getName());
-        Log.d(TAG, "ONBACKSTACKCHANGEDLISTENER");
+        if(getSupportFragmentManager().findFragmentById(R.id.fragmentContainer) instanceof ProfileFragment) {
+            currentFragment = (ProfileFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            mActionBar.setTitle(currentFragment.mPlayerProfile.getName());
+            Log.d(TAG, "ONBACKSTACKCHANGEDLISTENER");
+        }
     }
 
     FragmentManager fm;
@@ -67,7 +69,7 @@ public class ProfileActivity extends ActionBarActivity
     FragmentTransaction ft;
 
     @Override
-    public void addFragment(PlayerProfile p) {
+    public void addFragmentProfile(PlayerProfile p) {
 
         mActionBar.setTitle(p.getName());
 //        Log.d(TAG, "id = " + id);
@@ -101,7 +103,21 @@ public class ProfileActivity extends ActionBarActivity
     }
 
     @Override
-    public void setTitle(String str) {
+    public void search() {
+        mActionBar.setTitle("Поиск");
+//        Log.d(TAG, "id = " + id);
+
+        SearchFragment fragment = new SearchFragment();
+//        fragment.mPlayerProfile = player;
+
+
+
+        ft = fm.beginTransaction();
+        ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        ft.replace(R.id.fragmentContainer, fragment);
+
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
 

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -294,7 +295,33 @@ public class PreGameFragment extends Fragment {
     }
 
     public void closeLobby() {
-        //TODO: close Lobby
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
+                Mine.URL + "/lobbies/" + mId, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEB CLOSED");
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "closing lobby request - error, perhaps");
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     private void closeThis() {

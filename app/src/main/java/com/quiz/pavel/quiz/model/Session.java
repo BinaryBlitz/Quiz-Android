@@ -230,7 +230,6 @@ public class Session {
             @Override
             public void onErrorResponse(VolleyError error) {
                 NetworkResponse response = error.networkResponse;
-//                Log.d(TAG, "PATCH HAS SEND, MAYBE, status code: " + error.networkResponse.statusCode);
                 if (response != null && response.data != null) {
                     switch (response.statusCode) {
                         case 401:
