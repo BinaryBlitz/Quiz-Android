@@ -53,10 +53,11 @@ public class ListsActivity extends ActionBarActivity
     @Override
     public void onCategorySelected(int position) {
         // Create fragment and give it an argument for the selected article
-        TopicListFragment newFragment = new TopicListFragment();
-        Bundle args = new Bundle();
+        TopicListFragment newFragment = new TopicListFragment(position);
 
+        Bundle args = new Bundle();
         args.putInt("number_of_category", position);
+
         newFragment.setArguments(args);
 
         mFragmentTransaction = mFragmentManager.beginTransaction();

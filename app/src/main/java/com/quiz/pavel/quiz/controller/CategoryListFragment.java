@@ -169,6 +169,8 @@ public class CategoryListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+//        mCallback.onCategorySelected(mCategories.get(position).getId());
+        //TODO: important moment
         mCallback.onCategorySelected(position);
     }
 

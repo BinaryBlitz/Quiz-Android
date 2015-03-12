@@ -41,18 +41,22 @@ public class TopicListFragment extends ListFragment {
     OnEventTopicListListener mCallback;
 
 
-    public static TopicListFragment newInstance() {
-        Bundle args = new Bundle();
-        TopicListFragment fragment = new TopicListFragment();
-        fragment.setArguments(args);
-        return fragment;
+//    public static TopicListFragment newInstance() {
+//        Bundle args = new Bundle();
+//        TopicListFragment fragment = new TopicListFragment();
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+
+    public TopicListFragment(int numberOfCategory) {
+        mNumberOfCategory = numberOfCategory;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mNumberOfCategory= getActivity().getIntent().getIntExtra("number_of_category", 0);
+
     }
 
     @Override
@@ -74,6 +78,7 @@ public class TopicListFragment extends ListFragment {
         if (savedInstanceState == null) {
             Log.d("TAG", " WHAT THE FUCK");
         }
+        Log.d(TAG, "numberOf category = " + mNumberOfCategory);
 
         mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).
                     get(mNumberOfCategory).mTopics;
