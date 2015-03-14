@@ -36,5 +36,8 @@
     <string name="add_friend">Добавить в друзья</string>
     <string name="action_searching">Поиск</string>
     <string name="search_title">Поиск</string>
+    <string name="topic_word">тема</string>
+    <string name="waiting">ожидание противника...</string>
+    <string name="fact">Знаете ли вы, что...</string>
 
 </resources>

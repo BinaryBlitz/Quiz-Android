@@ -18,8 +18,8 @@ public class PreGameActivity extends FragmentActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
@@ -40,6 +40,7 @@ public class PreGameActivity extends FragmentActivity {
         super.onBackPressed();
         PreGameFragment fragment = (PreGameFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         fragment.closeLobby();
+        fragment.onDestroy();
     }
 
 }

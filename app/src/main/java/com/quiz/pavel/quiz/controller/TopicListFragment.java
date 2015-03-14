@@ -80,8 +80,8 @@ public class TopicListFragment extends ListFragment {
         }
         Log.d(TAG, "numberOf category = " + mNumberOfCategory);
 
-        mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).
-                    get(mNumberOfCategory).mTopics;
+        mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity())
+                .get(mNumberOfCategory).mTopics;
 
 
         ListView listView = (ListView) v.findViewById(android.R.id.list);
@@ -153,6 +153,7 @@ public class TopicListFragment extends ListFragment {
 
         Intent i = new Intent(getActivity(), PreGameActivity.class);
         i.putExtra("topic", mTopics.get(position).getId());
+        i.putExtra("name", mTopics.get(position).getTitle());
 
         startActivity(i);
     }

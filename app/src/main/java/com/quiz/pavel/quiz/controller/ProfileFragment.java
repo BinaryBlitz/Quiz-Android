@@ -61,12 +61,10 @@ public class ProfileFragment extends Fragment {
 
     ArrayList<PlayerProfile> myFriendList;
 
-
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
     @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
     @InjectView(R.id.milti_button) Button mMultiButton;
-
 
     public PlayerProfile mPlayerProfile;
 
@@ -84,7 +82,9 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
+
         ButterKnife.inject(this, v);
+
         mNumberOfFriends.setVisibility(View.INVISIBLE);
         mMultiButton.setVisibility(View.INVISIBLE);
 

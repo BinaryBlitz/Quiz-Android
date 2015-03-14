@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -34,6 +36,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by pavelkozemirov on 14.02.15.
  */
@@ -46,6 +51,8 @@ public class PreGameFragment extends Fragment {
     public int mTopicId;
     private String mId;
 
+    @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
+    @InjectView(R.id.interesting_fact) TextView mInterestingFact;
 
     public static PreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -79,7 +86,13 @@ public class PreGameFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_pre_game, parent, false);
+        View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
+
+        ButterKnife.inject(this, v);
+
+        String name = getActivity().getIntent().getStringExtra("name");
+        mNameOfTopic.setText(name);
+        mInterestingFact.setText("Интересный факт...");
 
         return v;
     }
@@ -107,7 +120,6 @@ public class PreGameFragment extends Fragment {
     }
 
     private void createLobby() {
-
         if (getActivity() == null) {
             return;
         }
@@ -160,7 +172,6 @@ public class PreGameFragment extends Fragment {
                 return params;
             }
         };
-
         queue.add(stringRequest);
     }
 
