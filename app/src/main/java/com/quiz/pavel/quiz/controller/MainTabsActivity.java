@@ -70,7 +70,6 @@ public class MainTabsActivity extends TabActivity {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
-
         setTabs();
     }
 

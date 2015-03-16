@@ -1,1 +1,1 @@
-include ':app', ':pusher-java-client-0.3.3-jar-with-dependencies',':vksdk_library'
+include ':app', ':pusher-java-client-0.3.3-jar-with-dependencies', ':vksdk_library'

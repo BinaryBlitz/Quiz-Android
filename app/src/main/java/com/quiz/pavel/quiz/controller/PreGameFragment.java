@@ -223,7 +223,6 @@ public class PreGameFragment extends Fragment {
     Handler myHandler = new Handler();
 
     private void sendReq() {
-
         if (getActivity() == null) {
             return;
         }
