@@ -15,8 +15,7 @@ import com.quiz.pavel.quiz.model.Mine;
 /**
  * Created by pavelkozemirov on 15.02.15.
  */
-public class ListsActivity extends ActionBarActivity
-        implements  TopicListFragment.OnEventTopicListListener {
+public class ListsActivity extends ActionBarActivity {
     private final static String TAG = "ListsActivity";
 
     ActionBar mActionBar;
@@ -82,10 +81,10 @@ public class ListsActivity extends ActionBarActivity
             mActionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
-
-    @Override
-    public void back() {
-        mFragmentManager.popBackStack();
-        Log.d(TAG, "BACK");
-    }
+//
+//    @Override
+//    public void back() {
+//        mFragmentManager.popBackStack();
+//        Log.d(TAG, "BACK");
+//    }
 }

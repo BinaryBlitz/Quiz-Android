@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,27 +27,12 @@ import java.util.ArrayList;
 /**
  * Created by pavelkozemirov on 15.02.15.
  */
-public class TopicListFragment extends ListFragment {
+public class TopicListFragment extends MyFragment {
     private static final String TAG = "TopicListFragment";
 
-
-
     private ArrayList<Topic> mTopics;
+
     private int mNumberOfCategory = 0;
-
-    public interface OnEventTopicListListener {
-        public void back();
-    }
-
-    OnEventTopicListListener mCallback;
-
-
-//    public static TopicListFragment newInstance() {
-//        Bundle args = new Bundle();
-//        TopicListFragment fragment = new TopicListFragment();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
 
     public TopicListFragment(int numberOfCategory) {
         mNumberOfCategory = numberOfCategory;
@@ -61,67 +47,41 @@ public class TopicListFragment extends ListFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        mTitle = Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mNumberOfCategory).getTitle();
         super.onAttach(activity);
-
-        ((MainSlidingActivity) activity).onSectionAttached(Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(mNumberOfCategory).getTitle());
-
-//        try {
-//            mCallback = (OnEventTopicListListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnHeadlineSelectedListener");
-//        }
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
-        if (savedInstanceState == null) {
-            Log.d("TAG", " WHAT THE FUCK");
-        }
-        Log.d(TAG, "numberOf category = " + mNumberOfCategory);
+        View v = inflater.inflate(R.layout.fragment_categories, parent, false);
 
         mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity())
                 .get(mNumberOfCategory).mTopics;
+        ListView listView = (ListView) v.findViewById(R.id.listView);
 
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
         TopicAdapter adapter = new TopicAdapter(mTopics);
-        setListAdapter(adapter);
+        listView.setAdapter(adapter);
 
         setRetainInstance(true);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Topic cr = mTopics.get(position);
+
+                Intent i = new Intent(getActivity(), PreGameActivity.class);
+                i.putExtra("topic", mTopics.get(position).getId());
+                i.putExtra("name", mTopics.get(position).getTitle());
+
+                startActivity(i);
+            }
+        });
+
 
         return v;
     }
@@ -138,7 +98,7 @@ public class TopicListFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Topic c = (Topic) getListAdapter().getItem(position);
+            Topic c = (Topic) mTopics.get(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
@@ -150,28 +110,10 @@ public class TopicListFragment extends ListFragment {
 
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-
-        Topic cr = ((TopicAdapter) getListAdapter()).getItem(position);
-
-        Intent i = new Intent(getActivity(), PreGameActivity.class);
-        i.putExtra("topic", mTopics.get(position).getId());
-        i.putExtra("name", mTopics.get(position).getTitle());
-
-        startActivity(i);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
-        super.onCreateOptionsMenu(menu, inflator);
-//        inflator.inflate(R.menu.menu_profile_fragment, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case android.R.id.home:
-                mCallback.back();
+                mMyFragmentListenerCallback.back();
         }
         return true;
     }

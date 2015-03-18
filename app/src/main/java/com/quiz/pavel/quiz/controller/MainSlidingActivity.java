@@ -25,7 +25,7 @@ import com.quiz.pavel.quiz.model.PlayerProfile;
 
 public class MainSlidingActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyFragment.MyFragmentListener,
-        CategoryListFragment.CategoryListListener{
+        CategoryListFragment.CategoryListListener, ProfileFragment.ProfileFragmentListener{
     public static final String TAG = "MainSlidingActivity";
 
     /**
@@ -55,6 +55,13 @@ public class MainSlidingActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                updateTitle();
+            }
+        });
     }
 
     FragmentManager mFragmentManager;
@@ -62,8 +69,10 @@ public class MainSlidingActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-
-
+        for(int i = 0; i < mFragmentManager.getBackStackEntryCount(); ++i) {
+            mFragmentManager.popBackStack();
+        }
+        mFragmentManager = getSupportFragmentManager();
         Fragment fragment;
         switch (position) {
             case 0:
@@ -86,8 +95,12 @@ public class MainSlidingActivity extends ActionBarActivity
                 fragment = PlaceholderFragment.newInstance(position + 1);
         }
 
+//        for(int i = 0; i < mFragmentManager.getBackStackEntryCount(); ++i) {
+//            mFragmentManager.popBackStack();
+//        }
         // update the main content by replacing fragments
         mFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit)
                 .replace(R.id.container, fragment)
                 .commit();
 
@@ -161,6 +174,12 @@ public class MainSlidingActivity extends ActionBarActivity
     @Override
     public void back() {
         mFragmentManager.popBackStack();
+        updateTitle();
+    }
+
+    @Override
+    public void updateTitle() {
+        mTitle = ((MyFragment)getSupportFragmentManager().findFragmentById(R.id.container)).mTitle;
     }
 
     @Override
@@ -184,6 +203,34 @@ public class MainSlidingActivity extends ActionBarActivity
         fragmentTransaction.addToBackStack(null);
 
         // Commit the transaction
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void openProfileFragment(PlayerProfile p) {
+        ProfileFragment fragment = new ProfileFragment(p);
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void openSearchFragment() {
+        SearchFragment fragment = new SearchFragment();
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

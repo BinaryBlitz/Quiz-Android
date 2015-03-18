@@ -119,6 +119,7 @@ public class CategoryListFragment extends MyFragment {
         super.onAttach(activity);
 
         ((MainSlidingActivity) activity).onSectionAttached(2);
+        mTitle = "Категории";
 
         try {
             mCallback = (CategoryListListener) activity;

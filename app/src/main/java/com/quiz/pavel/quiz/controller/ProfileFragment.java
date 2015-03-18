@@ -45,16 +45,14 @@ import butterknife.OnClick;
 /**
  * Created by pavelkozemirov on 12.12.14.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends MyFragment {
     public static final String TAG = "ProfileFragment";
 
-    public interface OnAddNewFragmentCallback {
-        public void addFragmentProfile(PlayerProfile p);
-        public void removeFragment();
-        public void search();
+    public interface ProfileFragmentListener {
+        public void openSearchFragment();
     }
 
-    OnAddNewFragmentCallback mCallback;
+    ProfileFragmentListener mCallback;
 
     LayoutInflater mInflater;
     LinearLayout mGallery;
@@ -145,7 +143,7 @@ public class ProfileFragment extends Fragment {
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mCallback.addFragmentProfile(mPlayerProfile.list.get(id));
+                    mMyFragmentListenerCallback.openProfileFragment(mPlayerProfile.list.get(id));
                 }
             });
         }
@@ -329,16 +327,15 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onAttach(Activity activity) {
+        mTitle = mPlayerProfile.getName();
         super.onAttach(activity);
 
-        ((MainSlidingActivity) activity).onSectionAttached(3);
-
-//        try {
-//            mCallback = (OnAddNewFragmentCallback) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnHeadlineSelectedListener");
-//        }
+        try {
+            mCallback = (ProfileFragmentListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
     @Override
@@ -351,10 +348,10 @@ public class ProfileFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case android.R.id.home:
-                mCallback.removeFragment();
+                mMyFragmentListenerCallback.back();
                 break;
             case R.id.action_search:
-                mCallback.search();
+                mCallback.openSearchFragment();
                 break;
         }
         return true;
