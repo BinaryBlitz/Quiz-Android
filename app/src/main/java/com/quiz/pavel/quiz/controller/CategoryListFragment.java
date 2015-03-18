@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,37 +26,46 @@ import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.PlayerProfile;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by pavelkozemirov on 12.12.14.
  */
-public class CategoryListFragment extends ListFragment {
+public class CategoryListFragment extends MyFragment {
     private static final String TAG = "CategoryListFragment";
 
     private ArrayList<Category> mCategories;
 
-    OnEventCategoriListListener mCallback;
+    CategoryListListener mCallback;
 
-    public static CategoryListFragment newInstance() {
-        Bundle args = new Bundle();
-        CategoryListFragment fragment = new CategoryListFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    ListView listView;
 
-    public interface OnEventCategoriListListener {
-        public void onCategorySelected(int position);
+    public interface CategoryListListener {
+        public void onOpenTopicList(int position);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_categories, parent, false);
+
+
+
+        listView = (ListView) v.findViewById(R.id.listView);
 
         mCategories = new ArrayList<Category>();
 
@@ -75,11 +85,11 @@ public class CategoryListFragment extends ListFragment {
                                 Log.d(TAG, "Error, JSONException");
                             }
                         }
+//                        setRetainInstance(true);
 
-                        TopicAdapter adapter = new TopicAdapter(mCategories);
-                        setListAdapter(adapter);
+                        TopicAdapter arrayAdapter = new TopicAdapter(mCategories);
+                        listView.setAdapter(arrayAdapter);
 
-                        setRetainInstance(true);
                     }
                 }
                 , new Response.ErrorListener() {
@@ -91,48 +101,18 @@ public class CategoryListFragment extends ListFragment {
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-        //TODO: save downloaded topics and categories
-    }
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCallback.onOpenTopicList(position);
             }
         });
 
         return v;
     }
-
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -140,12 +120,12 @@ public class CategoryListFragment extends ListFragment {
 
         ((MainSlidingActivity) activity).onSectionAttached(2);
 
-//        try {
-//            mCallback = (OnEventCategoriListListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                    + " must implement OnHeadlineSelectedListener");
-//        }
+        try {
+            mCallback = (CategoryListListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
     private class TopicAdapter extends ArrayAdapter<Category> {
@@ -160,7 +140,7 @@ public class CategoryListFragment extends ListFragment {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
             }
-            Category c = (Category) getListAdapter().getItem(position);
+            Category c = (Category) mCategories.get(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
@@ -168,27 +148,6 @@ public class CategoryListFragment extends ListFragment {
 
             return convertView;
         }
-    }
-
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-//        mCallback.onCategorySelected(mCategories.get(position).getId());
-        //TODO: important moment
-        mCallback.onCategorySelected(position);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
-        super.onCreateOptionsMenu(menu, inflator);
-//        inflator.inflate(R.menu.menu_profile_fragment, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-
-        return true;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -23,7 +24,8 @@ import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
 
 public class MainSlidingActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyFragment.MyFragmentListener,
+        CategoryListFragment.CategoryListListener{
     public static final String TAG = "MainSlidingActivity";
 
     /**
@@ -40,6 +42,9 @@ public class MainSlidingActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mFragmentManager = getSupportFragmentManager();
+
         setContentView(R.layout.activity_main_sliding);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -50,15 +55,14 @@ public class MainSlidingActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
+
     FragmentManager mFragmentManager;
 
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
 
-        mFragmentManager = getSupportFragmentManager();
 
         Fragment fragment;
         switch (position) {
@@ -107,7 +111,14 @@ public class MainSlidingActivity extends ActionBarActivity
             case 5:
                 mTitle = getString(R.string.title_section5);
                 break;
+            case 6:
+                mTitle = getString(R.string.title_section6);
+                break;
         }
+    }
+
+    public void onSectionAttached(String str) {
+        mTitle = str;
     }
 
     public void restoreActionBar() {
@@ -146,6 +157,36 @@ public class MainSlidingActivity extends ActionBarActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void back() {
+        mFragmentManager.popBackStack();
+    }
+
+    @Override
+    public void onOpenTopicList(int position) {
+        TopicListFragment newFragment = new TopicListFragment(position);
+
+        Bundle args = new Bundle();
+        args.putInt("number_of_category", position);
+
+        newFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+        fragmentTransaction.replace(R.id.container, newFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        // Commit the transaction
+        fragmentTransaction.commit();
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.

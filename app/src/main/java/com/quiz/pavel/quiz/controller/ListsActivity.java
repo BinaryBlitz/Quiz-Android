@@ -16,7 +16,7 @@ import com.quiz.pavel.quiz.model.Mine;
  * Created by pavelkozemirov on 15.02.15.
  */
 public class ListsActivity extends ActionBarActivity
-        implements CategoryListFragment.OnEventCategoriListListener, TopicListFragment.OnEventTopicListListener {
+        implements  TopicListFragment.OnEventTopicListListener {
     private final static String TAG = "ListsActivity";
 
     ActionBar mActionBar;
@@ -35,12 +35,12 @@ public class ListsActivity extends ActionBarActivity
 
         Fragment fragment = mFragmentManager.findFragmentById(R.id.fragmentContainer);
 
-        if (fragment == null) {
-            fragment = CategoryListFragment.newInstance();
-            mFragmentManager.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
-                    .commit();
-        }
+//        if (fragment == null) {
+//            fragment = CategoryListFragment.newInstance();
+//            mFragmentManager.beginTransaction()
+//                    .add(R.id.fragmentContainer, fragment)
+//                    .commit();
+//        }
 
         mFragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -50,28 +50,28 @@ public class ListsActivity extends ActionBarActivity
         });
     }
 
-    @Override
-    public void onCategorySelected(int position) {
-        // Create fragment and give it an argument for the selected article
-        TopicListFragment newFragment = new TopicListFragment(position);
-
-        Bundle args = new Bundle();
-        args.putInt("number_of_category", position);
-
-        newFragment.setArguments(args);
-
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        mFragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
-
-        mFragmentTransaction.replace(R.id.fragmentContainer, newFragment);
-        mFragmentTransaction.addToBackStack(null);
-
-        // Commit the transaction
-        mFragmentTransaction.commit();
-    }
+//    @Override
+//    public void onCategorySelected(int position) {
+//        // Create fragment and give it an argument for the selected article
+//        TopicListFragment newFragment = new TopicListFragment(position);
+//
+//        Bundle args = new Bundle();
+//        args.putInt("number_of_category", position);
+//
+//        newFragment.setArguments(args);
+//
+//        mFragmentTransaction = mFragmentManager.beginTransaction();
+//
+//        // Replace whatever is in the fragment_container view with this fragment,
+//        // and add the transaction to the back stack so the user can navigate back
+//        mFragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+//
+//        mFragmentTransaction.replace(R.id.fragmentContainer, newFragment);
+//        mFragmentTransaction.addToBackStack(null);
+//
+//        // Commit the transaction
+//        mFragmentTransaction.commit();
+//    }
 
     private void update() {
         if(mFragmentManager.findFragmentById(R.id.fragmentContainer) instanceof CategoryListFragment) {

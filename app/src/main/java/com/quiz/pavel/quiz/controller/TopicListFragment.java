@@ -63,12 +63,15 @@ public class TopicListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
-            mCallback = (OnEventTopicListListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
+        ((MainSlidingActivity) activity).onSectionAttached(Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mNumberOfCategory).getTitle());
+
+//        try {
+//            mCallback = (OnEventTopicListListener) activity;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(activity.toString()
+//                    + " must implement OnHeadlineSelectedListener");
+//        }
     }
 
 
