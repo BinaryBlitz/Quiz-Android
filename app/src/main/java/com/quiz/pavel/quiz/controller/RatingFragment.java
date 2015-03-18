@@ -96,7 +96,7 @@ public class RatingFragment extends ListFragment {
 
 
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(), null,
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

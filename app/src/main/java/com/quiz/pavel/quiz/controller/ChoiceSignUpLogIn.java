@@ -178,7 +178,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
         }
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
-                "/players/authenticate_vk?token=" + token.accessToken, null,
+                "/players/authenticate_vk?token=" + token.accessToken,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

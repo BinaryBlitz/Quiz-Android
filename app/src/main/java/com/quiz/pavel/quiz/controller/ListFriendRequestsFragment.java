@@ -135,7 +135,7 @@ public class ListFriendRequestsFragment extends ListFragment {
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
                 "/friendships?friend_id=" + list.get(position).getId() + "&token=" +
-                Mine.getInstance(getActivity()).getToken(), null,
+                Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

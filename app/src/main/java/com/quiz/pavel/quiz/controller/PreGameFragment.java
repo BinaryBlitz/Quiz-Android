@@ -231,7 +231,7 @@ public class PreGameFragment extends Fragment {
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
                 Mine.URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity())
-                        .getToken(), null,
+                        .getToken(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -309,7 +309,7 @@ public class PreGameFragment extends Fragment {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
-                Mine.URL + "/lobbies/" + mId, null,
+                Mine.URL + "/lobbies/" + mId,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

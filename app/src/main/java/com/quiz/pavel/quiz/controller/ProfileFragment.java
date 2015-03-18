@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment {
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.DELETE, Mine.URL +
                     "/friendships/unfriend?friend_id=" + mPlayerProfile.getId() + "&token=" +
-                    Mine.getInstance(getActivity()).getToken(), null,
+                    Mine.getInstance(getActivity()).getToken(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -266,7 +266,7 @@ public class ProfileFragment extends Fragment {
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
                     "/friendships?friend_id=" + mPlayerProfile.getId() + "&token=" +
-                    Mine.getInstance(getActivity()).getToken(), null,
+                    Mine.getInstance(getActivity()).getToken(),
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
