@@ -132,16 +132,20 @@ public class CategoryListFragment extends ListFragment {
         return v;
     }
 
+
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        try {
-            mCallback = (OnEventCategoriListListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
+        ((MainSlidingActivity) activity).onSectionAttached(2);
+
+//        try {
+//            mCallback = (OnEventCategoriListListener) activity;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(activity.toString()
+//                    + " must implement OnHeadlineSelectedListener");
+//        }
     }
 
     private class TopicAdapter extends ArrayAdapter<Category> {

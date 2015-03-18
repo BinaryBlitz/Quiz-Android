@@ -211,6 +211,11 @@ public class RatingFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
+        ((MainSlidingActivity) activity).onSectionAttached(4);
+    }
 
 }

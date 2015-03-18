@@ -330,12 +330,15 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mCallback = (OnAddNewFragmentCallback) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
-        }
+
+        ((MainSlidingActivity) activity).onSectionAttached(3);
+
+//        try {
+//            mCallback = (OnAddNewFragmentCallback) activity;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(activity.toString()
+//                    + " must implement OnHeadlineSelectedListener");
+//        }
     }
 
     @Override

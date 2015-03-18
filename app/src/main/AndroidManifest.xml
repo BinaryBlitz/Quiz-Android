@@ -85,9 +85,10 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+
         <activity
-            android:name=".MainActivity2"
-            android:label="@string/title_activity_main_activity2" >
+            android:name=".controller.MainSlidingActivity"
+            android:label="@string/title_activity_main_sliding" >
         </activity>
     </application>
 

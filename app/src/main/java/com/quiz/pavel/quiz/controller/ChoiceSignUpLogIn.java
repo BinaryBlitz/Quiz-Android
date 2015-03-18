@@ -73,7 +73,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
     }
 
     private void startApp() {
-        Intent intent = new Intent(ChoiceSignUpLogIn.this, MainTabsActivity.class);
+        Intent intent = new Intent(ChoiceSignUpLogIn.this, MainSlidingActivity.class);
         startActivity(intent);
         finish();
     }
