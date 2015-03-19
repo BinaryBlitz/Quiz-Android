@@ -50,5 +50,6 @@
 
     <string name="action_example">Example action</string>
     <string name="title_activity_main_sliding">MainSlidingActivity</string>
+    <string name="challenge">Бросить вызов</string>
 
 </resources>

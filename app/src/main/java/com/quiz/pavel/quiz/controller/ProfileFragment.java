@@ -2,6 +2,7 @@ package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -25,6 +26,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
@@ -50,6 +53,8 @@ public class ProfileFragment extends MyFragment {
 
     public interface ProfileFragmentListener {
         public void openSearchFragment();
+        public void openFriendsListFragment(PlayerProfile p);
+        public void openCategoryList();
     }
 
     ProfileFragmentListener mCallback;
@@ -80,11 +85,17 @@ public class ProfileFragment extends MyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
-
         ButterKnife.inject(this, v);
 
         mNumberOfFriends.setVisibility(View.INVISIBLE);
         mMultiButton.setVisibility(View.INVISIBLE);
+
+        mNumberOfFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.openFriendsListFragment(mPlayerProfile);
+            }
+        });
 
 
         mTextViewName.setText(mPlayerProfile.getName() + " id:" + mPlayerProfile.getId());
@@ -201,9 +212,6 @@ public class ProfileFragment extends MyFragment {
         queue.add(arRequest);
     }
 
-
-
-
     @OnClick(R.id.logout)
     public void onClick() {
         Mine.getInstance(getActivity()).logOut(getActivity());
@@ -212,6 +220,10 @@ public class ProfileFragment extends MyFragment {
         getActivity().finish();
     }
 
+    @OnClick(R.id.challenge)
+    public void onClickChallenge() {
+        mCallback.openCategoryList();
+    }
 
 
     @OnClick(R.id.open_list)
@@ -219,11 +231,6 @@ public class ProfileFragment extends MyFragment {
         Intent i = new Intent(getActivity(), ListFriendRequestsActivity.class);
         startActivity(i);
     }
-
-//    @OnClick(R.id.settings_profile)
-//    public void onClickSettings() {
-//
-//    }
 
     @OnClick(R.id.milti_button)
     public void onClickAdd() {

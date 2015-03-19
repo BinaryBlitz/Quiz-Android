@@ -262,6 +262,34 @@ public class MainSlidingActivity extends ActionBarActivity
         fragmentTransaction.commit();
     }
 
+    @Override
+    public void openFriendsListFragment(PlayerProfile p) {
+        ListFriendRequestsFragment fragment = new ListFriendRequestsFragment(p);
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void openCategoryList() {
+        CategoryListFragment fragment = new CategoryListFragment();
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.
