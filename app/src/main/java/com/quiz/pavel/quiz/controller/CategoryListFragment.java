@@ -56,19 +56,16 @@ public class CategoryListFragment extends MyFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        mCategories = new ArrayList<Category>();
+
+
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_categories, parent, false);
-
-
-
         listView = (ListView) v.findViewById(R.id.listView);
-
-        mCategories = new ArrayList<Category>();
-
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonArrayRequest stringRequest = new JsonArrayRequest(Mine.URL + "/categories" + "?token=" +
@@ -77,6 +74,10 @@ public class CategoryListFragment extends MyFragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        if(getActivity() == null) {
+                            return;
+                        }
+                        mCategories.clear();
                         Mine.getInstance(getActivity()).saveCatTopicJsonAr(getActivity(), response);
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -85,10 +86,10 @@ public class CategoryListFragment extends MyFragment {
                                 Log.d(TAG, "Error, JSONException");
                             }
                         }
-//                        setRetainInstance(true);
 
                         TopicAdapter arrayAdapter = new TopicAdapter(mCategories);
                         listView.setAdapter(arrayAdapter);
+                        setRetainInstance(true);
 
                     }
                 }
@@ -101,8 +102,6 @@ public class CategoryListFragment extends MyFragment {
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

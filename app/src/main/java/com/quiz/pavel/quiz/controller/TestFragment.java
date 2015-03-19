@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.filippudak.ProgressPieView.ProgressPieView;
 import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Question;
@@ -58,6 +59,10 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.my_name) TextView mMyName;
     @InjectView(R.id.opponents_name) TextView mOpponentsName;
 
+    private ProgressPieView mProgressPieView;
+    private static final int SIZE = 96;
+    private static final int MARGIN = 8;
+
 
     private Button mLastPushedButton; //TODO: delete this line
 
@@ -77,6 +82,7 @@ public class TestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
@@ -110,6 +116,8 @@ public class TestFragment extends Fragment {
             @Override
             public void updateTimer(int i) {
                 mTimerTextView.setText(String.valueOf(10 - i));
+                mProgressPieView.setProgress(i * 10);
+                mProgressPieView.setText(String.valueOf(i));
             }
 
             @Override
@@ -142,6 +150,33 @@ public class TestFragment extends Fragment {
                 beginGame();
             }
         }, 1000);
+
+        float density = getResources().getDisplayMetrics().density;
+        int size = (int) (density * SIZE);
+        int margin = (int) (density * MARGIN);
+
+        // Default version
+        mProgressPieView = (ProgressPieView) v.findViewById(R.id.progressPieView);
+        mProgressPieView.setOnProgressListener(new ProgressPieView.OnProgressListener() {
+            @Override
+            public void onProgressChanged(int progress, int max) {
+                if (!mProgressPieView.isTextShowing()) {
+                    mProgressPieView.setShowText(true);
+                    mProgressPieView.setShowImage(false);
+                }
+            }
+
+            @Override
+            public void onProgressCompleted() {
+                if (!mProgressPieView.isImageShowing()) {
+                    mProgressPieView.setShowImage(true);
+                }
+                mProgressPieView.setShowText(false);
+//                mProgressPieView.setImageResource(R.drawable.ic_action_accept);
+            }
+        });
+
+        mTimerTextView.setVisibility(View.INVISIBLE);
 
         return v;
     }
