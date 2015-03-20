@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -37,8 +38,9 @@ import java.util.ArrayList;
  * Created by pavelkozemirov on 12.12.14.
  */
 public class RatingFragment extends ListFragment {
-
     private static final String TAG = "RatingFragment";
+
+    private FragmentTabHost mTabHost;
 
     private String mName;
 
@@ -109,10 +111,10 @@ public class RatingFragment extends ListFragment {
                             Log.d(TAG, "Error with parsing json response");
                         }
 
-                        TopicAdapter adapter = new TopicAdapter(mPlayers);
-                        setListAdapter(adapter);
-
-                        setRetainInstance(true);
+//                        TopicAdapter adapter = new TopicAdapter(mPlayers);
+//                        setListAdapter(adapter);
+//
+//                        setRetainInstance(true);
                     }
                 }
                 , new Response.ErrorListener() {
@@ -151,53 +153,61 @@ public class RatingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
+//        View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.INVISIBLE);
-        listView.setClickable(false);
-        listView.setFocusable(false);
+        View v = inflater.inflate(R.layout.fragment_rating, parent, false);
+
+        mTabHost = new FragmentTabHost(getActivity());
+        mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.containerRating);
+
+        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("Simple"),
+                CategoryListFragment.class, null);
+
+//        ListView listView = (ListView) v.findViewById(android.R.id.list);
+//        listView.setChoiceMode(ListView.INVISIBLE);
+//        listView.setClickable(false);
+//        listView.setFocusable(false);
 
         return v;
     }
 
-    private class TopicAdapter extends ArrayAdapter<PlayerRating> {
-        public TopicAdapter(ArrayList<PlayerRating> topics) {
-            super(getActivity(), 0, topics);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            if (convertView == null) {
-                convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_ranking, null);
-            }
-            PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
-
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
-            if(c.getId() == Mine.getInstance(getActivity()).getId()) {
-                convertView.setBackgroundColor(Color.LTGRAY);
-            }
-            titleTextView.setText(c.getName());
-
-            TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
-            if(c.getPosition() > 0) {
-                numberTextView.setText(String.valueOf(c.getPosition()));
-            } else {
-                numberTextView.setText("");
-            }
-
-            TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
-            if(c.getPoints() >= 0){
-                pointsTextView.setText(String.valueOf(c.getPoints()));
-            } else {
-                pointsTextView.setText("");
-            }
-
-            return convertView;
-        }
-    }
+//    private class TopicAdapter extends ArrayAdapter<PlayerRating> {
+//        public TopicAdapter(ArrayList<PlayerRating> topics) {
+//            super(getActivity(), 0, topics);
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent) {
+//
+//            if (convertView == null) {
+//                convertView = getActivity().getLayoutInflater()
+//                        .inflate(R.layout.list_item_ranking, null);
+//            }
+//            PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
+//
+//            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+//            if(c.getId() == Mine.getInstance(getActivity()).getId()) {
+//                convertView.setBackgroundColor(Color.LTGRAY);
+//            }
+//            titleTextView.setText(c.getName());
+//
+//            TextView numberTextView = (TextView) convertView.findViewById(R.id.number_textView);
+//            if(c.getPosition() > 0) {
+//                numberTextView.setText(String.valueOf(c.getPosition()));
+//            } else {
+//                numberTextView.setText("");
+//            }
+//
+//            TextView pointsTextView = (TextView) convertView.findViewById(R.id.points_textView);
+//            if(c.getPoints() >= 0){
+//                pointsTextView.setText(String.valueOf(c.getPoints()));
+//            } else {
+//                pointsTextView.setText("");
+//            }
+//
+//            return convertView;
+//        }
+//    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)

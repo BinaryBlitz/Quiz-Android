@@ -3,13 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
-
     </style>
 
     <style name="ButtonVar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/button_var</item>
+        <item name="android:drawableLeft">@drawable/point</item>
     </style>
 
     <style name="TwoWayView">

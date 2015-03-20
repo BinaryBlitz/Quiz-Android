@@ -3,6 +3,7 @@ package com.quiz.pavel.quiz.controller;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -106,7 +107,7 @@ public class TestFragment extends Fragment {
 
             @Override
             public void callbackCallOpponent(int i) {
-                    mOpponentsPointsTextView.setText(String.valueOf(i));
+                mOpponentsPointsTextView.setText(String.valueOf(i));
             }
 
         };
@@ -117,7 +118,7 @@ public class TestFragment extends Fragment {
             public void updateTimer(int i) {
                 mTimerTextView.setText(String.valueOf(10 - i));
                 mProgressPieView.setProgress(i * 10);
-                mProgressPieView.setText(String.valueOf(i));
+                mProgressPieView.setText(String.valueOf(10 - i));
             }
 
             @Override
@@ -195,19 +196,21 @@ public class TestFragment extends Fragment {
         Log.d(TAG, "onCloseRound, mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
             case 0:
-                mVariantA.setTextColor(Color.RED);
+                mVariantA.setBackgroundColor(Color.BLUE);
                 break;
             case 1:
-                mVariantB.setTextColor(Color.RED);
+                mVariantB.setBackgroundColor(Color.BLUE);
                 break;
             case 2:
-                mVariantC.setTextColor(Color.RED);
+                mVariantC.setBackgroundColor(Color.BLUE);
                 break;
             case 3:
-                mVariantD.setTextColor(Color.RED);
+                mVariantD.setBackgroundColor(Color.BLUE);
                 break;
-
         }
+
+
+
         Log.d(TAG, "onCloseRound, mCorrectAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
             case 0:
@@ -602,8 +605,6 @@ public class TestFragment extends Fragment {
     }
 
     private void updateGUI() {
-
-
         mRoundShowerTextView.setText("Round " + mSessionManager.mSession.getNumberOfRound());
         showRoundTable();
         blockOfButtons = false;
@@ -619,6 +620,12 @@ public class TestFragment extends Fragment {
         mVariantB.setTextColor(Color.BLACK);
         mVariantC.setTextColor(Color.BLACK);
         mVariantD.setTextColor(Color.BLACK);
+
+        mVariantA.setBackgroundColor(Color.WHITE);
+        mVariantB.setBackgroundColor(Color.WHITE);
+        mVariantC.setBackgroundColor(Color.WHITE);
+        mVariantD.setBackgroundColor(Color.WHITE);
+
     }
 
     @Override
@@ -688,7 +695,6 @@ public class TestFragment extends Fragment {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
-
 
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
