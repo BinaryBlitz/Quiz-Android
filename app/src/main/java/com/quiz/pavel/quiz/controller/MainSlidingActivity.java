@@ -55,7 +55,6 @@ public class MainSlidingActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
 
         mFragmentManager = getSupportFragmentManager();
-
         setContentView(R.layout.activity_main_sliding);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
