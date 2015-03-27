@@ -16,19 +16,28 @@ import com.quiz.pavel.quiz.R;
  */
 public class PreGameActivity extends FragmentActivity {
 
+    private static final String EXTRA = "extra.pregameactivity";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
         FragmentManager fm = getSupportFragmentManager();
 
+        int index = 0;
+        index = getIntent().getIntExtra(EXTRA, 0);
+
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
         if (fragment == null) {
-            fragment = PreGameFragment.newInstance();
+            if(index == 0) {
+                fragment = PreGameFragment.newInstance();
+            } else {
+                fragment = ChallengePreGameFragment.newInstance();
+            }
+
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
@@ -38,7 +47,7 @@ public class PreGameActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        PreGameFragment fragment = (PreGameFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        BasePreGameFragment fragment = (BasePreGameFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         fragment.closeLobby();
         fragment.onDestroy();
     }

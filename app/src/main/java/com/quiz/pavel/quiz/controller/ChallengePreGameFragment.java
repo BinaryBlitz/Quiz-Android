@@ -3,16 +3,13 @@ package com.quiz.pavel.quiz.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,19 +37,23 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 /**
- * Created by pavelkozemirov on 14.02.15.
+ * Created by pavel on 27/03/15.
  */
-public class PreGameFragment extends BasePreGameFragment {
+public class ChallengePreGameFragment extends BasePreGameFragment {
 
     private static String TAG = "PreGameFragment";
 
     Timer mTimer;
 
     public int mTopicId;
+    private int mOpponentId;
+
     private String mId;
 
-    @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
+    @InjectView(R.id.name_of_topic)
+    TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
+
 
     public static PreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -82,7 +83,10 @@ public class PreGameFragment extends BasePreGameFragment {
             }
         }, ConnectionState.ALL);
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
+        mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -131,6 +135,7 @@ public class PreGameFragment extends BasePreGameFragment {
         try {
             JSONObject par = new JSONObject();
             par.put("topic_id", mTopicId);
+            par.put("opponent_id", mOpponentId);
 
             params.put("lobby", par);
 
@@ -140,7 +145,7 @@ public class PreGameFragment extends BasePreGameFragment {
             Log.d(TAG, "Problem with parsing json(Intent)");
         }
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies",
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies/challenge",
                 params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -338,6 +343,5 @@ public class PreGameFragment extends BasePreGameFragment {
     private void closeThis() {
         getActivity().finish();
     }
-
 
 }

@@ -103,12 +103,8 @@ public class SearchFragment extends MyFragment {
 
         Log.d(TAG, "query = " + query);
 
-        HashMap<String, String> params = new HashMap<String, String>();
-        params.put("query", query);
-        params.put("token", Mine.getInstance(getActivity()).getToken());
-
-
-        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL + "/players/search",
+        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL + "/players/search?query=" + query.trim().replace(" ", "%20")
+                + "&token=" + Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
