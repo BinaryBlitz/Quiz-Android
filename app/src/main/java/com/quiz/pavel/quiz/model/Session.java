@@ -58,6 +58,7 @@ public class Session {
 
     private String mMyName = "Я";
     private String mOpponentsName = "Оппонент";
+    public int mId;
 
 
 
@@ -75,13 +76,22 @@ public class Session {
         mSessionQuestions = new LinkedList<SessionQuestion>();
 
         try {
-            int host_id = response.getInt("host_id");
+            mId = response.getInt("id");
+
+
+            JSONObject objHost = response.getJSONObject("host");
+            JSONObject objOpponent = response.getJSONObject("opponent");
+
+            int host_id = objHost.getInt("id");
+
             if(host_id == Mine.getInstance(c).getId()) {
-                mMyName = response.getString("host_name");
-                mOpponentsName = response.getString("opponent_name");
+
+                mMyName = objHost.getString("name");
+                mOpponentsName = objOpponent.getString("name");
             } else {
-                mMyName = response.getString("opponent_name");
-                mOpponentsName = response.getString("host_name");
+
+                mMyName = objOpponent.getString("name");
+                mOpponentsName = objHost.getString("name");
             }
 
         } catch (JSONException ex) {

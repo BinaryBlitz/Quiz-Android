@@ -103,9 +103,12 @@ public class SearchFragment extends MyFragment {
 
         Log.d(TAG, "query = " + query);
 
-        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL
-                + "/players/search?query=" + query + "&token="
-                + Mine.getInstance(getActivity()).getToken(),
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("query", query);
+        params.put("token", Mine.getInstance(getActivity()).getToken());
+
+
+        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL + "/players/search",
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -133,7 +136,16 @@ public class SearchFragment extends MyFragment {
                     public void onErrorResponse(VolleyError error) {
 
                     }
-                });
+                }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
         queue.add(arRequest);
     }
 
