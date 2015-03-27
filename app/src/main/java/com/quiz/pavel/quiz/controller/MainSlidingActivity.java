@@ -402,7 +402,7 @@ public class MainSlidingActivity extends ActionBarActivity
     private SharedPreferences getGCMPreferences(Context context) {
         // This sample app persists the registration ID in shared preferences, but
         // how you store the registration ID in your app is up to you.
-        return getSharedPreferences(MainTabsActivity.class.getSimpleName(),
+        return getSharedPreferences(MainSlidingActivity.class.getSimpleName(),
                 Context.MODE_PRIVATE);
     }
 

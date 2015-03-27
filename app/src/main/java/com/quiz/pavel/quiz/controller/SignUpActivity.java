@@ -107,7 +107,7 @@ public class SignUpActivity extends Activity {
                             }
 
                             Intent intent = new Intent(SignUpActivity.this,
-                                    MainTabsActivity.class);
+                                    MainSlidingActivity.class);
                             startActivity(intent);
                             finish();
 

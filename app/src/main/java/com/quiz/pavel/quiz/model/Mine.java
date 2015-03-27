@@ -23,7 +23,7 @@ public class Mine {
     private static final String TAG= "Mine";
 
 //    public static final String URL = "https://protected-atoll-5061.herokuapp.com";
-    public static final String URL = "http://quizapp.binaryblitz.ru";
+    public static final String URL = "http://quizapp.binaryblitz.ru/api";
 
 
     public static final String PREFS_NAME = "MyPrefsFile";

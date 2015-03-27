@@ -7,13 +7,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.controller.MainTabsActivity;
+import com.quiz.pavel.quiz.controller.MainSlidingActivity;
 
 /**
  * Created by pavel on 08/03/15.
@@ -87,7 +86,7 @@ issueNotification(intent, "");
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainTabsActivity.class), 0);
+                new Intent(this, MainSlidingActivity.class), 0);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
@@ -145,7 +144,7 @@ issueNotification(intent, "");
          * UI for snoozing or dismissing the notification.
          * This is available through either the normal view or big view.
          */
-        Intent resultIntent = new Intent(this, MainTabsActivity.class);
+        Intent resultIntent = new Intent(this, MainSlidingActivity.class);
 //        resultIntent.putExtra(CommonConstants.EXTRA_MESSAGE, msg);
 //         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 

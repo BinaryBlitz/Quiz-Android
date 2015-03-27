@@ -106,7 +106,7 @@ public class LogInActivity extends Activity {
                             }
 
                             Intent intent = new Intent(LogInActivity.this,
-                                    MainTabsActivity.class);
+                                    MainSlidingActivity.class);
                             startActivity(intent);
                             finish();
                         }
