@@ -114,7 +114,8 @@ public class MainSlidingActivity extends ActionBarActivity
                         Mine.getInstance(this).getName()));
                 break;
             case 3:
-                fragment = new RatingFragment("general", 1, 1);
+//                fragment = new RatingFragment("general", 1, 1);
+                fragment = new RatingFragment1();
                 break;
             case 4:
                 fragment = PlaceholderFragment.newInstance(position + 1);

@@ -60,10 +60,6 @@
         </activity>
         <activity android:name=".controller.ProfileActivity" >
         </activity>
-        <activity
-            android:name=".controller.RatingActivity"
-            android:label="@string/title_activity_rating" >
-        </activity>
         <activity android:name=".controller.RRatingActivity" >
         </activity>
         <activity android:name=".controller.ListFriendRequestsActivity" >
