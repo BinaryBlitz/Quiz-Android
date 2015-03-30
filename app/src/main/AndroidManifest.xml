@@ -58,8 +58,7 @@
         </activity>
         <activity android:name=".controller.LogInActivity" >
         </activity>
-        <activity android:name=".controller.ProfileActivity" >
-        </activity>
+
         <activity android:name=".controller.RRatingActivity" >
         </activity>
         <activity android:name=".controller.ListFriendRequestsActivity" >

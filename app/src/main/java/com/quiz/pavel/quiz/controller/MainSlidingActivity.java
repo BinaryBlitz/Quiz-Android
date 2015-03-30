@@ -24,19 +24,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
+import com.quiz.pavel.quiz.model.Session;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainSlidingActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyFragment.MyFragmentListener,
-        CategoryListFragment.CategoryListListener, ProfileFragment.ProfileFragmentListener {
+        CategoryListFragment.CategoryListListener, ProfileFragment.ProfileFragmentListener, ChallengeCategoryListFragment.ChallengeCategoryListListener {
     public static final String TAG = "MainSlidingActivity";
 
     /**
@@ -49,6 +62,7 @@ public class MainSlidingActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
 
+    private int mIdForChallenge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,8 +292,8 @@ public class MainSlidingActivity extends ActionBarActivity
     }
 
     @Override
-    public void openCategoryList() {
-        CategoryListFragment fragment = new CategoryListFragment();
+    public void openCategoryListChallenge() {
+        ChallengeCategoryListFragment fragment = new ChallengeCategoryListFragment();
 
         FragmentTransaction fragmentTransaction;
 
@@ -288,6 +302,35 @@ public class MainSlidingActivity extends ActionBarActivity
         fragmentTransaction.replace(R.id.container, fragment);
 
         fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void setIdForChallenge(int id) {
+        mIdForChallenge = id;
+    }
+
+    @Override
+    public void onOpenTopicListChallenge(int position) {
+        ChallengeTopicListFragment newFragment = new ChallengeTopicListFragment(position, mIdForChallenge);
+
+        Bundle args = new Bundle();
+        args.putInt("number_of_category", position);
+
+        newFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+        fragmentTransaction.replace(R.id.container, newFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        // Commit the transaction
         fragmentTransaction.commit();
     }
 
@@ -476,6 +519,46 @@ public class MainSlidingActivity extends ActionBarActivity
      * using the 'from' address in the message.
      */
     private void sendRegistrationIdToBackend() {
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        JSONObject params = new JSONObject();
+
+        try {
+            JSONObject par = new JSONObject();
+            par.put("push_token", regid);
+            par.put("android", true);
+            params.put("token", Mine.getInstance(this).getToken());
+
+        } catch (JSONException e) {
+            Log.d(TAG, "Problem with parsing json(Intent)");
+        }
+
+        Log.d(TAG, "sendRegistrationIdToBackend");
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/push_tokens?push_token="
+                + regid + "&android=true", params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.d(TAG, "Push_token_id has been send");
+            }
+        }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, have no data from server");
+            }
+
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     /**

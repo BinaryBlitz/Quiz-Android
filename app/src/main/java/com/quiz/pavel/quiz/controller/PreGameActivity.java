@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -15,8 +16,9 @@ import com.quiz.pavel.quiz.R;
  * Created by pavelkozemirov on 14.02.15.
  */
 public class PreGameActivity extends FragmentActivity {
+    private static final String TAG = "PreGameActivity";
 
-    private static final String EXTRA = "extra.pregameactivity";
+    public static final String EXTRA = "extra.pregameactivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,7 @@ public class PreGameActivity extends FragmentActivity {
 
         int index = 0;
         index = getIntent().getIntExtra(EXTRA, 0);
+        Log.d(TAG, "extra = " + index);
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 

@@ -235,9 +235,10 @@ public class RatingFragment1 extends MyFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        mTitle = "Рейтинг";
+
         super.onAttach(activity);
 
         ((MainSlidingActivity) activity).onSectionAttached(2);
-        mTitle = "Рейтинг";
     }
 }

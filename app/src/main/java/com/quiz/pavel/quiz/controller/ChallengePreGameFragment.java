@@ -41,7 +41,7 @@ import butterknife.InjectView;
  */
 public class ChallengePreGameFragment extends BasePreGameFragment {
 
-    private static String TAG = "PreGameFragment";
+    private final static String TAG = "ChallengePreGameFr";
 
     Timer mTimer;
 
@@ -55,9 +55,9 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
 
 
-    public static PreGameFragment newInstance() {
+    public static ChallengePreGameFragment newInstance() {
         Bundle args = new Bundle();
-        PreGameFragment fragment = new PreGameFragment();
+        ChallengePreGameFragment fragment = new ChallengePreGameFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,6 +65,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "launch");
         sm = new SessionManager(getActivity());
         sm.mPusher.connect(new ConnectionEventListener() {
             @Override
@@ -101,27 +102,27 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         return v;
     }
 
-    int limit;
-
-    public void startTimer() {
-        mTimer = new Timer();
-        limit = 0;
-        mTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "executing action from schedule: " + limit);
-                sendReq();   // Question
-                limit++;
-                if (limit >= 12) {
-                    if (mTimer != null) {
-                        mTimer.cancel();
-                        mTimer.purge();
-                    }
-                    sm.mPusher.disconnect();
-                }
-            }
-        }, 0, 2000);
-    }
+//    int limit;
+//
+//    public void startTimer() {
+//        mTimer = new Timer();
+//        limit = 0;
+//        mTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.d(TAG, "executing action from schedule: " + limit);
+//                sendReq();   // Question
+//                limit++;
+//                if (limit >= 12) {
+//                    if (mTimer != null) {
+//                        mTimer.cancel();
+//                        mTimer.purge();
+//                    }
+//                    sm.mPusher.disconnect();
+//                }
+//            }
+//        }, 0, 2000);
+//    }
 
     private void createLobby() {
         if (getActivity() == null) {
@@ -145,20 +146,23 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
             Log.d(TAG, "Problem with parsing json(Intent)");
         }
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies/challenge",
-                params, new Response.Listener<JSONObject>() {
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies/challenge?topic_id="
+                + mTopicId + "&opponent_id=" + mOpponentId, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d(TAG, "LOBBY HAS BEEN CREATED");
-                try {
-                    mId = response.getString("id");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+
+                Log.d(TAG, "LOBBY HAS BEEN CREATED, response = " + response);
+                sm.mSession = new Session(getActivity(), response);
+
+//                try {
+//                    mId = response.getString("id");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
                 listenEventChannel();
 
-                startTimer();
+//                startTimer();
             }
         }
                 , new Response.ErrorListener() {

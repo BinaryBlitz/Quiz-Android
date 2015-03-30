@@ -442,43 +442,32 @@ public class TestFragment extends Fragment {
             }
             Intent intent = new Intent(getActivity(), PostGameActivity.class);
             intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+            sendToCloseGameSession();
             startActivity(intent);
             finish = true;
 
             getActivity().finish();
-            sendToCloseLobby();
             return;
         }
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
 
     }
 
-    private void sendToCloseLobby() {
+    private void sendToCloseGameSession() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
                 Mine.URL + "/game_sessions/" + mSessionManager.mSession.mId + "/close",
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "PATCH HAS SEND, response: " + response.toString());
-
-                        //TODO: возможно, сделать, что от этого должно зависить будет ли запускаться следующий раунд
+                        Log.d(TAG, "PATCH on close game session HAS SEND, response: " + response.toString());
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                NetworkResponse response = error.networkResponse;
-                if (response != null && response.data != null) {
-                    switch (response.statusCode) {
-                        case 401:
-                            Log.d(TAG, "Error 401" + error.getMessage());
-                            break;
-                    }
                     //Add cases
-                }
             }
         }) {
 
@@ -490,7 +479,6 @@ public class TestFragment extends Fragment {
                 return params;
             }
         };
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 

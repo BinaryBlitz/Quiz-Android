@@ -54,7 +54,8 @@ public class ProfileFragment extends MyFragment {
     public interface ProfileFragmentListener {
         public void openSearchFragment();
         public void openFriendsListFragment(PlayerProfile p);
-        public void openCategoryList();
+        public void openCategoryListChallenge();
+        public void setIdForChallenge(int id);
     }
 
     ProfileFragmentListener mCallback;
@@ -68,6 +69,7 @@ public class ProfileFragment extends MyFragment {
     @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
     @InjectView(R.id.milti_button) Button mMultiButton;
+    @InjectView(R.id.challenge) Button mChallengeButton;
 
     public PlayerProfile mPlayerProfile;
 
@@ -124,10 +126,13 @@ public class ProfileFragment extends MyFragment {
     private void setNameOfMultiButton() {
         if(mPlayerProfile.isMe()) {
             mMultiButton.setText("Настройки");
+            mChallengeButton.setVisibility(View.INVISIBLE);
         } else if(mPlayerProfile.isInMyFriends(myFriendList)) {
             mMultiButton.setText("Убрать из друзей");
+            mChallengeButton.setVisibility(View.VISIBLE);
         } else {
             mMultiButton.setText("Добавить в друзья");
+            mChallengeButton.setVisibility(View.VISIBLE);
         }
         mMultiButton.setVisibility(View.VISIBLE);
     }
@@ -222,7 +227,8 @@ public class ProfileFragment extends MyFragment {
 
     @OnClick(R.id.challenge)
     public void onClickChallenge() {
-        mCallback.openCategoryList();
+        mCallback.setIdForChallenge(mPlayerProfile.getId());
+        mCallback.openCategoryListChallenge();
     }
 
 
