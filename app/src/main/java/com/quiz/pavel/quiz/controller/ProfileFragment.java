@@ -1,7 +1,11 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -222,7 +226,45 @@ public class ProfileFragment extends MyFragment {
         Mine.getInstance(getActivity()).logOut(getActivity());
         Intent intent = new Intent(getActivity(), ChoiceSignUpLogIn.class);
         startActivity(intent);
+        setEmptyForPushNotificationId();
         getActivity().finish();
+    }
+
+    public static final String PROPERTY_REG_ID = "registration_id";
+    private static final String PROPERTY_APP_VERSION = "appVersion";
+
+    private void setEmptyForPushNotificationId() {
+        final SharedPreferences prefs = getGCMPreferences(getActivity());
+        int appVersion = getAppVersion(getActivity());
+        Log.i(TAG, "Saving regId on app version " + appVersion);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(PROPERTY_REG_ID, "");
+        editor.putInt(PROPERTY_APP_VERSION, appVersion);
+        editor.commit();
+    }
+
+    /**
+     * @return Application's {@code SharedPreferences}.
+     */
+    private SharedPreferences getGCMPreferences(Context context) {
+        // This sample app persists the registration ID in shared preferences, but
+        // how you store the registration ID in your app is up to you.
+        return getActivity().getSharedPreferences(MainSlidingActivity.class.getSimpleName(),
+                Context.MODE_PRIVATE);
+    }
+
+    /**
+     * @return Application's version code from the {@code PackageManager}.
+     */
+    private static int getAppVersion(Context context) {
+        try {
+            PackageInfo packageInfo = context.getPackageManager()
+                    .getPackageInfo(context.getPackageName(), 0);
+            return packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            // should never happen
+            throw new RuntimeException("Could not get package name: " + e);
+        }
     }
 
     @OnClick(R.id.challenge)
@@ -258,8 +300,8 @@ public class ProfileFragment extends MyFragment {
                     , new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "Error with response");
                 }
-
             }) {
 
                 @Override
@@ -274,6 +316,9 @@ public class ProfileFragment extends MyFragment {
             queue.add(stringRequest);
         } else {
             RequestQueue queue = Volley.newRequestQueue(getActivity());
+            Log.d(TAG, "url = " + Mine.URL +
+                    "/friendships?friend_id=" + mPlayerProfile.getId() + "&token=" +
+                    Mine.getInstance(getActivity()).getToken());
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
                     "/friendships?friend_id=" + mPlayerProfile.getId() + "&token=" +
@@ -287,8 +332,8 @@ public class ProfileFragment extends MyFragment {
                     , new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "Error with response");
                 }
-
             }) {
 
                 @Override
