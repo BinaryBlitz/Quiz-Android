@@ -8,5 +8,10 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/listView"/>
+        android:divider="@null"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+
+        android:id="@+id/listView"
+        android:background="#888888"/>
 </LinearLayout>

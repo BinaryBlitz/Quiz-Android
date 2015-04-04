@@ -93,7 +93,6 @@ public class TopicListFragment extends MyFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_topic, null);
@@ -102,7 +101,6 @@ public class TopicListFragment extends MyFragment {
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
-
 
             return convertView;
         }
