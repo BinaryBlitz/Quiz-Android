@@ -163,11 +163,11 @@ public class TestFragment extends Fragment {
 
         mSessionManager.listenEvent();
 
-        mMyName.setText(mSessionManager.mSession.getMyName());
-        mOpponentsName.setText(mSessionManager.mSession.getOpponentsName());
 
 
-        setAvatars();
+
+
+        setAvatarsNames();
 
 
         Handler handler = new Handler();
@@ -208,8 +208,22 @@ public class TestFragment extends Fragment {
         return v;
     }
 
-    private void setAvatars() {
-        Log.d(TAG, "url =====" + mSessionManager.mSession.mOpponentAvatarUrl);
+    private void setAvatarsNames() {
+        String myname = mSessionManager.mSession.getMyName();
+        String opponentName = mSessionManager.mSession.getOpponentsName();
+
+        if (myname.length() > 10) {
+            mMyName.setText(myname.substring(0, 8) + "...");
+        } else {
+            mMyName.setText(myname);
+        }
+
+        if (opponentName.length() > 10) {
+            mOpponentsName.setText(opponentName.substring(0, 8) + "...");
+        } else {
+            mOpponentsName.setText(opponentName);
+        }
+
         if (mSessionManager.mSession.mMyAvatarUrl == "null") {
             Picasso.with(getActivity())
                     .load(R.drawable.catty)
@@ -528,6 +542,7 @@ public class TestFragment extends Fragment {
 
         mRoundShowerTextView.setAlpha(0f);
         mRoundShowerTextView.setVisibility(View.VISIBLE);
+        mQuestionTextView.setVisibility(View.GONE);
 
         mRoundShowerTextView.animate()
                 .alpha(1f)

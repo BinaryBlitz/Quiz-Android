@@ -14,14 +14,14 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1"
         >
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0.25"
             android:gravity="center"
             android:id="@+id/broad_my_profile"
             >
@@ -41,11 +41,14 @@
 
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="myName"
-                android:id="@+id/my_name" />
+                android:text="name"
+                android:id="@+id/my_name"
+                android:autoText="false"
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,7 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_weight="2"
+            android:layout_weight="0.5"
+
 
             >
             <com.filippudak.ProgressPieView.ProgressPieView
@@ -77,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="10"
+                android:maxLines="1"
                 android:id="@+id/timer_textView" />
         </LinearLayout>
 
@@ -84,10 +89,9 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0.25"
             android:gravity="center"
             android:id="@+id/broad_opponent_profile"
-
             >
 
 
@@ -104,11 +108,14 @@
                 />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="opponents name"
-                android:id="@+id/opponents_name" />
+                android:text="name"
+                android:maxLines="1"
+                android:id="@+id/opponents_name"
+                android:gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -121,58 +128,63 @@
     </LinearLayout>
 
 
-    <FrameLayout android:orientation="vertical"
+
+
+
+
+    <LinearLayout android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_weight="2"
             >
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/question_text_view"
-                android:text="example" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Round "
-            android:layout_gravity="center"
-            android:id="@+id/round_shower"/>
-
-    </FrameLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         <LinearLayout
+            android:orientation="vertical"
+            android:layout_margin="20dp"
+            android:background="@drawable/shape"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            >
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:id="@+id/question_text_view"
+                    android:text="example"
+                    android:gravity="center"
+                    android:textColor="#ffffff"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Round "
+                android:layout_gravity="center"
+                android:id="@+id/round_shower"
+                android:gravity="center"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             >
+
             <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:id="@+id/buttons_broad"
+                android:layout_margin="20dp"
+
 
                 >
                 <LinearLayout
@@ -185,9 +197,10 @@
                         android:id="@+id/variant_a_button"
                         android:text="A"
                         android:padding="30dp"
-                        android:background="@color/button_material_light"
+                        android:background="@drawable/shape"
                         android:layout_marginRight="5dp"
                         style="@style/ButtonVar"
+
                         />
                     <Button
                         android:layout_marginLeft="5dp"
@@ -196,10 +209,12 @@
                         android:text="B"
                         android:padding="30dp"
                         android:id="@+id/variant_b_button"
-                        android:background="@color/button_material_light"
+                        android:background="@drawable/shape"
+
 
                         />
                 </LinearLayout>
+
                 <LinearLayout android:orientation="horizontal"
                               android:layout_width="match_parent"
                               android:layout_height="wrap_content"
@@ -211,8 +226,7 @@
 
                         android:padding="30dp"
                         android:id="@+id/variant_c_button"
-                        android:background="@color/button_material_light"
-
+                        android:background="@drawable/shape"
                         android:text="C" />
 
                     <Button
@@ -222,14 +236,15 @@
                         android:text="D"
                         android:padding="30dp"
                         android:id="@+id/variant_d_button"
-                        android:background="@color/button_material_light"
+                        android:background="@drawable/shape"
+
 
                         />
                 </LinearLayout>
             </LinearLayout>
+
+
         </LinearLayout>
-
-
 
 
 </LinearLayout>
