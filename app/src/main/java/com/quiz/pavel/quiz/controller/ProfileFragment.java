@@ -119,7 +119,7 @@ public class ProfileFragment extends MyFragment {
         }
 
         Picasso.with(getActivity())
-                .load(R.drawable.strawberry)
+                .load(R.drawable.catty)
                 .fit()
                 .into(mPhoto);
         downloadMyFriends();
@@ -179,7 +179,7 @@ public class ProfileFragment extends MyFragment {
         for (int i = 0; i < arViews.size(); i++) {
             ImageView imageButton = (ImageView) arViews.get(i).findViewById(R.id.imageButton);
             Picasso.with(getActivity())
-                    .load(R.drawable.strawberry)
+                    .load(R.drawable.catty)
                     .fit()
                     .into(imageButton);
         }

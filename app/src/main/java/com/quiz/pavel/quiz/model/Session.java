@@ -58,6 +58,10 @@ public class Session {
 
     private String mMyName = "Я";
     private String mOpponentsName = "Оппонент";
+
+    public String mMyAvatarUrl;
+    public String mOpponentAvatarUrl;
+
     public int mId;
 
 
@@ -85,13 +89,17 @@ public class Session {
             int host_id = objHost.getInt("id");
 
             if(host_id == Mine.getInstance(c).getId()) {
-
                 mMyName = objHost.getString("name");
                 mOpponentsName = objOpponent.getString("name");
+                mMyAvatarUrl = objHost.getString("avatar_url");
+                mOpponentAvatarUrl = objOpponent.getString("avatar_url");
+
             } else {
 
                 mMyName = objOpponent.getString("name");
                 mOpponentsName = objHost.getString("name");
+                mMyAvatarUrl = objOpponent.getString("avatar_url");
+                mOpponentAvatarUrl = objHost.getString("avatar_url");
             }
 
         } catch (JSONException ex) {

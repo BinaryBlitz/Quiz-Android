@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:ppv="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
@@ -25,13 +26,19 @@
             android:id="@+id/broad_my_profile"
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+
+            <com.github.siyamed.shapeimageview.CircularImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/my_image_imageView"
-                android:src="@android:drawable/ic_dialog_email"
-                android:background="@android:color/darker_gray"
+                app:siBorderWidth="2dp"
+                android:scaleType="centerCrop"
+                app:siBorderColor="#FF000000"
+                app:siSquare="true"
+                android:layout_gravity="center"
                 />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                ppv:ppvBackgroundColor="@color/tabTransparent"
                 android:layout_gravity="center"
                 android:id="@+id/progressPieView"/>
 
@@ -82,12 +90,17 @@
 
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+
+
+            <com.github.siyamed.shapeimageview.CircularImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/opponents_image_imageView"
-                android:src="@android:drawable/ic_dialog_dialer"
-                android:background="@android:color/darker_gray"
+                app:siBorderWidth="2dp"
+                android:scaleType="centerCrop"
+                app:siBorderColor="#FF000000"
+                app:siSquare="true"
+                android:layout_gravity="center"
                 />
 
             <TextView
@@ -129,85 +142,94 @@
             android:id="@+id/round_shower"/>
 
     </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.5"
-        android:gravity="center"
-        >
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttons_broad"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
             >
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
+                android:id="@+id/buttons_broad"
+
                 >
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    >
+                    <Button
+                        android:id="@+id/variant_a_button"
+                        android:text="A"
+                        android:padding="30dp"
+                        android:background="@color/button_material_light"
+                        android:layout_marginRight="5dp"
+                        style="@style/ButtonVar"
+                        />
+                    <Button
+                        android:layout_marginLeft="5dp"
+                        style="@style/ButtonVar"
 
+                        android:text="B"
+                        android:padding="30dp"
+                        android:id="@+id/variant_b_button"
+                        android:background="@color/button_material_light"
+
+                        />
+                </LinearLayout>
+                <LinearLayout android:orientation="horizontal"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:id="@+id/linearLayout">
+
+                    <Button
+                        android:layout_marginRight="5dp"
+                        style="@style/ButtonVar"
+
+                        android:padding="30dp"
+                        android:id="@+id/variant_c_button"
+                        android:background="@color/button_material_light"
+
+                        android:text="C" />
+
+                    <Button
+                        android:layout_marginLeft="5dp"
+                        style="@style/ButtonVar"
+
+                        android:text="D"
+                        android:padding="30dp"
+                        android:id="@+id/variant_d_button"
+                        android:background="@color/button_material_light"
+
+                        />
+                </LinearLayout>
             </LinearLayout>
-            <LinearLayout android:orientation="horizontal"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/linearLayout">
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/variant_a_button"
-                android:text="A"
-                android:padding="30dp"
-                android:background="#ffffff"
-                android:layout_marginRight="5dp"
-                style="@style/ButtonVar"
-
-                android:drawableLeft="@drawable/point"
-
-                android:width="20dp"
-
-                android:layout_width="match_parent"
-                />
-
-            <Button
-                android:layout_marginLeft="5dp"
-                style="@style/ButtonVar"
-
-                android:text="B"
-                android:padding="30dp"
-                android:id="@+id/variant_b_button"
-                android:background="#ffffffff"
-
-
-                android:layout_width="match_parent"/>
-
-            <Button
-                    android:layout_marginRight="5dp"
-                    style="@style/ButtonVar"
-
-                    android:padding="30dp"
-                    android:id="@+id/variant_c_button"
-                    android:background="@color/button_material_light"
-
-
-                    android:text="C"
-                    android:layout_width="match_parent"/>
-
-            <Button
-                    android:layout_marginLeft="5dp"
-                    style="@style/ButtonVar"
-
-                    android:text="D"
-                    android:padding="30dp"
-                    android:id="@+id/variant_d_button"
-                    android:background="@color/button_material_light"
-
-
-                    android:layout_width="match_parent"/>
         </LinearLayout>
-    </LinearLayout>
+
+
 
 
 </LinearLayout>

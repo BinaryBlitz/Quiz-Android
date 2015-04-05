@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +36,7 @@ import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,6 +77,10 @@ public class TestFragment extends Fragment {
 
     @InjectView(R.id.my_name) TextView mMyName;
     @InjectView(R.id.opponents_name) TextView mOpponentsName;
+
+    @InjectView(R.id.opponents_image_imageView) ImageView mOpponentImage;
+    @InjectView(R.id.my_image_imageView) ImageView mMyImage;
+
 
     private ProgressPieView mProgressPieView;
     private static final int SIZE = 96;
@@ -159,6 +166,10 @@ public class TestFragment extends Fragment {
         mMyName.setText(mSessionManager.mSession.getMyName());
         mOpponentsName.setText(mSessionManager.mSession.getOpponentsName());
 
+
+        setAvatars();
+
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable(){
             @Override
@@ -197,8 +208,34 @@ public class TestFragment extends Fragment {
         return v;
     }
 
-    private void beginGame() {
+    private void setAvatars() {
+        Log.d(TAG, "url =====" + mSessionManager.mSession.mOpponentAvatarUrl);
+        if (mSessionManager.mSession.mMyAvatarUrl == "null") {
+            Picasso.with(getActivity())
+                    .load(R.drawable.catty)
+                    .fit()
+                    .into(mMyImage);
+        } else {
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
+                    .fit()
+                    .into(mMyImage);
+        }
 
+        if (mSessionManager.mSession.mOpponentAvatarUrl == "null") {
+            Picasso.with(getActivity())
+                    .load(R.drawable.catty)
+                    .fit()
+                    .into(mOpponentImage);
+        } else {
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
+                    .fit()
+                    .into(mOpponentImage);
+        }
+    }
+
+    private void beginGame() {
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
         updateGUI();
     }
