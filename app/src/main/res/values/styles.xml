@@ -12,7 +12,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:background">@drawable/shape</item>
         <!--<item name="android:drawableLeft">@drawable/icon_of_choice_button_in_game</item>-->
-        <item name="android:drawableRight">@drawable/point</item>
+        <!--<item name="android:drawableRight">@drawable/point</item>-->
         <item name="android:layout_margin">10dp</item>
     </style>
 

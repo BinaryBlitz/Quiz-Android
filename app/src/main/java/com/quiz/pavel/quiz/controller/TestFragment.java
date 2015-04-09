@@ -264,16 +264,57 @@ public class TestFragment extends Fragment {
         Log.d(TAG, "onCloseRound, mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
             case 0:
-//                mVariantA.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
+
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds( 0, 0, 60, 60 );
+                    if(mVariantA.getCompoundDrawables()[0] != null) {
+                        mVariantA.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantA.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 1:
-//                mVariantB.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds( 0, 0, 60, 60 );
+                    if(mVariantB.getCompoundDrawables()[0] != null) {
+                        mVariantB.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantB.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 2:
-//                mVariantC.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds( 0, 0, 60, 60 );
+                    if(mVariantC.getCompoundDrawables()[0] != null) {
+                        mVariantC.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantC.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 3:
-//                mVariantD.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds( 0, 0, 60, 60 );
+                    if(mVariantD.getCompoundDrawables()[0] != null) {
+                        mVariantD.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantD.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
         }
 
@@ -726,6 +767,13 @@ public class TestFragment extends Fragment {
         mVariantC.setBackgroundResource(R.drawable.shape);
         mVariantD.setBackgroundResource(R.drawable.shape);
 
+        mVariantA.setCompoundDrawables(null, null, null, null);
+        mVariantB.setCompoundDrawables(null, null, null, null);
+        mVariantC.setCompoundDrawables(null, null, null, null);
+        mVariantD.setCompoundDrawables(null, null, null, null);
+
+
+
     }
 
     @Override
@@ -797,7 +845,10 @@ public class TestFragment extends Fragment {
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
 
         try {
-            mVariantA.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+
+            mVariantA.setCompoundDrawables(img, null, null, null);
         } catch (Exception ex) {
 
         }
@@ -818,7 +869,13 @@ public class TestFragment extends Fragment {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
-//        mVariantB.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantB.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
+
+        }
 
 
         blockOfButtons = true;
@@ -840,8 +897,13 @@ public class TestFragment extends Fragment {
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
 
-//        mVariantC.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantC.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
 
+        }
 
         blockOfButtons = true;
 
@@ -863,8 +925,13 @@ public class TestFragment extends Fragment {
             return;
         }
 
-//        mVariantD.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantD.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
 
+        }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
 
 
