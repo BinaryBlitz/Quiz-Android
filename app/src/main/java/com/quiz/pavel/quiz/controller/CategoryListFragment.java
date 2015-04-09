@@ -148,7 +148,11 @@ public class CategoryListFragment extends MyFragment {
 
             ImageView image = (ImageView) convertView.findViewById(R.id.myImageView);
 
-            Picasso.with(getActivity()).load(Mine.URL_photo + c.mBannerUrl).into(image);
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + c.mBannerUrl)
+                    .resize(640, 200)
+                    .centerCrop()
+                    .into(image);
 
 
             return convertView;
