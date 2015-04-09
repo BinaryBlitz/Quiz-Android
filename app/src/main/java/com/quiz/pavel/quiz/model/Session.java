@@ -64,6 +64,7 @@ public class Session {
 
     public int mId;
 
+    public String mBackgroundUrl;
 
 
     public LinkedList<SessionQuestion> mSessionQuestions;
@@ -81,7 +82,7 @@ public class Session {
 
         try {
             mId = response.getInt("id");
-
+            mBackgroundUrl = response.getString("background_url");
 
             JSONObject objHost = response.getJSONObject("host");
             JSONObject objOpponent = response.getJSONObject("opponent");

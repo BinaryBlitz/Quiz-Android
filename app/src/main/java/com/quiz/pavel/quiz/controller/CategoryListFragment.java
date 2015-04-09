@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +29,7 @@ import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -138,12 +141,16 @@ public class CategoryListFragment extends MyFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_category, null);
             }
             Category c = (Category) mCategories.get(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
+
+            ImageView image = (ImageView) convertView.findViewById(R.id.myImageView);
+
+            Picasso.with(getActivity()).load(Mine.URL_photo + c.mBannerUrl).into(image);
 
 
             return convertView;
