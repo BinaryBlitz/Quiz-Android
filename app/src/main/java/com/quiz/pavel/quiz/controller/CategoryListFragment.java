@@ -50,6 +50,7 @@ public class CategoryListFragment extends MyFragment {
 
     ListView listView;
 
+
     public interface CategoryListListener {
         public void onOpenTopicList(int position);
     }
@@ -60,9 +61,6 @@ public class CategoryListFragment extends MyFragment {
         setHasOptionsMenu(true);
 
         mCategories = new ArrayList<Category>();
-
-
-
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -27,10 +31,13 @@ import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -49,10 +56,12 @@ public class PreGameFragment extends BasePreGameFragment {
     Timer mTimer;
 
     public int mTopicId;
+    public int mCategoryId;
     private String mId;
 
     @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
+    @InjectView(R.id.background_pre_game) LinearLayout mBackground;
 
     public static PreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -82,13 +91,22 @@ public class PreGameFragment extends BasePreGameFragment {
             }
         }, ConnectionState.ALL);
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
+        mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
-
         ButterKnife.inject(this, v);
+
+//        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+//                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+//        try {
+//            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);

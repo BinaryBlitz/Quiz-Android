@@ -77,11 +77,11 @@ public class TopicListFragment extends MyFragment {
                 Intent i = new Intent(getActivity(), PreGameActivity.class);
                 i.putExtra("topic", mTopics.get(position).getId());
                 i.putExtra("name", mTopics.get(position).getTitle());
+                i.putExtra("category", mNumberOfCategory);
 
                 startActivity(i);
             }
         });
-
 
         return v;
     }

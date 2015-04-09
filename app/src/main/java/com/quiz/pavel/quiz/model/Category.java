@@ -19,13 +19,16 @@ public class Category {
     public int mId;
     public ArrayList<Topic> mTopics;
     public JSONArray mJsonTopics;
+
     public String mBannerUrl;
+    public String mBackgroundUrl;
 
     public Category(JSONObject json) {
         try {
             mId = json.getInt("id");
             mText = json.getString("name");
             mBannerUrl = json.getString("banner_url");
+            mBackgroundUrl = json.getString("background_url");
 
             JSONArray ar = json.getJSONArray("topics");
 
