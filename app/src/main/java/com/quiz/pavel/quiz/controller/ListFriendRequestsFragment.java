@@ -75,6 +75,7 @@ public class ListFriendRequestsFragment extends MyFragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
+        list.clear();
         JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL
                 + "/players/" + mPlayerProfile.getId() + "/friends?token="
                 + Mine.getInstance(getActivity()).getToken(),

@@ -144,7 +144,7 @@
             android:layout_margin="20dp"
             android:background="@drawable/shape"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="200dp"
             >
 
             <TextView
@@ -178,73 +178,61 @@
             android:gravity="center"
             >
 
-            <LinearLayout
-                android:orientation="vertical"
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:layout_margin="10dp"
+                     android:id="@+id/buttons_broad"
+                     >
+
+            <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/buttons_broad"
-                android:layout_margin="20dp"
+                android:weightSum="2"
+                android:padding="5dip" >
+
+                <Button
+                    android:id="@+id/variant_a_button"
+                    android:text="A"
+                    android:layout_weight="1"
+                    style="@style/ButtonVar"
+                    />
+
+                <!-- Column 2 -->
+                <Button
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:text="B"
+                    android:id="@+id/variant_b_button"
+                    />
 
 
-                >
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="10dp"
-                    >
-                    <Button
-                        android:id="@+id/variant_a_button"
-                        android:text="A"
-                        android:padding="30dp"
-                        android:background="@drawable/shape"
-                        android:layout_marginRight="5dp"
-                        style="@style/ButtonVar"
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="2"
 
-                        />
-                    <Button
-                        android:layout_marginLeft="5dp"
-                        style="@style/ButtonVar"
+                android:padding="5dip" >
 
-                        android:text="B"
-                        android:padding="30dp"
-                        android:id="@+id/variant_b_button"
-                        android:background="@drawable/shape"
+                <Button
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:id="@+id/variant_c_button"
+                    android:text="C" />
 
+                <Button
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:text="D"
+                    android:id="@+id/variant_d_button"
+                    />
 
-                        />
-                </LinearLayout>
+            </TableRow>
+        </TableLayout>
 
-                <LinearLayout android:orientation="horizontal"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:id="@+id/linearLayout">
-
-                    <Button
-                        android:layout_marginRight="5dp"
-                        style="@style/ButtonVar"
-
-                        android:padding="30dp"
-                        android:id="@+id/variant_c_button"
-                        android:background="@drawable/shape"
-                        android:text="C" />
-
-                    <Button
-                        android:layout_marginLeft="5dp"
-                        style="@style/ButtonVar"
-
-                        android:text="D"
-                        android:padding="30dp"
-                        android:id="@+id/variant_d_button"
-                        android:background="@drawable/shape"
-
-
-                        />
-                </LinearLayout>
-            </LinearLayout>
-
-
-        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

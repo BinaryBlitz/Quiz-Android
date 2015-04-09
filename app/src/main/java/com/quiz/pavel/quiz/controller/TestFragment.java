@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import com.filippudak.ProgressPieView.ProgressPieView;
 import com.nineoldandroids.animation.Animator;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.MyButton;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
@@ -47,6 +49,8 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+
+import static com.quiz.pavel.quiz.R.style.ButtonVar;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
@@ -68,7 +72,7 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
     @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
 
-    @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
+    @InjectView(R.id.buttons_broad) TableLayout mButtonsBroad;
 
     @InjectView(R.id.broad_my_profile) LinearLayout mMyProfileBroad;
     @InjectView(R.id.broad_opponent_profile) LinearLayout mOpponentProfileBroad;
@@ -110,10 +114,8 @@ public class TestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this, v);
-
 
         mSessionManager = SessionManager.getInstance(getActivity());
         mQuestionTextView.setVisibility(View.GONE);
@@ -262,16 +264,16 @@ public class TestFragment extends Fragment {
         Log.d(TAG, "onCloseRound, mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
             case 0:
-                mVariantA.setBackgroundColor(Color.BLUE);
+//                mVariantA.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
                 break;
             case 1:
-                mVariantB.setBackgroundColor(Color.BLUE);
+//                mVariantB.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
                 break;
             case 2:
-                mVariantC.setBackgroundColor(Color.BLUE);
+//                mVariantC.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
                 break;
             case 3:
-                mVariantD.setBackgroundColor(Color.BLUE);
+//                mVariantD.setCompoundDrawables(null, getResources().getDrawable(R.drawable.point), null, null);
                 break;
         }
 
@@ -507,8 +509,9 @@ public class TestFragment extends Fragment {
     private void sendToCloseGameSession() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
-                Mine.URL + "/game_sessions/" + mSessionManager.mSession.mId + "/close",
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
+                Mine.URL + "/game_sessions/" + mSessionManager.mSession.mId + "/close?token=" +
+                Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -713,15 +716,15 @@ public class TestFragment extends Fragment {
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
-        mVariantA.setTextColor(Color.BLACK);
-        mVariantB.setTextColor(Color.BLACK);
-        mVariantC.setTextColor(Color.BLACK);
-        mVariantD.setTextColor(Color.BLACK);
+        mVariantA.setTextColor(Color.WHITE);
+        mVariantB.setTextColor(Color.WHITE);
+        mVariantC.setTextColor(Color.WHITE);
+        mVariantD.setTextColor(Color.WHITE);
 
-        mVariantA.setBackgroundColor(Color.WHITE);
-        mVariantB.setBackgroundColor(Color.WHITE);
-        mVariantC.setBackgroundColor(Color.WHITE);
-        mVariantD.setBackgroundColor(Color.WHITE);
+        mVariantA.setBackgroundResource(R.drawable.shape);
+        mVariantB.setBackgroundResource(R.drawable.shape);
+        mVariantC.setBackgroundResource(R.drawable.shape);
+        mVariantD.setBackgroundResource(R.drawable.shape);
 
     }
 
@@ -793,6 +796,12 @@ public class TestFragment extends Fragment {
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
 
+        try {
+            mVariantA.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+        } catch (Exception ex) {
+
+        }
+
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
         mSessionManager.iChooseAnswer(getActivity(), 0);
@@ -809,6 +818,7 @@ public class TestFragment extends Fragment {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
+//        mVariantB.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
 
 
         blockOfButtons = true;
@@ -829,6 +839,8 @@ public class TestFragment extends Fragment {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
+
+//        mVariantC.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
 
 
         blockOfButtons = true;
@@ -851,6 +863,8 @@ public class TestFragment extends Fragment {
             return;
         }
 
+//        mVariantD.setCompoundDrawables(getResources().getDrawable(R.drawable.point), null, null, null);
+
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
 
 
@@ -865,11 +879,7 @@ public class TestFragment extends Fragment {
         } else {
             mVariantD.setTextColor(Color.RED);
         }
-
-
     }
-
-
 
 
 }

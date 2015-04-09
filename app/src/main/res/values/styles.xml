@@ -5,16 +5,31 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
+
     <style name="ButtonVar">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/button_var</item>
-        <item name="android:drawableLeft">@drawable/point</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/shape</item>
+        <item name="android:drawableLeft">@drawable/icon_of_choice_button_in_game</item>
+        <item name="android:drawableRight">@drawable/point</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
     <style name="TwoWayView">
         <item name="android:orientation">horizontal</item>
     </style>
+
+    <style name="ButtonVarChecked">
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/shape</item>
+        <item name="android:drawableLeft">@drawable/point</item>
+        <item name="android:drawableRight">@drawable/point</item>
+    </style>
+
+
 
 
 
@@ -68,5 +83,6 @@
 
 
     <color name="actionbar_text">#ffffff</color>
+
     <drawable name="actionbar_background">#111111</drawable>
 </resources>

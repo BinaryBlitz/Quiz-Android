@@ -52,4 +52,9 @@
     <string name="title_activity_main_sliding">MainSlidingActivity</string>
     <string name="challenge">Бросить вызов</string>
 
+    <declare-styleable name="food">
+        <attr name="state_my_answer" format="boolean" />
+        <attr name="state_opponents_answer" format="boolean" />
+    </declare-styleable>
+
 </resources>
