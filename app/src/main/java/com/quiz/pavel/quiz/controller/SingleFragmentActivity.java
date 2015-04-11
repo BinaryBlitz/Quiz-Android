@@ -1,10 +1,12 @@
 package com.quiz.pavel.quiz.controller;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -13,7 +15,7 @@ import com.quiz.pavel.quiz.R;
 /**
  * Created by pavelkozemirov on 11.11.14.
  */
-public class SingleFragmentActivity extends FragmentActivity {
+public class SingleFragmentActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,14 @@ public class SingleFragmentActivity extends FragmentActivity {
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
+        restoreActionBar();
     }
+    public void restoreActionBar() {
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+    }
+
 
     @Override
     public void onBackPressed() {

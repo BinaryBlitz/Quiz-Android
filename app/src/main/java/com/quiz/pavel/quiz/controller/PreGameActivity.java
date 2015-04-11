@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -16,7 +18,7 @@ import com.quiz.pavel.quiz.model.Session;
 /**
  * Created by pavelkozemirov on 14.02.15.
  */
-public class PreGameActivity extends FragmentActivity {
+public class PreGameActivity extends ActionBarActivity {
     private static final String TAG = "PreGameActivity";
 
     public static final String EXTRA = "extra.pregameactivity";
@@ -48,6 +50,12 @@ public class PreGameActivity extends FragmentActivity {
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
+        restoreActionBar();
+    }
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
     }
 
     @Override

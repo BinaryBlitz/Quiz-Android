@@ -27,7 +27,12 @@
             android:id="@+id/broad_my_profile"
             >
 
-
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
 
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:layout_width="50dp"
@@ -39,7 +44,14 @@
                 app:siSquare="true"
                 android:layout_gravity="center"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="0"
+                android:id="@+id/my_points_textView"/>
 
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -51,12 +63,7 @@
                 android:autoText="false"
                 android:gravity="center"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/my_points_textView"/>
+
         </LinearLayout>
 
         <LinearLayout
@@ -95,8 +102,18 @@
             android:id="@+id/broad_opponent_profile"
             >
 
-
-
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="0"
+                    android:id="@+id/opponents_points_textView"/>
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -108,6 +125,9 @@
                 android:layout_gravity="center"
                 />
 
+
+            </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,12 +138,7 @@
                 android:id="@+id/opponents_name"
                 android:gravity="center"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/opponents_points_textView"/>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -142,7 +157,7 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:background="@drawable/shape"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
@@ -183,7 +198,7 @@
         <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
                      android:layout_width="fill_parent"
                      android:layout_height="fill_parent"
-                     android:layout_margin="10dp"
+                     android:layout_margin="5dp"
                      android:id="@+id/buttons_broad"
                      >
 
@@ -191,7 +206,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:weightSum="2"
-                android:padding="5dip" >
+                android:padding="5dp" >
 
                 <Button
                     android:id="@+id/variant_a_button"
