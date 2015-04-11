@@ -24,6 +24,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
@@ -59,6 +62,8 @@ public class PreGameFragment extends BasePreGameFragment {
     public int mTopicId;
     public int mCategoryId;
     private String mId;
+    DisplayImageOptions options;
+
 
     @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
@@ -91,8 +96,16 @@ public class PreGameFragment extends BasePreGameFragment {
                 System.out.println("GOO There was a problem connecting!");
             }
         }, ConnectionState.ALL);
+
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
         mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
@@ -102,33 +115,14 @@ public class PreGameFragment extends BasePreGameFragment {
 
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
                 .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
-//        try {
-//            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        Log.d(TAG, "url= " + url);
 
-        Target target = new Target() {
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
                 mBackground.setBackground(drawable);
-
             }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
-        Picasso.with(getActivity()).load(url).into(target);
+        });
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);

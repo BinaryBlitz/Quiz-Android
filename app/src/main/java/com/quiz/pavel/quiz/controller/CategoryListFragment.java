@@ -29,6 +29,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
@@ -66,11 +67,11 @@ public class CategoryListFragment extends MyFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+
         mCategories = new ArrayList<Category>();
         options = new DisplayImageOptions.Builder()
-//                .showImageOnLoading(R.drawable.ic_stub)
-//                .showImageForEmptyUri(R.drawable.ic_empty)
-//                .showImageOnFail(R.drawable.ic_error)
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
@@ -162,13 +163,7 @@ public class CategoryListFragment extends MyFragment {
 
             ImageView image = (ImageView) convertView.findViewById(R.id.myImageView);
 
-            Picasso.with(getActivity())
-                    .load(Mine.URL_photo + c.mBannerUrl)
-                    .resize(640, 200)
-                    .centerCrop()
-                    .into(image);
-
-//            ImageLoader.getInstance().displayImage(Mine.URL_photo + c.mBannerUrl, image, options);
+            ImageLoader.getInstance().displayImage(Mine.URL_photo + c.mBannerUrl, image, options);
 
             return convertView;
         }

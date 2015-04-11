@@ -34,6 +34,9 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.filippudak.ProgressPieView.ProgressPieView;
 import com.nineoldandroids.animation.Animator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.MyButton;
@@ -95,6 +98,7 @@ public class TestFragment extends Fragment {
     private static final int SIZE = 96;
     private static final int MARGIN = 8;
 
+    DisplayImageOptions options;
 
     private Button mLastPushedButton; //TODO: delete this line
 
@@ -219,33 +223,20 @@ public class TestFragment extends Fragment {
     private void setBackground() {
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
                 .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId).mBackgroundUrl;
-//        try {
-//            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        Log.d(TAG, "url= " + url);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
 
-        Target target = new Target() {
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
                 mBackground.setBackground(drawable);
-
             }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
-        Picasso.with(getActivity()).load(url).into(target);
+        });
     }
 
     private void setAvatarsNames() {
@@ -584,7 +575,6 @@ public class TestFragment extends Fragment {
             return;
         }
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
-
     }
 
     private void sendToCloseGameSession() {
