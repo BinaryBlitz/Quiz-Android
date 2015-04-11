@@ -54,6 +54,8 @@ public class Session {
     public int pointsMine;
     public int pointsOpponent;
 
+    public int mCategoryId;
+
     public SessionQuestion mCurrentSessionQuestion;
 
     private String mMyName = "Я";
@@ -77,12 +79,15 @@ public class Session {
     }
 
 
-    public Session(Context c, JSONObject response) {
+    public Session(Context c, JSONObject response, int cat) {
+
+        mCategoryId = cat;
         mSessionQuestions = new LinkedList<SessionQuestion>();
+
+        Log.d(TAG, "response = " + response);
 
         try {
             mId = response.getInt("id");
-            mBackgroundUrl = response.getString("background_url");
 
             JSONObject objHost = response.getJSONObject("host");
             JSONObject objOpponent = response.getJSONObject("opponent");
@@ -106,6 +111,8 @@ public class Session {
         } catch (JSONException ex) {
 
         }
+
+        Log.d(TAG, "url= " +  mMyAvatarUrl);
 
         try {
             JSONArray sqs = response.getJSONArray("game_session_questions");

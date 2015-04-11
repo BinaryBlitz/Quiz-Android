@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -61,7 +62,7 @@ public class PreGameFragment extends BasePreGameFragment {
 
     @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
-    @InjectView(R.id.background_pre_game) LinearLayout mBackground;
+    @InjectView(R.id.background_pre_game) RelativeLayout mBackground;
 
     public static PreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -99,14 +100,35 @@ public class PreGameFragment extends BasePreGameFragment {
         View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
         ButterKnife.inject(this, v);
 
-//        String url = Mine.URL_photo + Mine.getInstance(getActivity())
-//                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
 //        try {
 //            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+        Log.d(TAG, "url= " + url);
 
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                mBackground.setBackground(drawable);
+
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        Picasso.with(getActivity()).load(url).into(target);
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);
@@ -255,7 +277,7 @@ public class PreGameFragment extends BasePreGameFragment {
                         Log.d(TAG, "RESPONSE HAS BEEN GOT");
                         flagResponse = true;
 
-                        sm.mSession = new Session(getActivity(), response);
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
 
                         try {
                             sm.online = !response.getBoolean("offline");

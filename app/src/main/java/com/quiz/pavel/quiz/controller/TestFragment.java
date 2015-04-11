@@ -2,7 +2,9 @@ package com.quiz.pavel.quiz.controller;
 
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +41,7 @@ import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,6 +88,8 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.opponents_image_imageView) ImageView mOpponentImage;
     @InjectView(R.id.my_image_imageView) ImageView mMyImage;
 
+    @InjectView(R.id.background_game) LinearLayout mBackground;
+
 
     private ProgressPieView mProgressPieView;
     private static final int SIZE = 96;
@@ -121,6 +126,7 @@ public class TestFragment extends Fragment {
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
+        setBackground();
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
@@ -210,6 +216,38 @@ public class TestFragment extends Fragment {
         return v;
     }
 
+    private void setBackground() {
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId).mBackgroundUrl;
+//        try {
+//            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        Log.d(TAG, "url= " + url);
+
+        Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+                mBackground.setBackground(drawable);
+
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        Picasso.with(getActivity()).load(url).into(target);
+    }
+
     private void setAvatarsNames() {
         String myname = mSessionManager.mSession.getMyName();
         String opponentName = mSessionManager.mSession.getOpponentsName();
@@ -226,7 +264,8 @@ public class TestFragment extends Fragment {
             mOpponentsName.setText(opponentName);
         }
 
-        if (mSessionManager.mSession.mMyAvatarUrl == "null") {
+        if (mSessionManager.mSession.mMyAvatarUrl == "null" ||
+                mSessionManager.mSession.mMyAvatarUrl == null) {
             Picasso.with(getActivity())
                     .load(R.drawable.catty)
                     .fit()
@@ -238,7 +277,8 @@ public class TestFragment extends Fragment {
                     .into(mMyImage);
         }
 
-        if (mSessionManager.mSession.mOpponentAvatarUrl == "null") {
+        if (mSessionManager.mSession.mOpponentAvatarUrl == "null" ||
+                mSessionManager.mSession.mOpponentAvatarUrl == null) {
             Picasso.with(getActivity())
                     .load(R.drawable.catty)
                     .fit()
@@ -280,7 +320,7 @@ public class TestFragment extends Fragment {
             case 1:
                 try {
                     Drawable img = getResources().getDrawable( R.drawable.point );
-                    img.setBounds( 0, 0, 60, 60 );
+                    img.setBounds(0, 0, 60, 60);
                     if(mVariantB.getCompoundDrawables()[0] != null) {
                         mVariantB.setCompoundDrawables(img, null, img, null);
                     } else {
@@ -293,7 +333,7 @@ public class TestFragment extends Fragment {
             case 2:
                 try {
                     Drawable img = getResources().getDrawable( R.drawable.point );
-                    img.setBounds( 0, 0, 60, 60 );
+                    img.setBounds(0, 0, 60, 60);
                     if(mVariantC.getCompoundDrawables()[0] != null) {
                         mVariantC.setCompoundDrawables(img, null, img, null);
                     } else {
@@ -306,7 +346,7 @@ public class TestFragment extends Fragment {
             case 3:
                 try {
                     Drawable img = getResources().getDrawable( R.drawable.point );
-                    img.setBounds( 0, 0, 60, 60 );
+                    img.setBounds(0, 0, 60, 60);
                     if(mVariantD.getCompoundDrawables()[0] != null) {
                         mVariantD.setCompoundDrawables(img, null, img, null);
                     } else {

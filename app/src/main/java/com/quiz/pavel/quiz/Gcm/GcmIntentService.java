@@ -24,8 +24,6 @@ public class GcmIntentService extends IntentService {
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
-
-
     public GcmIntentService() {
         super("GcmIntentService");
     }
@@ -70,7 +68,7 @@ public class GcmIntentService extends IntentService {
 //                sendNotification("Received: " + extras.toString());
 //                Log.i(TAG, "Received: " + extras.toString());
 
-issueNotification(intent, "");
+                issueNotification(intent, "");
 
             }
         }

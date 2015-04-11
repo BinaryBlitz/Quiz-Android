@@ -53,6 +53,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
     @InjectView(R.id.name_of_topic)
     TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
+    private int mCategoryId;
 
 
     public static ChallengePreGameFragment newInstance() {
@@ -85,6 +86,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         }, ConnectionState.ALL);
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
         mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
+        mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
     }
 
 
@@ -152,7 +154,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
             public void onResponse(JSONObject response) {
 
                 Log.d(TAG, "LOBBY HAS BEEN CREATED, response = " + response);
-                sm.mSession = new Session(getActivity(), response);
+                sm.mSession = new Session(getActivity(), response, mCategoryId);
 
 //                try {
 //                    mId = response.getString("id");
@@ -246,7 +248,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                         Log.d(TAG, "RESPONSE HAS BEEN GOT");
                         flagResponse = true;
 
-                        sm.mSession = new Session(getActivity(), response);
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
 
                         try {
                             sm.online = !response.getBoolean("offline");

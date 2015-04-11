@@ -1,6 +1,8 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -25,11 +27,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +55,7 @@ public class CategoryListFragment extends MyFragment {
 
     ListView listView;
 
+    DisplayImageOptions options;
 
     public interface CategoryListListener {
         public void onOpenTopicList(int position);
@@ -61,6 +67,15 @@ public class CategoryListFragment extends MyFragment {
         setHasOptionsMenu(true);
 
         mCategories = new ArrayList<Category>();
+        options = new DisplayImageOptions.Builder()
+//                .showImageOnLoading(R.drawable.ic_stub)
+//                .showImageForEmptyUri(R.drawable.ic_empty)
+//                .showImageOnFail(R.drawable.ic_error)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
@@ -91,7 +106,6 @@ public class CategoryListFragment extends MyFragment {
                         TopicAdapter arrayAdapter = new TopicAdapter(mCategories);
                         listView.setAdapter(arrayAdapter);
                         setRetainInstance(true);
-
                     }
                 }
                 , new Response.ErrorListener() {
@@ -154,6 +168,7 @@ public class CategoryListFragment extends MyFragment {
                     .centerCrop()
                     .into(image);
 
+//            ImageLoader.getInstance().displayImage(Mine.URL_photo + c.mBannerUrl, image, options);
 
             return convertView;
         }

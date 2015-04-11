@@ -79,12 +79,21 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
         }
 
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-        Log.d("Fingerprint", fingerprint[0]);
 
         context = getApplicationContext();
 
         // Check device for Play Services APK. If check succeeds, proceed with
         //  GCM registration.
+        if (checkPlayServices()) {
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = getRegistrationId(context);
+
+            if (regid.isEmpty()) {
+                registerInBackground();
+            }
+        } else {
+            Log.i(TAG, "No valid Google Play Services APK found.");
+        }
 
     }
 
@@ -93,6 +102,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
         startActivity(intent);
         finish();
     }
+
     private void firstStartApp() {
         Log.d(TAG, "invoke firstStartUp()");
         if (checkPlayServices()) {
@@ -320,8 +330,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
      */
     private static int getAppVersion(Context context) {
         try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
+            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
@@ -374,7 +383,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
             }
         }.execute(null, null, null);
-
     }
 
     /**

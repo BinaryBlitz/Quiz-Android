@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Session;
 
 /**
  * Created by pavelkozemirov on 14.02.15.
@@ -19,6 +20,8 @@ public class PreGameActivity extends FragmentActivity {
     private static final String TAG = "PreGameActivity";
 
     public static final String EXTRA = "extra.pregameactivity";
+
+    public Session mSession;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
