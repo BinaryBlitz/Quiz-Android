@@ -109,7 +109,7 @@ public class MainSlidingActivity extends ActionBarActivity
                 break;
             case 2:
                 fragment = new ProfileFragment(new PlayerProfile(this, Mine.getInstance(this).getId(),
-                        Mine.getInstance(this).getName()));
+                        Mine.getInstance(this).getName(), Mine.getInstance(this).getAvatar()));
                 break;
             case 3:
 //                fragment = new RatingFragment("general", 1, 1);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
@@ -67,6 +73,9 @@ public class ProfileFragment extends MyFragment {
 
     ProfileFragmentListener mCallback;
 
+    DisplayImageOptions options;
+
+
     LayoutInflater mInflater;
     LinearLayout mGallery;
 
@@ -79,6 +88,8 @@ public class ProfileFragment extends MyFragment {
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
     @InjectView(R.id.milti_button) Button mMultiButton;
     @InjectView(R.id.challenge) Button mChallengeButton;
+    @InjectView(R.id.main_scroll_view) ScrollView mScrollView;
+    @InjectView(R.id.profile_favorite_topics_listview) ListView mFavoriteTopics;
 
     public PlayerProfile mPlayerProfile;
 
@@ -90,6 +101,13 @@ public class ProfileFragment extends MyFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
 
@@ -97,6 +115,8 @@ public class ProfileFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
         ButterKnife.inject(this, v);
+
+//        downloadData();
 
         mNumberOfFriends.setVisibility(View.INVISIBLE);
         mMultiButton.setVisibility(View.INVISIBLE);
@@ -123,25 +143,67 @@ public class ProfileFragment extends MyFragment {
             showListAndPictures();
         }
 
-        Picasso.with(getActivity())
+        if (mPlayerProfile.mAvatarUrl == null || mPlayerProfile.mAvatarUrl == "null") {
+            Picasso.with(getActivity())
                 .load(R.drawable.catty)
                 .fit()
                 .into(mPhoto);
+        } else {
+            ImageLoader.getInstance().displayImage(Mine.URL_photo + mPlayerProfile.mAvatarUrl, mPhoto, options);
+        }
+
         downloadMyFriends();
 
-        setFavoriteTopics(v);
 
         return v;
     }
 
-    private void setFavoriteTopics(View v) {
-        mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity())
-                .get(0).mTopics;
-        ListView listView = (ListView) v.findViewById(R.id.profile_favorite_topics_listview);
+    private void downloadData() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
 
+        final JsonObjectRequest arRequest = new JsonObjectRequest(Mine.URL + "/players/"
+                + mPlayerProfile.getId() + "?token=" + Mine.getInstance(getActivity()).getToken(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                            Log.d(TAG, "response = " + response);
+                            int id  = 0;
+                            String name = "";
+                            String url = "";
+                            try {
+                                id = response.getInt("id");
+                                name = response.getString("name");
+                                url = response.getString("avatar_url");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            try {
+                                JSONArray ar = response.getJSONArray("favorite_topics");
+                                for (int j = 0; j < 3; j++) {
+                                    mTopics.add(new Topic(ar.getJSONObject(j)));
+                                }
+                                setFavoriteTopics();
+
+                            } catch (JSONException e) {
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Response");
+                    }
+                });
+        queue.add(arRequest);
+    }
+
+    private void setFavoriteTopics() {
+        mFavoriteTopics.setFocusable(false);
 
         TopicAdapter adapter = new TopicAdapter(mTopics);
-        listView.setAdapter(adapter);
+        mFavoriteTopics.setAdapter(adapter);
 
         setRetainInstance(true);
     }
@@ -172,12 +234,14 @@ public class ProfileFragment extends MyFragment {
             arViews.add(view);
 
             TextView txt = (TextView) view.findViewById(R.id.item_name);
-            txt.setText(mPlayerProfile.list.get(i).getName());
+            txt.setText(mPlayerProfile.list.get(i).getShortName());
 
             mGallery.addView(view);
 
             final int id = i;
             ImageView imageButton = (ImageView) view.findViewById(R.id.imageButton);
+
+            Log.d(TAG, "url link = " +  mPlayerProfile.list.get(i).mAvatarUrl );
 
             imageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -187,20 +251,20 @@ public class ProfileFragment extends MyFragment {
             });
         }
 
-//        new AsyncTask<Void, Void, Void>() {
-//                            @Override
-//                            protected Void doInBackground(Void... params) {
-//
-//                                return null;
-//                            }
-//                        }.execute(null, null, null);
-
         for (int i = 0; i < arViews.size(); i++) {
             ImageView imageButton = (ImageView) arViews.get(i).findViewById(R.id.imageButton);
-            Picasso.with(getActivity())
-                    .load(R.drawable.catty)
-                    .fit()
-                    .into(imageButton);
+
+            if (mPlayerProfile.list.get(i).mAvatarUrl == null || mPlayerProfile.list.get(i).mAvatarUrl == "null") {
+                Picasso.with(getActivity())
+                        .load(R.drawable.catty)
+                        .fit()
+                        .into(imageButton);
+            } else {
+                Picasso.with(getActivity())
+                        .load(Mine.URL_photo + mPlayerProfile.list.get(i).mAvatarUrl)
+                        .fit()
+                        .into(imageButton);
+            }
         }
     }
 
@@ -219,14 +283,16 @@ public class ProfileFragment extends MyFragment {
 
                             int id  = 0;
                             String name = "";
+                            String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
                                 name = response.getJSONObject(i).getString("name");
+                                url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            mPlayerProfile.list.add(new PlayerProfile(getActivity(), id, name));
+                            mPlayerProfile.list.add(new PlayerProfile(getActivity(), id, name, url));
                         }
                         showListAndPictures();
                     }
@@ -381,14 +447,16 @@ public class ProfileFragment extends MyFragment {
                         for (int i = 0; i < response.length(); i++) {
                             int id  = 0;
                             String name = "";
+                            String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
                                 name = response.getJSONObject(i).getString("name");
+                                url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            myFriendList.add(new PlayerProfile(getActivity(), id, name));
+                            myFriendList.add(new PlayerProfile(getActivity(), id, name, url));
                         }
                         setNameOfMultiButton();
                     }

@@ -33,6 +33,7 @@ public class Mine {
     private String mEmail;
     private String mToken;
     private int mId;
+    private String mAvatar;
 
     private Mine(Context c, JSONObject json) throws JSONException {
 
@@ -40,6 +41,7 @@ public class Mine {
         mEmail = json.getString("email");
         mToken = json.getString("token");
         mId = json.getInt("id");
+        mAvatar = json.getString("avatar_url");
 
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -47,8 +49,9 @@ public class Mine {
         editor.putString("email", mEmail);
         editor.putString("token", mToken);
         editor.putBoolean("signin", true);
+        editor.putString("avatar_url", mAvatar);
         editor.putInt("id", mId);
-        Log.d("MINE", "name= " + mName + "email =" + mEmail + "token= " + mToken + "id= " + mId);
+        Log.d("MINE", "name= " + mName + "email =" + mEmail + "token= " + mToken + "id= " + mId + " url= " + mAvatar);
 
         // Commit the edits!
         editor.commit();
@@ -61,6 +64,7 @@ public class Mine {
         mName = settings.getString("name", "");
         mEmail = settings.getString("email", "");
         mToken = settings.getString("token", "");
+        mAvatar = settings.getString("avatar_url","");
         mId = settings.getInt("id", 1);
         Log.d("MINE", "name= " + mName + "email =" + mEmail + "token= " + mToken + "id= " + mId);
 
@@ -156,4 +160,7 @@ public class Mine {
 
     }
 
+    public String getAvatar() {
+        return mAvatar;
+    }
 }

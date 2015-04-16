@@ -112,7 +112,7 @@ public class CategoryListFragment extends MyFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "Ошибка сервера", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Плохое соединение", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Error Response, have no data from server");
             }
         });

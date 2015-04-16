@@ -25,11 +25,14 @@ public class PlayerProfile {
 
     private boolean myProfile = false;
 
+    public String mAvatarUrl;
+
     public ArrayList<PlayerProfile> list;
 
-    public PlayerProfile(Context c, int id, String name) {
+    public PlayerProfile(Context c, int id, String name, String avatarUrl) {
         mId = id;
         mName = name;
+        mAvatarUrl = avatarUrl;
 
         if( id == Mine.getInstance(c).getId()) {
             myProfile = true;
@@ -61,5 +64,10 @@ public class PlayerProfile {
     }
 
 
-
+    public String  getShortName() {
+        if(mName.length() > 9) {
+            return mName.substring(0,8).trim() + "...";
+        }
+        return mName;
+    }
 }

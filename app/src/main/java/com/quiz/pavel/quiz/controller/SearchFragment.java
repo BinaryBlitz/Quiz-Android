@@ -90,7 +90,7 @@ public class SearchFragment extends MyFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PlayerProfile playerProfile = new PlayerProfile(getActivity(), list.get(position).getId(),
-                        list.get(position).getName());
+                        list.get(position).getName(), list.get(position).mAvatarUrl);
                 mMyFragmentListenerCallback.openProfileFragment(playerProfile);
             }
         });
@@ -114,14 +114,16 @@ public class SearchFragment extends MyFragment {
 
                             int id  = 0;
                             String name = "";
+                            String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
                                 name = response.getJSONObject(i).getString("name");
+                                url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            list.add(new PlayerProfile(getActivity(), id, name));
+                            list.add(new PlayerProfile(getActivity(), id, name, url));
                         }
                         MyAdapter arrayAdapter = new MyAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
                         mListView.setAdapter(arrayAdapter);

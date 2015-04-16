@@ -86,14 +86,17 @@ public class ListFriendRequestsFragment extends MyFragment {
                         for (int i = 0; i < response.length(); i++) {
                             int id  = 0;
                             String name = "";
+                            String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
                                 name = response.getJSONObject(i).getString("name");
+                                url = response.getJSONObject(i).getString("avatar_url");
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            list.add(new PlayerProfile(getActivity(), id, name));
+                            list.add(new PlayerProfile(getActivity(), id, name, url));
                         }
 
                         MyAdapter arrayAdapter = new MyAdapter(getActivity(), android.R.layout.simple_list_item_1, list);

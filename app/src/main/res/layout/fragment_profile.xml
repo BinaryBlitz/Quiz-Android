@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:id="@+id/main_scroll_view"
     >
 
 
@@ -9,6 +10,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
+              android:id="@+id/common_info"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
     android:background="@color/common_signin_btn_light_text_pressed"
@@ -71,6 +73,7 @@
                     <TextView android:layout_width="match_parent"
                               android:layout_height="wrap_content"
                               android:text="0"
+                              android:textColor="#333333"
                               style="?android:textViewStyle"
                               android:gravity="center"
                               android:textStyle="bold"
@@ -98,6 +101,7 @@
                         android:text="@string/points_numder"
                         style="?android:textViewStyle"
                         android:gravity="center"
+                        android:textColor="#333333"
                         android:textStyle="bold"
                         android:textSize="18dp"
                         android:id="@+id/number_of_achievements"/>
@@ -122,13 +126,21 @@
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_below="@id/common_info"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_white"
+        >
+    </View>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:weightSum="3"
-        android:paddingTop="10dp">
+        android:id="@+id/games_stat"
+        android:paddingTop="7dp">
 
         <LinearLayout
             android:orientation="vertical"
@@ -230,10 +242,19 @@
 
 
     </LinearLayout>
+    <View
+        android:layout_below="@id/games_stat"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_grey"
+        >
+    </View>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
+        android:id="@+id/friends_card"
+        style="@style/MyGreyCard"
         android:layout_height="fill_parent">
 
         <TextView
@@ -241,7 +262,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Друзья:"
-            android:id="@+id/textView9"/>
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:id="@+id/textView9"
+            android:textColor="#000000"/>
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -259,10 +283,18 @@
             </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
+    <View
+        android:layout_below="@id/friends_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_white"
+        >
+    </View>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
+        android:id="@+id/achievements_card"
         android:layout_height="fill_parent">
 
         <TextView
@@ -270,7 +302,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Достижения:"
-            android:id="@+id/textView10"/>
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:id="@+id/textView10"
+            android:textColor="#000000"/>
 
         <HorizontalScrollView
             android:layout_width="match_parent"
@@ -287,26 +322,46 @@
                 android:orientation="horizontal"/>
         </HorizontalScrollView>
     </LinearLayout>
+    <View
+        android:layout_below="@id/achievements_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_grey"
+        >
+    </View>
+
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:background="#3f3f3f"
-        android:layout_height="fill_parent">
+        android:background="#333333"
+        android:id="@+id/list_topics_card"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:text="Коронные темы:"
+            android:textColor="#ffffff"
             android:id="@+id/textView11"/>
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:id="@+id/profile_favorite_topics_listview"
             />
     </LinearLayout>
+    <View
+        android:layout_below="@id/list_topics_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_white"
+        >
+    </View>
+
 
     <Button android:layout_width="match_parent"
             android:layout_height="wrap_content"
