@@ -16,9 +16,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
+import com.quiz.pavel.quiz.model.Topic;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -66,6 +69,8 @@ public class ProfileFragment extends MyFragment {
 
     LayoutInflater mInflater;
     LinearLayout mGallery;
+
+    private ArrayList<Topic> mTopics;
 
     ArrayList<PlayerProfile> myFriendList;
 
@@ -124,7 +129,21 @@ public class ProfileFragment extends MyFragment {
                 .into(mPhoto);
         downloadMyFriends();
 
+        setFavoriteTopics(v);
+
         return v;
+    }
+
+    private void setFavoriteTopics(View v) {
+        mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity())
+                .get(0).mTopics;
+        ListView listView = (ListView) v.findViewById(R.id.profile_favorite_topics_listview);
+
+
+        TopicAdapter adapter = new TopicAdapter(mTopics);
+        listView.setAdapter(adapter);
+
+        setRetainInstance(true);
     }
 
     private void setNameOfMultiButton() {
@@ -413,6 +432,26 @@ public class ProfileFragment extends MyFragment {
                 break;
         }
         return true;
+    }
+
+    private class TopicAdapter extends ArrayAdapter<Topic> {
+        public TopicAdapter(ArrayList<Topic> topics) {
+            super(getActivity(), 0, topics);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater()
+                        .inflate(R.layout.list_item_topic, null);
+            }
+            Topic c = (Topic) mTopics.get(position);
+
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+            titleTextView.setText(c.getTitle());
+
+            return convertView;
+        }
     }
 
 }
