@@ -73,11 +73,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
         VKSdk.initialize(sdkListener, "4795421");
 
-        if (Mine.getInstance(this).isSignIn(this)) {
-            startApp();
-            return;
-        }
-
         String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
 
         context = getApplicationContext();
@@ -95,11 +90,16 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
 
+        if (Mine.getInstance(this).isSignIn(this)) {
+            startApp();
+            return;
+        }
     }
 
     private void startApp() {
         Intent intent = new Intent(ChoiceSignUpLogIn.this, MainSlidingActivity.class);
         startActivity(intent);
+        checkPlayServices();
         finish();
     }
 
@@ -423,7 +423,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
             }
 
         }) {
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
