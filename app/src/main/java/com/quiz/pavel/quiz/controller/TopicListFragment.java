@@ -2,6 +2,9 @@ package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -18,6 +21,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Topic;
@@ -38,10 +45,20 @@ public class TopicListFragment extends MyFragment {
         mNumberOfCategory = numberOfCategory;
     }
 
+    DisplayImageOptions options;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
 
     }
 
@@ -59,7 +76,7 @@ public class TopicListFragment extends MyFragment {
 
         mTopics = Mine.getInstance(getActivity()).loadCategoryAr(getActivity())
                 .get(mNumberOfCategory).mTopics;
-        ListView listView = (ListView) v.findViewById(R.id.listView);
+        final ListView listView = (ListView) v.findViewById(R.id.listView);
 
 
         TopicAdapter adapter = new TopicAdapter(mTopics);
@@ -67,6 +84,8 @@ public class TopicListFragment extends MyFragment {
 
         setRetainInstance(true);
 
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mNumberOfCategory).mBackgroundUrl;
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -83,6 +102,13 @@ public class TopicListFragment extends MyFragment {
             }
         });
 
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                listView.setBackground(drawable);
+            }
+        });
         return v;
     }
 

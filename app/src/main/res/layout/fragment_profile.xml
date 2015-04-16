@@ -166,9 +166,8 @@
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/circle"
-
                 android:gravity="center"
-                android:text="234"
+                android:text="0"
                 android:textColor="#333333"
                 android:textStyle="bold"
                 android:textSize="25sp" />
@@ -199,7 +198,7 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/circle"
                 android:gravity="center"
-                android:text="4"
+                android:text="0"
                 android:textColor="#333333"
                 android:textStyle="bold"
                 android:textSize="25sp" />
@@ -223,14 +222,14 @@
                 android:id="@+id/textView8"/>
 
             <TextView
-                android:id="@+id/profile_defeats"
+                android:id="@+id/profile_losses"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:layout_gravity="center"
                 android:layout_alignParentTop="true"
                 android:background="@drawable/circle"
                 android:gravity="center"
-                android:text="142"
+                android:text="0"
                 android:textColor="#333333"
                 android:textStyle="bold"
                 android:textSize="25sp" />
@@ -350,7 +349,7 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="240dp"
             android:id="@+id/profile_favorite_topics_listview"
             />
     </LinearLayout>
@@ -358,49 +357,85 @@
         android:layout_below="@id/list_topics_card"
         android:layout_width="fill_parent"
         android:layout_height="7dip"
-        android:background="@drawable/drop_shadow_grey_to_white"
+        android:background="@drawable/drop_shadow_black_to_lightgrey"
         >
     </View>
 
 
-    <Button android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#4D4D4D"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/open_list"
-            android:text="@string/open_list_view"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="ЛИЧНЫЙ СЧЕТ:"
+                android:id="@+id/personal_tab_textView"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0-0"
+                android:id="@+id/personal_tab"
+                android:textSize="62sp"
+                android:textStyle="bold"
+                android:textColor="#FECD2F"
+                android:layout_gravity="center"
+                android:paddingBottom="20dp"/>
+
+        </LinearLayout>
+
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/open_list"
+                android:text="@string/open_list_view"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+            />
+
+        <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logout"
+            android:text="@string/logout"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-        />
+            />
 
-    <Button android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/logout"
-        android:text="@string/logout"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        />
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/challenge"
+                android:text="@string/challenge"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+            />
 
-    <Button android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/challenge"
-            android:text="@string/challenge"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-        />
+        <TextView android:layout_width="match_parent"
+                  android:layout_weight="1"
 
-    <TextView android:layout_width="match_parent"
-              android:layout_weight="1"
-
-              android:layout_height="wrap_content"
-        android:text="@string/name"
-        android:id="@+id/name"
-        style="?android:textViewStyle"
-        android:textSize="20dp"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:padding="20dp"/>
-
-
-
+                  android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:id="@+id/name"
+            style="?android:textViewStyle"
+            android:textSize="20dp"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"
+            android:padding="20dp"/>
+    </LinearLayout>
 
 
 </LinearLayout>

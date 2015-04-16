@@ -8,7 +8,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -46,10 +49,25 @@ import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.quiz.pavel.quiz.model.Topic;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -79,17 +97,24 @@ public class ProfileFragment extends MyFragment {
     LayoutInflater mInflater;
     LinearLayout mGallery;
 
-    private ArrayList<Topic> mTopics;
+    private ArrayList<Topic> mTopics = new ArrayList<Topic>();
 
     ArrayList<PlayerProfile> myFriendList;
 
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
     @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
+    @InjectView(R.id.personal_tab) TextView mPersonalTab;
+    @InjectView(R.id.personal_tab_textView) TextView mPersonalTabText;
     @InjectView(R.id.milti_button) Button mMultiButton;
     @InjectView(R.id.challenge) Button mChallengeButton;
     @InjectView(R.id.main_scroll_view) ScrollView mScrollView;
     @InjectView(R.id.profile_favorite_topics_listview) ListView mFavoriteTopics;
+
+    @InjectView(R.id.profile_wins) TextView mWins;
+    @InjectView(R.id.profile_dead_heats) TextView mDeadHeats;
+    @InjectView(R.id.profile_losses) TextView mLosses;
+
 
     public PlayerProfile mPlayerProfile;
 
@@ -116,10 +141,11 @@ public class ProfileFragment extends MyFragment {
         View v = inflater.inflate(R.layout.fragment_profile, parent, false);
         ButterKnife.inject(this, v);
 
-//        downloadData();
-
         mNumberOfFriends.setVisibility(View.INVISIBLE);
         mMultiButton.setVisibility(View.INVISIBLE);
+
+        mPersonalTab.setVisibility(View.GONE);
+        mPersonalTabText.setVisibility(View.GONE);
 
         mNumberOfFriends.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,59 +179,88 @@ public class ProfileFragment extends MyFragment {
         }
 
         downloadMyFriends();
-
+        downloadData();
 
         return v;
     }
 
     private void downloadData() {
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-        final JsonObjectRequest arRequest = new JsonObjectRequest(Mine.URL + "/players/"
-                + mPlayerProfile.getId() + "?token=" + Mine.getInstance(getActivity()).getToken(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                            Log.d(TAG, "response = " + response);
-                            int id  = 0;
-                            String name = "";
-                            String url = "";
-                            try {
-                                id = response.getInt("id");
-                                name = response.getString("name");
-                                url = response.getString("avatar_url");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            try {
-                                JSONArray ar = response.getJSONArray("favorite_topics");
-                                for (int j = 0; j < 3; j++) {
-                                    mTopics.add(new Topic(ar.getJSONObject(j)));
-                                }
-                                setFavoriteTopics();
-
-                            } catch (JSONException e) {
-
-                        }
+        if(!mTopics.isEmpty()) {
+            setFavoriteTopics();
+            return;
+        }
+        new AsyncTask<String, String, JSONObject>() {
+            @Override
+            protected JSONObject doInBackground(String... uri) {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpResponse response;
+                JSONObject responseString = null;
+                try {
+                    response = httpclient.execute(new HttpGet(Mine.URL + "/players/"
+                + mPlayerProfile.getId() + "?token=" + Mine.getInstance(getActivity()).getToken()));
+                    StatusLine statusLine = response.getStatusLine();
+                    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        response.getEntity().writeTo(out);
+                        responseString = new JSONObject(out.toString());
+                        out.close();
+                    } else{
+                        //Closes the connection.
+                        response.getEntity().getContent().close();
+                        throw new IOException(statusLine.getReasonPhrase());
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error Response");
+                } catch (ClientProtocolException e) {
+                    Log.d(TAG, "Data problem");
+                } catch (IOException e) {
+                    Log.d(TAG, "Data problem");
+                } catch (JSONException e) {
+                    Log.d(TAG, "Data problem, parsing to jsonobject");
+                }
+                return responseString;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject response) {
+                super.onPostExecute(response);
+                Log.d(TAG, "res = " + response);
+                try {
+                    JSONArray ar = response.getJSONArray("favorite_topics");
+                    for (int j = 0; j < ar.length(); j++) {
+                        mTopics.add(new Topic(ar.getJSONObject(j)));
                     }
-                });
-        queue.add(arRequest);
+                    setFavoriteTopics();
+                    JSONObject srjson = response.getJSONObject("score");
+                    setPersonalScore(srjson);
+                    JSONObject totaljson =  response.getJSONObject("total_score");
+//                    setTotalScore(totaljson);
+                } catch (JSONException e) {
+
+                }
+            }
+        }.execute(null,null,null);
+    }
+
+    private void setTotalScore(JSONObject jsonObject) throws JSONException {
+        mWins.setText(String.valueOf(4));
+        mDeadHeats.setText(jsonObject.getInt("draws"));
+        mLosses.setText(jsonObject.getInt("losses"));
+    }
+
+    private void setPersonalScore(JSONObject jsonObject) throws JSONException {
+        int mine = jsonObject.getInt("wins");
+        int him = jsonObject.getInt("losses");
+        mPersonalTab.setText(mine + "-" + him);
+        mPersonalTab.setVisibility(View.VISIBLE);
+        mPersonalTabText.setVisibility(View.VISIBLE);
     }
 
     private void setFavoriteTopics() {
         mFavoriteTopics.setFocusable(false);
-
+        if(mTopics == null || getActivity() == null) {
+            return;
+        }
         TopicAdapter adapter = new TopicAdapter(mTopics);
         mFavoriteTopics.setAdapter(adapter);
-
-        setRetainInstance(true);
     }
 
     private void setNameOfMultiButton() {
@@ -522,4 +577,32 @@ public class ProfileFragment extends MyFragment {
         }
     }
 
+    private void downloadData1() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        JsonObjectRequest arRequest = new JsonObjectRequest(Request.Method.GET, Mine.URL + "/players/"
+                + mPlayerProfile.getId() + "?token=" + Mine.getInstance(getActivity()).getToken(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "res = " + response);
+                        try {
+                            JSONArray ar = response.getJSONArray("favorite_topics");
+                            for (int j = 0; j < 3; j++) {
+                                mTopics.add(new Topic(ar.getJSONObject(j)));
+                            }
+                            setFavoriteTopics();
+
+                        } catch (JSONException e) {
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "Error Response: DATA");
+                    }
+                });
+        queue.add(arRequest);
+    }
 }

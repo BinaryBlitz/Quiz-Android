@@ -13,7 +13,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:background="#ffffff"
+        android:background="@drawable/item_topic"
         android:layout_height="55dp">
 
 
@@ -29,7 +29,7 @@
                 android:id="@+id/imageView2"
                 android:layout_gravity="center"
                 android:layout_marginLeft="5dp"
-                android:background="@color/wallet_holo_blue_light"
+                android:background="@drawable/item_topic_icon"
 
                 />
         </LinearLayout>
@@ -50,7 +50,7 @@
                 android:text="Example topic"
                 android:layout_gravity="center_vertical"
                 android:maxLines="1"
-                />
+                android:textColor="#111111"/>
         </LinearLayout>
 
         <ImageView
