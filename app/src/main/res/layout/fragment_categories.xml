@@ -13,5 +13,5 @@
         android:scrollbarStyle="outsideOverlay"
 
         android:id="@+id/listView"
-        android:background="#888888"/>
+        android:background="#ffffff"/>
 </LinearLayout>

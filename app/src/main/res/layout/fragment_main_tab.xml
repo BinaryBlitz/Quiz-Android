@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+    >
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#FC5658"
+        android:id="@+id/list_new_topic"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingTop="10dp"
+            android:text="НОВИНКИ"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:id="@+id/main_new_topic_list"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_blue"
+        >
+    </View>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#1EB5D7"
+        android:id="@+id/list_popular_topic"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingTop="10dp"
+            android:text="ПОПУЛЯРНОЕ У ДРУЗЕЙ"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:id="@+id/main_popular_topic_list"
+            />
+    </LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_green"
+        >
+    </View>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#21D077"
+        android:id="@+id/list_favorite_topic"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingTop="10dp"
+            android:text="КОРОННЫЕ ТЕМЫ"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:id="@+id/main_favorite_topic_list"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+    </ScrollView>

@@ -102,7 +102,7 @@ public class MainSlidingActivity extends ActionBarActivity
         Fragment fragment;
         switch (position) {
             case 0:
-                fragment = PlaceholderFragment.newInstance(position + 1);
+                fragment = new MainFragment();
                 break;
             case 1:
                 fragment = new CategoryListFragment();
