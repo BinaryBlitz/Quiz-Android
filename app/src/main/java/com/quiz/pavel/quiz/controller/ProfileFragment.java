@@ -185,10 +185,10 @@ public class ProfileFragment extends MyFragment {
     }
 
     private void downloadData() {
-        if(!mTopics.isEmpty()) {
-            setFavoriteTopics();
-            return;
-        }
+//        if(!mTopics.isEmpty()) {
+//            setFavoriteTopics();
+//            return;
+//        }
         new AsyncTask<String, String, JSONObject>() {
             @Override
             protected JSONObject doInBackground(String... uri) {
@@ -229,10 +229,10 @@ public class ProfileFragment extends MyFragment {
                         mTopics.add(new Topic(ar.getJSONObject(j)));
                     }
                     setFavoriteTopics();
+                    JSONObject totaljson =  response.getJSONObject("total_score");
+                    setTotalScore(totaljson);
                     JSONObject srjson = response.getJSONObject("score");
                     setPersonalScore(srjson);
-                    JSONObject totaljson =  response.getJSONObject("total_score");
-//                    setTotalScore(totaljson);
                 } catch (JSONException e) {
 
                 }
@@ -241,9 +241,13 @@ public class ProfileFragment extends MyFragment {
     }
 
     private void setTotalScore(JSONObject jsonObject) throws JSONException {
-        mWins.setText(String.valueOf(4));
-        mDeadHeats.setText(jsonObject.getInt("draws"));
-        mLosses.setText(jsonObject.getInt("losses"));
+        final int wins = jsonObject.getInt("wins");
+        final int draws = jsonObject.getInt("draws");
+        final int losses = jsonObject.getInt("losses");
+        mWins.setText(String.valueOf(wins));
+        mDeadHeats.setText(String.valueOf(draws));
+        mLosses.setText(String.valueOf(losses));
+
     }
 
     private void setPersonalScore(JSONObject jsonObject) throws JSONException {
