@@ -7,7 +7,9 @@
     android:paddingLeft="20dp"
     android:background="@drawable/background_activated"
     android:orientation="horizontal"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools">
 
 
     <LinearLayout
@@ -53,10 +55,34 @@
                 android:textColor="#111111"/>
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:id="@+id/imageView3"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/arc_progress"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                custom:arc_progress="50"
+                custom:arc_suffix_text=" "
+                custom:arc_text_size="0sp"
+                custom:arc_text_color="#ffffff"
+                custom:arc_unfinished_color="#4d4d4d"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="0"
+                android:layout_height="wrap_content"
+                android:textColor="#4d4d4d"
+                android:id="@+id/item_level"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
 
 
     </LinearLayout>

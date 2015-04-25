@@ -25,6 +25,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':pusher-java-client-0.3.3-jar-with-dependencies')
     compile project(':vksdk_library')
+    compile project(':universal-image-loader-1.9.3-with-sources')
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.jakewharton:butterknife:6.0.0'
@@ -40,5 +41,5 @@ dependencies {
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.github.filippudak.progresspieview:library:1.0.+'
-    compile project(':universal-image-loader-1.9.3-with-sources')
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }

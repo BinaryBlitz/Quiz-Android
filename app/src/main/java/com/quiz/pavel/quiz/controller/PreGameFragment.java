@@ -26,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.pusher.client.connection.ConnectionEventListener;
@@ -54,7 +55,6 @@ import butterknife.InjectView;
  * Created by pavelkozemirov on 14.02.15.
  */
 public class PreGameFragment extends BasePreGameFragment {
-
     private static String TAG = "PreGameFragment";
 
     Timer mTimer;
@@ -63,7 +63,6 @@ public class PreGameFragment extends BasePreGameFragment {
     public int mCategoryId;
     private String mId;
     DisplayImageOptions options;
-
 
     @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
@@ -99,6 +98,9 @@ public class PreGameFragment extends BasePreGameFragment {
 
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
         mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
 
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)

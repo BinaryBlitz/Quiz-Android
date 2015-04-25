@@ -4,14 +4,15 @@
 
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-    >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:background="#4D4D4D">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content">
 
 
 
@@ -29,14 +30,17 @@
             android:paddingTop="10dp"
             android:text="НОВИНКИ"
             android:textColor="#ffffff"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"/>
 
-        <ListView
+        <ExpandableListView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:id="@+id/main_new_topic_list"
-            />
+            android:background="#FC5658"/>
+
     </LinearLayout>
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="7dip"
@@ -58,14 +62,18 @@
             android:paddingTop="10dp"
             android:text="ПОПУЛЯРНОЕ У ДРУЗЕЙ"
             android:textColor="#ffffff"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"/>
 
-        <ListView
+        <ExpandableListView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:id="@+id/main_popular_topic_list"
-            />
+            android:background="#1EB5D7"/>
+
+
     </LinearLayout>
+
     <View
         android:layout_width="fill_parent"
         android:layout_height="7dip"
@@ -87,13 +95,15 @@
             android:paddingTop="10dp"
             android:text="КОРОННЫЕ ТЕМЫ"
             android:textColor="#ffffff"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"/>
 
-        <ListView
+        <ExpandableListView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:id="@+id/main_favorite_topic_list"
-            />
+            android:background="#21D077"/>
+
     </LinearLayout>
 
 

@@ -1,24 +1,28 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
-import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.quiz.pavel.quiz.model.Topic;
 
 import org.json.JSONArray;
@@ -36,9 +40,11 @@ import butterknife.InjectView;
 public class MainFragment extends MyFragment {
     private final static String TAG = "MainFragment";
 
-    @InjectView(R.id.main_favorite_topic_list) ListView mFavoriteTopicsView;
-    @InjectView(R.id.main_new_topic_list) ListView mNewTopicsView;
-    @InjectView(R.id.main_popular_topic_list) ListView mPopularTopicsView;
+    public TopicListFragment.TopicListListener mCallback;
+
+    @InjectView(R.id.main_favorite_topic_list) ExpandableListView mFavoriteTopicsView;
+    @InjectView(R.id.main_new_topic_list) ExpandableListView mNewTopicsView;
+    @InjectView(R.id.main_popular_topic_list) ExpandableListView mPopularTopicsView;
 
     ArrayList<Topic> mFavoriteTopics = new ArrayList<Topic>();
     ArrayList<Topic> mNewTopics = new ArrayList<Topic>();
@@ -93,10 +99,17 @@ public class MainFragment extends MyFragment {
 
     @Override
     public void onAttach(Activity activity) {
+        mTitle = "Один на один";
         super.onAttach(activity);
 
         ((MainSlidingActivity) activity).onSectionAttached(2);
-        mTitle = "Один на один";
+
+        try {
+            mCallback = (TopicListFragment.TopicListListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
     }
 
     private void writeInTopics(JSONArray ar, ArrayList<Topic> topics) throws JSONException {
@@ -109,14 +122,33 @@ public class MainFragment extends MyFragment {
         if(mPopularTopics == null || getActivity() == null) {
             return;
         }
-        TopicAdapter adapter1 = new TopicAdapter(mFavoriteTopics);
+
+        mFavoriteTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mFavoriteTopicsView.setGroupIndicator(null);
+        ExpandableTopicAdapter adapter1 = new ExpandableTopicAdapter(mFavoriteTopics);
         mFavoriteTopicsView.setAdapter(adapter1);
 
-        TopicAdapter adapter2 = new TopicAdapter(mNewTopics);
+//        TopicAdapter adapter1 = new TopicAdapter(mFavoriteTopics);
+//        mFavoriteTopicsView.setAdapter(adapter1);
+
+        mNewTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mNewTopicsView.setGroupIndicator(null);
+        ExpandableTopicAdapter adapter2 = new ExpandableTopicAdapter(mNewTopics);
         mNewTopicsView.setAdapter(adapter2);
 
-        TopicAdapter adapter3 = new TopicAdapter(mPopularTopics);
+//        TopicAdapter adapter2 = new TopicAdapter(mNewTopics);
+//        mNewTopicsView.setAdapter(adapter2);
+
+        mPopularTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        mPopularTopicsView.setGroupIndicator(null);
+        ExpandableTopicAdapter adapter3 = new ExpandableTopicAdapter(mPopularTopics);
         mPopularTopicsView.setAdapter(adapter3);
+
+        setRetainInstance(true);
+
+
+//        TopicAdapter adapter3 = new TopicAdapter(mPopularTopics);
+//        mPopularTopicsView.setAdapter(adapter3);
     }
 
     private class TopicAdapter extends ArrayAdapter<Topic> {
@@ -140,4 +172,123 @@ public class MainFragment extends MyFragment {
             return convertView;
         }
     }
+
+
+    public class ExpandableTopicAdapter extends BaseExpandableListAdapter {
+        ArrayList<Topic> mTopics;
+
+        public ExpandableTopicAdapter(ArrayList<Topic> topics) {
+            mTopics = topics;
+        }
+
+        @Override
+        public int getGroupCount() {
+            return mTopics.size();
+        }
+
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return 1;
+        }
+
+        @Override
+        public Object getGroup(int groupPosition) {
+            return mTopics.get(groupPosition);
+        }
+
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return 1;
+        }
+
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
+        }
+
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_topic, null);
+            }
+            Topic c = (Topic) mTopics.get(groupPosition);
+
+            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+            titleTextView.setText(c.getTitle());
+
+            ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
+            progress.setArcAngle(360);
+
+            TextView level = (TextView) convertView.findViewById(R.id.item_level);
+            level.setText(String.valueOf(c.getLevel()));
+            progress.setProgress(c.getProgress());
+
+            return convertView;
+
+        }
+
+        @Override
+        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+            if (convertView == null) {
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_child_item_topic, null);
+            }
+            final int position = groupPosition;
+
+            Button playBtn = (Button) convertView.findViewById(R.id.child_button_play);
+            playBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Topic cr = mTopics.get(position);
+
+                    int mNumberOfCategory = 1;
+
+                    Intent i = new Intent(getActivity(), PreGameActivity.class);
+                    i.putExtra("topic", mTopics.get(position).getId());
+                    i.putExtra("name", mTopics.get(position).getTitle());
+                    i.putExtra("category", mNumberOfCategory);
+
+                    startActivity(i);
+                }
+            });
+
+            Button challengeBtn = (Button) convertView.findViewById(R.id.child_button_challenge);
+            challengeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getActivity(), "challenge", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Button ratingBtn = (Button) convertView.findViewById(R.id.child_button_rating);
+            ratingBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCallback.onOpenRating();
+                }
+            });
+
+
+            return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+    }
+
+
+
 }

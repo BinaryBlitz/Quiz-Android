@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:id="@+id/background_post_game"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="center">
+              android:gravity="center"
+              android:background="#66111111">
+
 
 
 
@@ -27,17 +30,31 @@
 
 
 
-            <com.github.siyamed.shapeimageview.CircularImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/my_image_imageView"
-                app:siBorderWidth="2dp"
-                android:scaleType="centerCrop"
-                app:siBorderColor="#FF000000"
-                app:siSquare="true"
-                android:layout_gravity="center"
-                />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
 
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/my_image_imageView"
+                    app:siBorderWidth="2dp"
+                    android:scaleType="centerCrop"
+                    app:siBorderColor="#FF000000"
+                    app:siSquare="true"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="0"
+                    android:id="@+id/my_points_textView"/>
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -47,14 +64,9 @@
                 android:text="name"
                 android:id="@+id/my_name"
                 android:autoText="false"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="#ffffff"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/my_points_textView"/>
         </LinearLayout>
 
         <LinearLayout
@@ -68,7 +80,11 @@
          <TextView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="vs."></TextView>
+             android:text="vs."
+             android:textSize="20sp"
+             android:textStyle="bold"
+             android:textColor="#111111"/>
+
 
         </LinearLayout>
 
@@ -83,16 +99,31 @@
 
 
 
-            <com.github.siyamed.shapeimageview.CircularImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:id="@+id/opponents_image_imageView"
-                app:siBorderWidth="2dp"
-                android:scaleType="centerCrop"
-                app:siBorderColor="#FF000000"
-                app:siSquare="true"
-                android:layout_gravity="center"
-                />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="0"
+                    android:id="@+id/opponents_points_textView"/>
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/opponents_image_imageView"
+                    app:siBorderWidth="2dp"
+                    android:scaleType="centerCrop"
+                    app:siBorderColor="#FF000000"
+                    app:siSquare="true"
+                    android:layout_gravity="center"
+                    />
+
+
+            </LinearLayout>
 
             <TextView
                 android:layout_width="match_parent"
@@ -102,14 +133,9 @@
                 android:text="name"
                 android:maxLines="1"
                 android:id="@+id/opponents_name"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textColor="#ffffff"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/opponents_points_textView"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -125,7 +151,9 @@
         android:text="Large Text"
         android:layout_weight="1"
         android:id="@+id/textView"
-        />
+        android:textSize="56sp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"/>
 
     <LinearLayout android:orientation="vertical"
                   android:layout_width="match_parent"
@@ -135,45 +163,106 @@
 
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"/>
+            android:text="Сыграть еще раз"
+            android:textColor="#ffffff"
+            android:background="@drawable/shape"
+            android:id="@+id/button_play_again"/>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button2"/>
+            android:text="Выбрать другую тему"
+            android:textColor="#ffffff"
+            android:background="@drawable/shape"
+            android:id="@+id/choose_topic"/>
     </LinearLayout>
-
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-            >
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:background="#4D4D4D"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="0"
+                    android:textSize="38sp"
+                    android:id="@+id/textView2"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="очков"
+                    android:id="@+id/textView12"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView2"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView3"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
-            android:id="@+id/textView4"/>
+            android:id="@+id/profile_wins"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/blue_circle"
+            android:gravity="center"
+            android:text="x2"
+            android:textColor="#1EB5D7"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textIsSelectable="false"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_grey"
+        >
+    </View>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#333333"
+        android:layout_height="100dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0 очков"
+            android:id="@+id/textView4"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#FC5659"
+            android:textStyle="bold"
+            android:textSize="58sp"/>
+    </LinearLayout>
+
 </LinearLayout>
+

@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.squareup.picasso.Picasso;
@@ -20,6 +25,7 @@ import com.squareup.picasso.Target;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * Created by pavel on 07/03/15.
@@ -29,14 +35,22 @@ public class PostGameFragment extends Fragment {
     public final static String EXTRA = "extra_postGameFragment";
 
     @InjectView(R.id.textView) TextView mTextView;
+    @InjectView(R.id.background_post_game) LinearLayout mBackground;
 
-    @InjectView(R.id.background_post_game)
-    LinearLayout mBackground;
+    @InjectView(R.id.button_play_again) Button mButtonPlayAgain;
+    @InjectView(R.id.choose_topic) Button mButtonChooseTopic;
 
+    DisplayImageOptions options;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -60,31 +74,30 @@ public class PostGameFragment extends Fragment {
     private void setBackground() {
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
                 .loadCategoryAr(getActivity()).get(1).mBackgroundUrl;
-//        try {
-//            mBackground.setBackgroundDrawable(new BitmapDrawable(getResources(), Picasso.with(getActivity()).load(url).get() ));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
 
-        Target target = new Target() {
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
                 mBackground.setBackground(drawable);
-
             }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
-        Picasso.with(getActivity()).load(url).into(target);
+        });
     }
+
+    @OnClick(R.id.button_play_again)
+    public void onClick1() {
+        YoYo.with(Techniques.Swing).duration(700).playOn(mButtonPlayAgain);
+    }
+
+    @OnClick(R.id.choose_topic)
+    public void onClick2() {
+        YoYo.with(Techniques.Swing).duration(700).playOn(mButtonChooseTopic);
+    }
+
 }

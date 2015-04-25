@@ -49,7 +49,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainSlidingActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyFragment.MyFragmentListener,
-        CategoryListFragment.CategoryListListener, ProfileFragment.ProfileFragmentListener, ChallengeCategoryListFragment.ChallengeCategoryListListener {
+        CategoryListFragment.CategoryListListener, ProfileFragment.ProfileFragmentListener, ChallengeCategoryListFragment.ChallengeCategoryListListener,
+        TopicListFragment.TopicListListener {
     public static final String TAG = "MainSlidingActivity";
 
     /**
@@ -302,6 +303,25 @@ public class MainSlidingActivity extends ActionBarActivity
         args.putInt("number_of_category", position);
 
         newFragment.setArguments(args);
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack so the user can navigate back
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+
+        fragmentTransaction.replace(R.id.container, newFragment);
+        fragmentTransaction.addToBackStack(null);
+
+        // Commit the transaction
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onOpenRating() {
+        RatingFragment1 newFragment = new RatingFragment1();
 
         FragmentTransaction fragmentTransaction;
 

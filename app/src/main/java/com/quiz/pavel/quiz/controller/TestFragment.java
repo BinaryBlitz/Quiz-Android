@@ -175,10 +175,6 @@ public class TestFragment extends Fragment {
 
         mSessionManager.listenEvent();
 
-
-
-
-
         setAvatarsNames();
 
 
@@ -963,7 +959,6 @@ public class TestFragment extends Fragment {
 
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
-
 
         blockOfButtons = true;
 
