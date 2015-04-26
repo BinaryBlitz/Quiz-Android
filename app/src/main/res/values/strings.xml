@@ -15,8 +15,8 @@
     <string name="hello">Hello World, ParseStarterProjectActivity!</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="loginBtn">Login</string>
-    <string name="signupBtn">Sign Up</string>
+    <string name="loginBtn">ВОЙТИ</string>
+    <string name="signupBtn">РЕГИСТРАЦИЯ</string>
     <string name="logoutBtn">Log Out</string>
     <string name="mail">Mail</string>
     <string name="action_logout">Log out</string>
@@ -35,7 +35,7 @@
     <string name="title_section_categoryies">Категории</string>
     <string name="title_activity_choice_cat_or_topic">ChoiceCatOrTopicActivity</string>
     <string name="title_section_topics">Темы</string>
-    <string name="signupVkBtn">vk sign in</string>
+    <string name="signupVkBtn">ВКОНТАКТЕ</string>
     <string name="open_list_view">Открыть заявки в друзья</string>
     <string name="add_friend">Добавить в друзья</string>
     <string name="action_searching">Поиск</string>

@@ -56,6 +56,8 @@ public class MainFragment extends MyFragment {
         setHasOptionsMenu(true);
     }
 
+    View mV;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_main_tab, parent, false);
@@ -94,6 +96,8 @@ public class MainFragment extends MyFragment {
                 });
         queue.add(arRequest);
 
+        mV = v;
+
         return v;
     }
 
@@ -127,6 +131,7 @@ public class MainFragment extends MyFragment {
         mFavoriteTopicsView.setGroupIndicator(null);
         ExpandableTopicAdapter adapter1 = new ExpandableTopicAdapter(mFavoriteTopics);
         mFavoriteTopicsView.setAdapter(adapter1);
+
 
 //        TopicAdapter adapter1 = new TopicAdapter(mFavoriteTopics);
 //        mFavoriteTopicsView.setAdapter(adapter1);

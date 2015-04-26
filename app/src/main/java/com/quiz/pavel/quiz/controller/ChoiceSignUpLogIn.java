@@ -1,6 +1,5 @@
 package com.quiz.pavel.quiz.controller;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,10 +11,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -153,6 +150,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
     @OnClick(R.id.login_choice)
     public void onClick1() {
+//        YoYo.with(Techniques.Swing).duration(500).playOn(mLogIn);
         Intent intent = new Intent(ChoiceSignUpLogIn.this, LogInActivity.class);
         startActivity(intent);
 
@@ -160,6 +158,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
     @OnClick(R.id.signup_choice)
     public void onClick2() {
+//        YoYo.with(Techniques.Swing).duration(500).playOn(mSignUp);
         Intent intent = new Intent(ChoiceSignUpLogIn.this, SignUpActivity.class);
         startActivity(intent);
 
@@ -167,6 +166,7 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
 
     @OnClick(R.id.vk_sighin)
     public void onClick3() {
+//        YoYo.with(Techniques.Swing).duration(500).playOn(mSignUpVk);
 //        VKSdk.authorize(sMyScope, true, true);
         VKSdk.authorize(sMyScope);
     }

@@ -6,18 +6,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -36,13 +32,10 @@ import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -117,6 +110,8 @@ public class PreGameFragment extends BasePreGameFragment {
 
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
                 .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+
+        Log.d(TAG, "url= " + url);
 
         ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
