@@ -45,11 +45,16 @@
                 android:layout_gravity="center"
                 />
             <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/my_points_textView"
                 android:text="0"
-                android:id="@+id/my_points_textView"/>
+                android:background="@drawable/shape_red"
+                android:layout_width="25dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginLeft="-5dp"/>
 
             </LinearLayout>
 
@@ -103,19 +108,28 @@
             >
 
             <LinearLayout
+                android:id="@+id/layout_for_invalidating"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 >
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:text="0"
+                    android:background="@drawable/shape_red"
+                    android:layout_width="25dp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:adjustViewBounds="true"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="0"
-                    android:id="@+id/opponents_points_textView"/>
+                    android:id="@+id/opponents_points_textView"
+                    android:gravity="center"
+                    />
+
             <com.github.siyamed.shapeimageview.CircularImageView
                 android:layout_width="50dp"
+                android:nextFocusForward="@id/opponents_points_textView"
                 android:layout_height="50dp"
                 android:id="@+id/opponents_image_imageView"
                 app:siBorderWidth="2dp"
@@ -211,6 +225,7 @@
                 <Button
                     android:id="@+id/variant_a_button"
                     android:text="A"
+                    android:lines="1"
                     android:layout_weight="1"
                     style="@style/ButtonVar"
                     />
@@ -220,6 +235,7 @@
                     style="@style/ButtonVar"
                     android:layout_weight="1"
                     android:text="B"
+                    android:lines="1"
                     android:id="@+id/variant_b_button"
                     />
 
@@ -235,12 +251,15 @@
                 <Button
                     style="@style/ButtonVar"
                     android:layout_weight="1"
+                    android:drawableRight="@drawable/point"
+                    android:lines="1"
                     android:id="@+id/variant_c_button"
                     android:text="C" />
 
                 <Button
                     style="@style/ButtonVar"
                     android:layout_weight="1"
+                    android:lines="1"
                     android:text="D"
                     android:id="@+id/variant_d_button"
                     />

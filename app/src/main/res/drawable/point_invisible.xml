@@ -6,11 +6,9 @@
           android:width="20dp">
     </size>
 
-    <padding android:right="0dp"
-        >
+    <solid android:color="#00ffffff"/>
 
-    </padding>
-
-
+    <stroke android:width="4dp"
+            android:color="#00111111"/>
 
 </shape>

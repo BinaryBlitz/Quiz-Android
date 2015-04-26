@@ -1,26 +1,18 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 
 import com.pusher.client.Pusher;
 import com.pusher.client.channel.Channel;
 import com.pusher.client.channel.SubscriptionEventListener;
-import com.pusher.client.connection.ConnectionEventListener;
-import com.pusher.client.connection.ConnectionState;
-import com.pusher.client.connection.ConnectionStateChange;
-import com.quiz.pavel.quiz.controller.SingleFragmentActivity;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.UUID;
 
 
 /**
@@ -94,6 +86,7 @@ public class SessionManager {
     }
 
     public void deleteInstance() {
+        stopTimer();
         myHandler.removeCallbacks(myRunnable);
         sSessionManager = null;
     }
@@ -147,11 +140,16 @@ public class SessionManager {
     private int timer;
     public Handler myHandler;
     Timer mTimer;
+    int round;
 
 
     public final Runnable myRunnable = new Runnable() {
         public void run() {
             if (timer == 11 || mSession.bothPlayersAreAnswered()) {
+                round++;
+                if (round > 7) {
+                    deleteInstance();
+                }
                 mCallbackOnView.closeRound();
                 mCallbackOnView.openRound();
                 timer = 0;

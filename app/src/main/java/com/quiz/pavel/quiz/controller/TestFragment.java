@@ -10,20 +10,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -39,14 +35,11 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
-import com.quiz.pavel.quiz.model.MyButton;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -55,8 +48,6 @@ import java.util.Map;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-
-import static com.quiz.pavel.quiz.R.style.ButtonVar;
 
 /**
  * Created by pavelkozemirov on 11.12.14.
@@ -210,8 +201,6 @@ public class TestFragment extends Fragment {
 //                mProgressPieView.setImageResource(R.drawable.ic_action_accept);
             }
         });
-
-        mTimerTextView.setVisibility(View.INVISIBLE);
 
         return v;
     }
@@ -588,7 +577,7 @@ public class TestFragment extends Fragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                    //Add cases
+                    Log.d(TAG, "Patch request on close session has not be send, error");
             }
         }) {
 
@@ -798,9 +787,9 @@ public class TestFragment extends Fragment {
         mVariantC.setCompoundDrawables(null, null, null, null);
         mVariantD.setCompoundDrawables(null, null, null, null);
 
-
-
     }
+
+
 
     @Override
     public void onDestroy() {
