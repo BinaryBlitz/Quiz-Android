@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="80dp"
+              android:layout_height="wrap_content"
               android:gravity="center"
+              android:id="@+id/background_table"
               android:paddingLeft="10dp"
               android:paddingRight="10dp">
 
@@ -12,8 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Играть"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_margin="5dp"
         android:background="@drawable/shape"
         android:textColor="#ffffff"
         android:id="@+id/child_button_play"/>
@@ -21,8 +21,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_margin="5dp"
         android:text="Вызов"
         android:background="@drawable/shape"
         android:textColor="#ffffff"
@@ -31,8 +30,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_margin="5dp"
         android:text="Рейтинг"
         android:background="@drawable/shape"
         android:textColor="#ffffff"

@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,12 +24,14 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Topic;
+import com.quiz.pavel.quiz.model.TopicHeader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -42,13 +44,15 @@ public class MainFragment extends MyFragment {
 
     public TopicListFragment.TopicListListener mCallback;
 
-    @InjectView(R.id.main_favorite_topic_list) ExpandableListView mFavoriteTopicsView;
-    @InjectView(R.id.main_new_topic_list) ExpandableListView mNewTopicsView;
-    @InjectView(R.id.main_popular_topic_list) ExpandableListView mPopularTopicsView;
+    @InjectView(R.id.main_topic_list) ExpandableListView mTopicsView;
 
     ArrayList<Topic> mFavoriteTopics = new ArrayList<Topic>();
     ArrayList<Topic> mNewTopics = new ArrayList<Topic>();
     ArrayList<Topic> mPopularTopics = new ArrayList<Topic>();
+
+    ArrayList<Topic> mTopics = new ArrayList<Topic>();
+
+    Bundle bundle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,16 +60,18 @@ public class MainFragment extends MyFragment {
         setHasOptionsMenu(true);
     }
 
-    View mV;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main_tab, parent, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, final Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_main_tab_1, parent, false);
         ButterKnife.inject(this, v);
 
-        mFavoriteTopicsView.setFocusable(false);
-        mNewTopicsView.setFocusable(false);
-        mPopularTopicsView.setFocusable(false);
+        mTopicsView.setFocusable(false);
+
+
+
+
+
+
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
@@ -85,7 +91,7 @@ public class MainFragment extends MyFragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        setTopics();
+                        setTopics(savedInstanceState);
                     }
                 },
                 new Response.ErrorListener() {
@@ -96,8 +102,7 @@ public class MainFragment extends MyFragment {
                 });
         queue.add(arRequest);
 
-        mV = v;
-
+        bundle = savedInstanceState;
         return v;
     }
 
@@ -122,38 +127,44 @@ public class MainFragment extends MyFragment {
         }
     }
 
-    private void setTopics() {
+
+    private void setTopics(Bundle saved) {
         if(mPopularTopics == null || getActivity() == null) {
             return;
         }
+        mTopicsView.setGroupIndicator(null);
 
-        mFavoriteTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mFavoriteTopicsView.setGroupIndicator(null);
-        ExpandableTopicAdapter adapter1 = new ExpandableTopicAdapter(mFavoriteTopics);
-        mFavoriteTopicsView.setAdapter(adapter1);
+        final ExpandableTopicAdapter adapter = new ExpandableTopicAdapter();
 
+        adapter.addHeader(0, R.color.main_tab_red);
+        for (Topic newTopic : mNewTopics) {
+            newTopic.setColor(R.color.main_tab_red);
+            adapter.addItem(newTopic);
+        }
 
-//        TopicAdapter adapter1 = new TopicAdapter(mFavoriteTopics);
-//        mFavoriteTopicsView.setAdapter(adapter1);
+        adapter.addHeader(1, R.color.main_tab_blue);
+        for (Topic popularTopic : mPopularTopics) {
+            popularTopic.setColor(R.color.main_tab_blue);
+            adapter.addItem(popularTopic);
+        }
 
-        mNewTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mNewTopicsView.setGroupIndicator(null);
-        ExpandableTopicAdapter adapter2 = new ExpandableTopicAdapter(mNewTopics);
-        mNewTopicsView.setAdapter(adapter2);
+        adapter.addHeader(2, R.color.main_tab_green);
+        for (Topic topic : mFavoriteTopics) {
+            topic.setColor(R.color.main_tab_green);
+            adapter.addItem(topic);
+        }
 
-//        TopicAdapter adapter2 = new TopicAdapter(mNewTopics);
-//        mNewTopicsView.setAdapter(adapter2);
+        mTopicsView.setAdapter(adapter);
 
-        mPopularTopicsView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mPopularTopicsView.setGroupIndicator(null);
-        ExpandableTopicAdapter adapter3 = new ExpandableTopicAdapter(mPopularTopics);
-        mPopularTopicsView.setAdapter(adapter3);
-
-        setRetainInstance(true);
-
-
-//        TopicAdapter adapter3 = new TopicAdapter(mPopularTopics);
-//        mPopularTopicsView.setAdapter(adapter3);
+        mTopicsView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousGroup = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (groupPosition != previousGroup)
+                    mTopicsView.collapseGroup(previousGroup);
+                previousGroup = groupPosition;
+            }
+        });
     }
 
     private class TopicAdapter extends ArrayAdapter<Topic> {
@@ -182,9 +193,27 @@ public class MainFragment extends MyFragment {
     public class ExpandableTopicAdapter extends BaseExpandableListAdapter {
         ArrayList<Topic> mTopics;
 
-        public ExpandableTopicAdapter(ArrayList<Topic> topics) {
-            mTopics = topics;
+        public ExpandableTopicAdapter(ArrayList<Topic> topics, int color) {
+//            mTopics = topics;
         }
+        public ExpandableTopicAdapter(Topic[] topics) {
+            mTopics = new ArrayList<Topic>(Arrays.asList(topics));
+        }
+
+        public ExpandableTopicAdapter() {
+            mTopics = new ArrayList<Topic>();
+        }
+
+        public void addItem(final Topic item) {
+            mTopics.add(item);
+            notifyDataSetChanged();
+        }
+
+        public void addHeader(int n, int color) {
+            mTopics.add(new TopicHeader(n, color));
+            notifyDataSetChanged();
+        }
+
 
         @Override
         public int getGroupCount() {
@@ -224,23 +253,45 @@ public class MainFragment extends MyFragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
-            if (convertView == null) {
+//            if (convertView == null) {
+//                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_topic, null);
+//            }
+
+            try {
+                TopicHeader th = (TopicHeader)mTopics.get(groupPosition);
+                switch (th.headerNumber) {
+                    case 0:
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.red_header_for_listview, null);
+                        break;
+                    case 1:
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.blue_header_for_listview, null);
+                        break;
+                    case 2:
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.green_header_for_listview, null);
+                        break;
+                    case 3:
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.red_header_for_listview, null);
+                        break;
+                }
+            } catch (ClassCastException ex) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_topic, null);
+
+                Topic c = (Topic) mTopics.get(groupPosition);
+
+                convertView.setBackground(getResources().getDrawable(c.getColor()));
+
+                TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+                titleTextView.setText(c.getTitle());
+
+                ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
+                progress.setArcAngle(360);
+
+                TextView level = (TextView) convertView.findViewById(R.id.item_level);
+                level.setText(String.valueOf(c.getLevel()));
+                progress.setProgress(c.getProgress());
             }
-            Topic c = (Topic) mTopics.get(groupPosition);
-
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
-            titleTextView.setText(c.getTitle());
-
-            ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
-            progress.setArcAngle(360);
-
-            TextView level = (TextView) convertView.findViewById(R.id.item_level);
-            level.setText(String.valueOf(c.getLevel()));
-            progress.setProgress(c.getProgress());
 
             return convertView;
-
         }
 
         @Override
@@ -250,6 +301,9 @@ public class MainFragment extends MyFragment {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_child_item_topic, null);
             }
             final int position = groupPosition;
+
+            ((LinearLayout)convertView.findViewById(R.id.background_table))
+                    .setBackground(getResources().getDrawable(mTopics.get(groupPosition).getColor()));
 
             Button playBtn = (Button) convertView.findViewById(R.id.child_button_play);
             playBtn.setOnClickListener(new View.OnClickListener() {
@@ -295,5 +349,13 @@ public class MainFragment extends MyFragment {
     }
 
 
-
+    void addHeaderRed() {
+        mTopicsView.addHeaderView(getLayoutInflater(bundle).inflate(R.layout.red_header_for_listview, null));
+    }
+    void addHeaderBlue() {
+        mTopicsView.addHeaderView(getLayoutInflater(bundle).inflate(R.layout.blue_header_for_listview, null));
+    }
+    void addHeaderGreen() {
+        mTopicsView.addHeaderView(getLayoutInflater(bundle).inflate(R.layout.green_header_for_listview, null));
+    }
 }

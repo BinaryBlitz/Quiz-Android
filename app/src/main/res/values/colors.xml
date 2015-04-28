@@ -10,6 +10,13 @@
 
 
 
+    <color name="main_tab_red">#FC5658</color>
+    <color name="main_tab_blue">#1EB5D7</color>
+    <color name="main_tab_green">#21D077</color>
+
+
+
+
 
 
 </resources>

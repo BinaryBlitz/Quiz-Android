@@ -1,1 +1,2 @@
-include ':app', ':pusher-java-client-0.3.3-jar-with-dependencies', ':vksdk_library', ':universal-image-loader-1.9.3-with-sources'
+include ':app', ':pusher-java-client-0.3.3-jar-with-dependencies', ':vksdk_library', ':universal-image-loader-1.9.3-with-sources', ':libraryListView'
+project(':libraryListView').projectDir = new File('library')

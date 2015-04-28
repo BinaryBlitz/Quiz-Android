@@ -15,6 +15,8 @@ public class Topic {
     public int mPoints;
     private int mProgress;
 
+    private int mColor;
+
     public Topic(JSONObject json) {
         try {
             mText = json.getString("name");
@@ -27,7 +29,7 @@ public class Topic {
     }
 
     public Topic() {
-        mText = "person";
+
     }
 
     public String getTitle() {
@@ -63,4 +65,11 @@ public class Topic {
         return mProgress;
     }
 
+    public int getColor() {
+        return mColor;
+    }
+
+    public void setColor(int color) {
+        mColor = color;
+    }
 }
