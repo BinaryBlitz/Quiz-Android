@@ -9,24 +9,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerRating;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,9 +45,9 @@ public class RatingFragment1 extends MyFragment {
         mTabHost = new FragmentTabHost(getActivity());
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.layout.fragment_main);
 
-        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("Simple"),
+        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("За неделю"),
                 TestFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("contacts").setIndicator("Contacts"),
+        mTabHost.addTab(mTabHost.newTabSpec("contacts").setIndicator("За все время"),
                 TestFragment.class, null);
 
 
@@ -206,8 +203,6 @@ public class RatingFragment1 extends MyFragment {
                 }
                 PlayerRating c = (PlayerRating) mPlayers.get(position);
 
-
-
                 TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
                 if(c.getId() == Mine.getInstance(getActivity()).getId()) {
                     convertView.setBackgroundColor(Color.LTGRAY);
@@ -227,6 +222,20 @@ public class RatingFragment1 extends MyFragment {
                 } else {
                     pointsTextView.setText("");
                 }
+
+
+                ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_photo);
+
+                if (c.mUrl == null || c.mUrl.equals("null")){
+                    Picasso.with(getActivity())
+                            .load(R.drawable.catty)
+                            .into(imageView);
+                }
+
+                Picasso.with(getActivity())
+                        .load(Mine.URL_photo + c.mUrl)
+                        .placeholder(R.drawable.catty)
+                        .into(imageView);
 
                 return convertView;
             }

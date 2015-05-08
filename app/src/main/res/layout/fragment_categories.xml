@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/common_signin_btn_light_text_pressed">
+              android:background="@color/progress_grey">
 
     <ListView
         android:layout_width="match_parent"
@@ -11,7 +11,7 @@
         android:divider="@null"
         android:clipToPadding="false"
         android:scrollbarStyle="outsideOverlay"
-
+        android:background="#ffffff"
         android:id="@+id/listView"
-        android:background="#ffffff"/>
+        />
 </LinearLayout>

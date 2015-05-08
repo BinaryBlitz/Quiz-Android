@@ -487,11 +487,11 @@ public class ProfileFragment extends MyFragment {
     }
 
 
-    @OnClick(R.id.open_list)
-    public void onClickOpen() {
-        Intent i = new Intent(getActivity(), ListFriendRequestsActivity.class);
-        startActivity(i);
-    }
+//    @OnClick(R.id.open_list)
+//    public void onClickOpen() {
+//        Intent i = new Intent(getActivity(), ListFriendRequestsActivity.class);
+//        startActivity(i);
+//    }
 
     @OnClick(R.id.milti_button)
     public void onClickAdd() {
