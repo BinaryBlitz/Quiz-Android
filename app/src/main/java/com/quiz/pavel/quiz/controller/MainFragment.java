@@ -267,6 +267,12 @@ public class MainFragment extends MyFragment {
                         convertView = getActivity().getLayoutInflater().inflate(R.layout.red_header_for_listview, null);
                         break;
                 }
+                convertView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
             } catch (ClassCastException ex) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_topic, null);
 
@@ -296,8 +302,13 @@ public class MainFragment extends MyFragment {
             }
             final int position = groupPosition;
 
-            ((LinearLayout)convertView.findViewById(R.id.background_table))
-                    .setBackground(getResources().getDrawable(mTopics.get(groupPosition).getColor()));
+
+            try {
+                ((LinearLayout)convertView.findViewById(R.id.background_table))
+                        .setBackground(getResources().getDrawable(mTopics.get(groupPosition).getColor()));
+            } catch (Exception e) {
+
+            }
 
             Button playBtn = (Button) convertView.findViewById(R.id.child_button_play);
             playBtn.setOnClickListener(new View.OnClickListener() {
