@@ -2,32 +2,25 @@ package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
@@ -36,7 +29,6 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,7 +109,7 @@ public class SearchFragment extends MyFragment {
                             String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
-                                name = response.getJSONObject(i).getString("name");
+                                name = response.getJSONObject(i).getString("username");
                                 url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -169,12 +161,10 @@ public class SearchFragment extends MyFragment {
         inflater.inflate(R.menu.menu_search_list, menu);
     }
 
-
-
     private class MyAdapter extends ArrayAdapter<PlayerProfile> {
 
-        public MyAdapter(FragmentActivity activity, int simple_list_item_1, ArrayList<PlayerProfile> crimes){
-            super(getActivity(), 0, crimes);
+        public MyAdapter(FragmentActivity activity, int simple_list_item_1, ArrayList<PlayerProfile> list){
+            super(getActivity(), 0, list);
         }
 
         @Override
@@ -182,13 +172,26 @@ public class SearchFragment extends MyFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_user, null);
             }
 
             PlayerProfile c = (PlayerProfile)list.get(position);
 
             TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getName());
+
+            ImageView photo = (ImageView)convertView.findViewById(R.id.imageView_photo);
+
+            if (c.getAvatarUrl() == null || c.getAvatarUrl() == "null" || c.getAvatarUrl() == "") {
+                Picasso.with(getActivity())
+                        .load(R.drawable.catty)
+                        .into(photo);
+            } else {
+                Picasso.with(getActivity())
+                        .load(Mine.URL_photo + c.getAvatarUrl())
+                        .placeholder(R.drawable.catty)
+                        .into(photo);
+            }
 
             return convertView;
         }

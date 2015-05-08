@@ -73,7 +73,7 @@ public class PostGameFragment extends Fragment {
 
     private void setBackground() {
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(1).mBackgroundUrl;
+                .loadCategoryAr(getActivity()).get(0).mBackgroundUrl;
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)

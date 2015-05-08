@@ -109,7 +109,7 @@ public class PreGameFragment extends BasePreGameFragment {
         ButterKnife.inject(this, v);
 
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+                .loadCategoryAr(getActivity()).get(mCategoryId - 1).mBackgroundUrl;
 
         Log.d(TAG, "url= " + url);
 

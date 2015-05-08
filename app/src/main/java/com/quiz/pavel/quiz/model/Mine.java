@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.android.volley.Response;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +34,8 @@ public class Mine {
 
     private Mine(Context c, JSONObject json) throws JSONException {
 
-        mName = json.getString("name");
+        Log.d(TAG, "json= " + json);
+        mName = json.getString("username");
         mEmail = json.getString("email");
         mToken = json.getString("token");
         mId = json.getInt("id");
@@ -45,7 +43,7 @@ public class Mine {
 
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("name", mName);
+        editor.putString("username", mName);
         editor.putString("email", mEmail);
         editor.putString("token", mToken);
         editor.putBoolean("signin", true);
@@ -61,7 +59,7 @@ public class Mine {
 
         SharedPreferences settings = c.getSharedPreferences(PREFS_NAME, 0);
 
-        mName = settings.getString("name", "");
+        mName = settings.getString("username", "");
         mEmail = settings.getString("email", "");
         mToken = settings.getString("token", "");
         mAvatar = settings.getString("avatar_url","");

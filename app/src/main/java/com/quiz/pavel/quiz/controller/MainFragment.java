@@ -67,12 +67,6 @@ public class MainFragment extends MyFragment {
 
         mTopicsView.setFocusable(false);
 
-
-
-
-
-
-
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest arRequest = new JsonObjectRequest(Mine.URL + "/pages/home?token="

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -263,6 +264,20 @@ public class MainSlidingActivity extends ActionBarActivity
     @Override
     public void setIdForChallenge(int id) {
         mIdForChallenge = id;
+    }
+
+    @Override
+    public void openAchievementsList(PlayerProfile playerProfile) {
+        MyFragment fragment = new AchievementsFragment();
+
+        FragmentTransaction fragmentTransaction;
+
+        fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+        fragmentTransaction.replace(R.id.container, fragment);
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     @Override

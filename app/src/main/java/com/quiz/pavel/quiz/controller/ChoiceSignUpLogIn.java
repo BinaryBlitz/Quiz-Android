@@ -57,8 +57,6 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
     @InjectView(R.id.login_choice) Button mLogIn;
 
     private static final String[] sMyScope = new String[] {
-            VKScope.FRIENDS,
-            VKScope.WALL,
             VKScope.PHOTOS,
             VKScope.OFFLINE
     };
@@ -394,23 +392,21 @@ public class ChoiceSignUpLogIn extends FragmentActivity {
     private void sendRegistrationIdToBackend() {
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        JSONObject params = new JSONObject();
+        JSONObject par = new JSONObject();
         String token = Mine.getInstance(this).getToken();
 
+        Log.d(TAG, "It has occured!! regid = " + regid);
         try {
-            JSONObject par = new JSONObject();
+            par = new JSONObject();
             par.put("push_token", regid);
-            par.put("android", true);
-            params.put("token", Mine.getInstance(this).getToken());
+            par.put("android", "true");
 
         } catch (JSONException e) {
             Log.d(TAG, "Problem with parsing json(Intent)");
         }
 
-        Log.d(TAG, "It has occured!! regid = " + regid);
-
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/push_tokens?push_token="
-                + regid + "&android=true&token=" + token, params, new Response.Listener<JSONObject>() {
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/push_tokens?token="
+                + token, par, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d(TAG, "Push_token_id has been send");

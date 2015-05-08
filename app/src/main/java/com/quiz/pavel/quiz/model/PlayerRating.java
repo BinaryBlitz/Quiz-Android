@@ -1,12 +1,9 @@
 package com.quiz.pavel.quiz.model;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 17.02.15.
@@ -23,7 +20,7 @@ public class PlayerRating {
     public PlayerRating(JSONObject json, int i) {
         try {
             mId = json.getInt("id");
-            mName = json.getString("name");
+            mName = json.getString("username");
             mPoints = json.getInt("points");
             mPosition = i;
         } catch (JSONException e) {

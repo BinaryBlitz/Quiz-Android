@@ -6,10 +6,10 @@
           android:width="20dp">
     </size>
 
-
-    <solid android:color="#ffffff"/>
+    <solid android:color="#ffffffff"/>
 
     <stroke android:width="4dp"
             android:color="#111111"/>
+
 
 </shape>

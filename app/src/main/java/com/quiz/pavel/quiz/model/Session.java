@@ -3,7 +3,6 @@ package com.quiz.pavel.quiz.model;
 import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -13,14 +12,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -32,17 +27,9 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 13.12.14.
@@ -95,15 +82,15 @@ public class Session {
             int host_id = objHost.getInt("id");
 
             if(host_id == Mine.getInstance(c).getId()) {
-                mMyName = objHost.getString("name");
-                mOpponentsName = objOpponent.getString("name");
+                mMyName = objHost.getString("username");
+                mOpponentsName = objOpponent.getString("username");
                 mMyAvatarUrl = objHost.getString("avatar_url");
                 mOpponentAvatarUrl = objOpponent.getString("avatar_url");
 
             } else {
 
-                mMyName = objOpponent.getString("name");
-                mOpponentsName = objHost.getString("name");
+                mMyName = objOpponent.getString("username");
+                mOpponentsName = objHost.getString("username");
                 mMyAvatarUrl = objOpponent.getString("avatar_url");
                 mOpponentAvatarUrl = objHost.getString("avatar_url");
             }

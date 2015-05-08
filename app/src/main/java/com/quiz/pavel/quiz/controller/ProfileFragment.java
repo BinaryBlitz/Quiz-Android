@@ -38,6 +38,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Achievement;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.quiz.pavel.quiz.model.Topic;
@@ -75,6 +76,7 @@ public class ProfileFragment extends MyFragment {
         public void openFriendsListFragment(PlayerProfile p);
         public void openCategoryListChallenge();
         public void setIdForChallenge(int id);
+        public void openAchievementsList(PlayerProfile playerProfile);
     }
 
     ProfileFragmentListener mCallback;
@@ -84,14 +86,18 @@ public class ProfileFragment extends MyFragment {
 
     LayoutInflater mInflater;
     LinearLayout mGallery;
+    LinearLayout mGalleryAchieve;
 
     private ArrayList<Topic> mTopics = new ArrayList<Topic>();
 
     ArrayList<PlayerProfile> myFriendList;
+    ArrayList<Achievement> mAchievements;
+
 
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
     @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
+    @InjectView(R.id.number_of_achievements) TextView mNumberOfAchievements;
     @InjectView(R.id.personal_tab) TextView mPersonalTab;
     @InjectView(R.id.personal_tab_textView) TextView mPersonalTabText;
     @InjectView(R.id.milti_button) Button mMultiButton;
@@ -142,12 +148,23 @@ public class ProfileFragment extends MyFragment {
             }
         });
 
+        mNumberOfAchievements.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.openAchievementsList(mPlayerProfile);
+            }
+        });
+
 
         mTextViewName.setText(mPlayerProfile.getName() + " id:" + mPlayerProfile.getId());
 
         mGallery = (LinearLayout)v.findViewById(R.id.id_gallery);
         mGallery.removeAllViews();
         mGallery.removeAllViewsInLayout();
+
+        mGalleryAchieve = (LinearLayout)v.findViewById(R.id.id_gallery_achievements);
+        mGalleryAchieve.removeAllViews();
+        mGalleryAchieve.removeAllViewsInLayout();
 
         mInflater = LayoutInflater.from(getActivity());
 
@@ -157,10 +174,11 @@ public class ProfileFragment extends MyFragment {
             showListAndPictures();
         }
 
-        if (mPlayerProfile.mAvatarUrl == null || mPlayerProfile.mAvatarUrl == "null") {
+        Log.d(TAG, "url= " + mPlayerProfile.mAvatarUrl);
+
+        if (mPlayerProfile.mAvatarUrl == null || mPlayerProfile.mAvatarUrl.equals("null")) {
             Picasso.with(getActivity())
                 .load(R.drawable.catty)
-                .fit()
                 .into(mPhoto);
         } else {
             ImageLoader.getInstance().displayImage(Mine.URL_photo + mPlayerProfile.mAvatarUrl, mPhoto, options);
@@ -170,6 +188,59 @@ public class ProfileFragment extends MyFragment {
         downloadData();
 
         return v;
+    }
+
+    private void setAchievements(JSONArray array) {
+        ArrayList<View> arViews = new ArrayList<View>();
+        Log.d(TAG, "setAchieve");
+        mAchievements = new ArrayList<Achievement>();
+
+        for (int i = 0; i < array.length(); i++) {
+            Achievement ach = null;
+            try {
+                ach = new Achievement(array.getJSONObject(i));
+            } catch (Exception e) {
+                Log.d(TAG, "fucking error");
+            }
+            mAchievements.add(ach);
+        }
+
+        for (int i = 0; i < mAchievements.size(); i++) {
+            View view = mInflater.inflate(R.layout.simple_horizontal_list_item, mGalleryAchieve, false);
+
+            arViews.add(view);
+
+            TextView txt = (TextView) view.findViewById(R.id.item_name);
+            txt.setText(mAchievements.get(i).getName());
+
+            mGalleryAchieve.addView(view);
+
+            final int id = i;
+            ImageView imageButton = (ImageView)view.findViewById(R.id.imageButton);
+
+            imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Toast.makeText(getActivity(), mAchievements.get(id).getDescription(), Toast.LENGTH_SHORT);
+                }
+            });
+
+        }
+
+        for (int i = 0; i < arViews.size(); i++) {
+            ImageView imageButton = (ImageView) arViews.get(i).findViewById(R.id.imageButton);
+
+            if (mAchievements.get(i).getUrl() == null || mAchievements.get(i).getUrl().equals("null")) {
+                Picasso.with(getActivity())
+                        .load(R.drawable.icon_vk)
+                        .into(imageButton);
+            } else {
+                Picasso.with(getActivity())
+                        .load(Mine.URL_photo + mAchievements.get(i).getUrl())
+                        .into(imageButton);
+            }
+        }
+        mNumberOfAchievements.setText(String.valueOf(mAchievements.size()));
     }
 
     private void downloadData() {
@@ -213,15 +284,25 @@ public class ProfileFragment extends MyFragment {
                 Log.d(TAG, "res = " + response);
                 try {
                     JSONArray ar = response.getJSONArray("favorite_topics");
+                    mTopics.clear();
                     for (int j = 0; j < ar.length(); j++) {
                         mTopics.add(new Topic(ar.getJSONObject(j)));
                     }
                     setFavoriteTopics();
                     JSONObject totaljson =  response.getJSONObject("total_score");
+
                     setTotalScore(totaljson);
                     JSONObject srjson = response.getJSONObject("score");
+                    Log.d(TAG, "3");
+
                     setPersonalScore(srjson);
-                } catch (JSONException e) {
+                } catch (Exception ex) {
+
+                }
+                try {
+                    JSONArray array = response.getJSONArray("achievements");
+                    setAchievements(array);
+                } catch (Exception ex) {
 
                 }
             }
@@ -333,7 +414,7 @@ public class ProfileFragment extends MyFragment {
                             String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
-                                name = response.getJSONObject(i).getString("name");
+                                name = response.getJSONObject(i).getString("username");
                                 url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -497,13 +578,15 @@ public class ProfileFragment extends MyFragment {
                             String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
-                                name = response.getJSONObject(i).getString("name");
+                                name = response.getJSONObject(i).getString("username");
                                 url = response.getJSONObject(i).getString("avatar_url");
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
                             myFriendList.add(new PlayerProfile(getActivity(), id, name, url));
+
+
                         }
                         setNameOfMultiButton();
                     }

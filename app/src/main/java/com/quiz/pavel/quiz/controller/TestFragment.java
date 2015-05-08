@@ -64,7 +64,7 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.variant_d_button) Button mVariantD;
 
     @InjectView(R.id.question_text_view) TextView mQuestionTextView;
-    @InjectView(R.id.timer_textView) TextView mTimerTextView;
+//    @InjectView(R.id.timer_textView) TextView mTimerTextView;
 
     @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
     @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
@@ -141,7 +141,7 @@ public class TestFragment extends Fragment {
 
             @Override
             public void updateTimer(int i) {
-                mTimerTextView.setText(String.valueOf(10 - i));
+//                mTimerTextView.setText(String.valueOf(10 - i));
                 mProgressPieView.setProgress(i * 10);
                 mProgressPieView.setText(String.valueOf(10 - i));
             }
@@ -207,7 +207,7 @@ public class TestFragment extends Fragment {
 
     private void setBackground() {
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId).mBackgroundUrl;
+                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId - 1).mBackgroundUrl;
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
@@ -240,31 +240,38 @@ public class TestFragment extends Fragment {
             mOpponentsName.setText(opponentName);
         }
 
-        if (mSessionManager.mSession.mMyAvatarUrl == "null" ||
-                mSessionManager.mSession.mMyAvatarUrl == null) {
+//        if (mSessionManager.mSession.mMyAvatarUrl == "null" ||
+//                mSessionManager.mSession.mMyAvatarUrl == null) {
+//            Log.d(TAG,"picasso is doing photo for me");
             Picasso.with(getActivity())
-                    .load(R.drawable.catty)
-                    .fit()
+                    .load(mSessionManager.mSession.mMyAvatarUrl)
+                    .placeholder(R.drawable.catty)
                     .into(mMyImage);
-        } else {
-            Picasso.with(getActivity())
-                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
-                    .fit()
-                    .into(mMyImage);
-        }
+//        } else {
+//            ImageLoader.getInstance().displayImage(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl, mMyImage, options);
+//
+////            Picasso.with(getActivity())
+////                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
+////                    .fit()
+////                    .into(mMyImage);
+//        }
 
-        if (mSessionManager.mSession.mOpponentAvatarUrl == "null" ||
-                mSessionManager.mSession.mOpponentAvatarUrl == null) {
+//        if (mSessionManager.mSession.mOpponentAvatarUrl == "null" ||
+//                mSessionManager.mSession.mOpponentAvatarUrl == null) {
+//            Log.d(TAG,"picasso is doing photo for opponent");
+
             Picasso.with(getActivity())
-                    .load(R.drawable.catty)
-                    .fit()
+                    .load(mSessionManager.mSession.mOpponentAvatarUrl)
+                    .placeholder(R.drawable.catty)
                     .into(mOpponentImage);
-        } else {
-            Picasso.with(getActivity())
-                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
-                    .fit()
-                    .into(mOpponentImage);
-        }
+//        } else {
+//            ImageLoader.getInstance().displayImage(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl, mOpponentImage, options);
+//            Log.d(TAG, "we have photo url");
+//            //            Picasso.with(getActivity())
+////                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
+////                    .fit()
+////                    .into(mOpponentImage);
+//        }
     }
 
     private void beginGame() {

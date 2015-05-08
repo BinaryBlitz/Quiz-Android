@@ -125,6 +125,17 @@ public class TopicListFragment extends MyFragment {
                 listView.setBackground(drawable);
             }
         });
+
+        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousGroup = -1;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (groupPosition != previousGroup)
+                    listView.collapseGroup(previousGroup);
+                previousGroup = groupPosition;
+            }
+        });
+
         return v;
     }
 

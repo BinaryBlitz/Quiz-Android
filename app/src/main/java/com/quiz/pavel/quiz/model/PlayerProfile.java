@@ -1,17 +1,6 @@
 package com.quiz.pavel.quiz.model;
 
 import android.content.Context;
-import android.util.Log;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import com.quiz.pavel.quiz.controller.ProfileFragment;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -28,6 +17,7 @@ public class PlayerProfile {
     public String mAvatarUrl;
 
     public ArrayList<PlayerProfile> list;
+    public ArrayList<Achievement> achievements;
 
     public PlayerProfile(Context c, int id, String name, String avatarUrl) {
         mId = id;
@@ -69,5 +59,9 @@ public class PlayerProfile {
             return mName.substring(0,8).trim() + "...";
         }
         return mName;
+    }
+
+    public String getAvatarUrl() {
+            return mAvatarUrl;
     }
 }
