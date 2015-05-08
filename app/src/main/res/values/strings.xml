@@ -23,7 +23,7 @@
     <string name="title_activity_rating">RatingActivity</string>
     <string name="rating_section1">Неделя</string>
     <string name="rating_section2">Месяц</string>
-    <string name="points_numder">49/57</string>
+    <string name="points_numder">0</string>
     <string name="points_word">Достижения</string>
     <string name="friends_word">Друзья</string>
     <string name="name">Имя</string>

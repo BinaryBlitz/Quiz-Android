@@ -109,6 +109,8 @@ public class ProfileFragment extends MyFragment {
     @InjectView(R.id.profile_dead_heats) TextView mDeadHeats;
     @InjectView(R.id.profile_losses) TextView mLosses;
 
+    @InjectView(R.id.logout) Button mExitButton;
+
 
     public PlayerProfile mPlayerProfile;
 
@@ -337,7 +339,9 @@ public class ProfileFragment extends MyFragment {
     }
 
     private void setNameOfMultiButton() {
+        mExitButton.setVisibility(View.GONE);
         if(mPlayerProfile.isMe()) {
+            mExitButton.setVisibility(View.VISIBLE);
             mMultiButton.setText("Настройки");
             mChallengeButton.setVisibility(View.INVISIBLE);
         } else if(mPlayerProfile.isInMyFriends(myFriendList)) {

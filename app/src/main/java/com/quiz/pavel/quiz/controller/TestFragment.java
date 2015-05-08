@@ -207,7 +207,7 @@ public class TestFragment extends Fragment {
 
     private void setBackground() {
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId - 1).mBackgroundUrl;
+                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId).mBackgroundUrl;
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
