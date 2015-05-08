@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -63,7 +65,7 @@ public class ListFriendRequestsFragment extends MyFragment {
         View v = inflater.inflate(R.layout.fragment_friend_list, parent, false);
 
         listView = (ListView)v.findViewById(R.id.list_friends);
-
+        listView.setFooterDividersEnabled(true);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         list.clear();
@@ -80,7 +82,7 @@ public class ListFriendRequestsFragment extends MyFragment {
                             String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
-                                name = response.getJSONObject(i).getString("name");
+                                name = response.getJSONObject(i).getString("username");
                                 url = response.getJSONObject(i).getString("avatar_url");
 
                             } catch (JSONException e) {
@@ -112,43 +114,6 @@ public class ListFriendRequestsFragment extends MyFragment {
         return v;
     }
 
-//
-//    @Override
-//    public void onListItemClick(ListView l, View v, int position, long id){
-//
-//
-//        RequestQueue queue = Volley.newRequestQueue(getActivity());
-//
-//        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
-//                "/friendships?friend_id=" + list.get(position).getId() + "&token=" +
-//                Mine.getInstance(getActivity()).getToken(),
-//                new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                Toast.makeText(getActivity(), "added", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//                , new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//            }
-//
-//        }) {
-//
-//            @Override
-//            public Map<String, String> getHeaders() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//                params.put("Content-Type", "application/json");
-//                params.put("Accept", "application/json");
-//                return params;
-//            }
-//        };
-//
-//        queue.add(stringRequest);
-//
-//        getActivity().finish();
-//
-//    }
 
     private class MyAdapter extends ArrayAdapter<PlayerProfile> {
 
@@ -161,13 +126,26 @@ public class ListFriendRequestsFragment extends MyFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_user, null);
             }
 
             PlayerProfile c = (PlayerProfile)list.get(position);
 
             TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getName());
+
+            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_photo);
+
+            if (list.get(position).getAvatarUrl() == null || list.get(position).getAvatarUrl().equals("null")){
+                Picasso.with(getActivity())
+                        .load(R.drawable.catty)
+                        .into(imageView);
+            }
+
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + list.get(position).getAvatarUrl())
+                    .placeholder(R.drawable.catty)
+                    .into(imageView);
 
             return convertView;
         }
