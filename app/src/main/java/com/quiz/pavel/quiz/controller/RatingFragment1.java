@@ -12,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.PlayerProfile;
 import com.quiz.pavel.quiz.model.PlayerRating;
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +41,7 @@ import java.util.ArrayList;
  */
 public class RatingFragment1 extends MyFragment {
 
-    private static final String TAG = "RatingFrag,ment1";
+    private static final String TAG = "RatingFragment1";
     private FragmentTabHost mTabHost;
 
     @Override
@@ -64,6 +66,7 @@ public class RatingFragment1 extends MyFragment {
         mTabHost = null;
     }
 
+
     public static class TestFragment extends Fragment {
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String TAG = "TestFragment";
@@ -86,12 +89,16 @@ public class RatingFragment1 extends MyFragment {
             mPlayers = new ArrayList<PlayerRating>();
         }
 
+
+        static TestFragment fragment;
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
         public static TestFragment newInstance(int sectionNumber) {
-            TestFragment fragment = new TestFragment();
+            if(fragment == null) {
+                TestFragment fragment = new TestFragment();
+            }
             return fragment;
         }
 
@@ -184,6 +191,16 @@ public class RatingFragment1 extends MyFragment {
             });
             queue.add(stringRequest);
 
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    PlayerProfile playerProfile = new PlayerProfile(getActivity(), mPlayers.get(position).getId(),
+                            mPlayers.get(position).getName(), mPlayers.get(position).mUrl);
+
+//                    mMyFragmentListenerCallback.openProfileFragment(playerProfile);
+                }
+            });
+
             return v;
         }
 
@@ -257,7 +274,7 @@ public class RatingFragment1 extends MyFragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_more_rating:
-                Intent intent = new Intent(getActivity(), MoreRatingActivity.class);
+                Intent intent = new Intent(getActivity(), RatingCatTopicActivity.class);
                 startActivity(intent);
                 break;
         }

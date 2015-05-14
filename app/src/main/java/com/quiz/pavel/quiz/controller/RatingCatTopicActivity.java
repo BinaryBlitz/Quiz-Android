@@ -8,17 +8,25 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.Topic;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
-public class MoreRatingActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class RatingCatTopicActivity extends ActionBarActivity implements ActionBar.TabListener {
+    private static final String TAG = "RatingCatTopicActivity";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,12 +46,11 @@ public class MoreRatingActivity extends ActionBarActivity implements ActionBar.T
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_more_rating1);
+        setContentView(R.layout.activity_rating_cat_topic);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle("Рейтинги");
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -77,12 +84,6 @@ public class MoreRatingActivity extends ActionBarActivity implements ActionBar.T
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_more_rating, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -128,7 +129,12 @@ public class MoreRatingActivity extends ActionBarActivity implements ActionBar.T
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            if(position == 0) {
+                return CategoriesFragment.newInstance(position + 1, position);
+            } else {
+                return CategoriesFragment.newInstance(1,1);
+            }
         }
 
         @Override
@@ -142,9 +148,9 @@ public class MoreRatingActivity extends ActionBarActivity implements ActionBar.T
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return "За все время".toUpperCase(l);
+                    return "Категории".toUpperCase(l);
                 case 1:
-                    return "За неделю".toUpperCase(l);
+                    return "Темы".toUpperCase(l);
             }
             return null;
         }
@@ -153,32 +159,111 @@ public class MoreRatingActivity extends ActionBarActivity implements ActionBar.T
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class TopicsFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
 
+
+        private int mNumber;
         /**
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static CategoriesFragment newInstance(int sectionNumber, int numberOfCat) {
+            CategoriesFragment fragment = new CategoriesFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public TopicsFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_more_rating1, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_rating_cat_topic, container, false);
+
+            ListView listView = (ListView)rootView.findViewById(R.id.listView_topics_rating);
+
+            ArrayList<Topic> list = new ArrayList<Topic>();
+            for (int i = 0; i < Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).size(); i++) {
+                list.addAll(Mine.getInstance(getActivity()).loadCategoryAr(getActivity()).get(i).mTopics);
+            }
+            MyAdapter adapter = new MyAdapter(list);
+            listView.setAdapter(adapter);
+
+            return rootView;
+        }
+
+        private class MyAdapter extends ArrayAdapter<Topic> {
+
+            ArrayList<Topic> mTopics;
+            public MyAdapter(ArrayList<Topic> topics) {
+                super(getActivity(), 0, topics);
+                mTopics = topics;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                if (convertView == null) {
+                    convertView = getActivity().getLayoutInflater()
+                            .inflate(R.layout.list_item_topic, null);
+                }
+                Topic c = (Topic) mTopics.get(position);
+
+                TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+                titleTextView.setText(c.getTitle());
+
+                ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
+                progress.setArcAngle(360);
+
+                TextView level = (TextView) convertView.findViewById(R.id.item_level);
+                level.setText(String.valueOf(c.getLevel()));
+                progress.setProgress(c.getProgress());
+
+                return convertView;
+            }
+        }
+    }
+
+
+    public static class CategoriesFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+
+        private int mNumber;
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static CategoriesFragment newInstance(int sectionNumber, int numberOfCat) {
+            CategoriesFragment fragment = new CategoriesFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public CategoriesFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_rating_cat_topic, container, false);
+
+
+
             return rootView;
         }
     }

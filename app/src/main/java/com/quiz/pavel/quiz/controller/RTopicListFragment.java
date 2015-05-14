@@ -1,16 +1,11 @@
 package com.quiz.pavel.quiz.controller;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,33 +64,7 @@ public class RTopicListFragment extends ListFragment {
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-            @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
 
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-        });
         TopicAdapter adapter = new TopicAdapter(mTopics);
         setListAdapter(adapter);
 
@@ -129,14 +98,14 @@ public class RTopicListFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-
-        Topic topic = ((TopicAdapter) getListAdapter()).getItem(position);
-
-        Intent i = new Intent(getActivity(), RRatingActivity.class);
-        i.putExtra("by_topic", true);
-        i.putExtra("topic_id", topic.getId());
-        i.putExtra(RRatingActivity.EXTRA_NAME_OF_TOPIC, topic.getTitle());
-
-        startActivity(i);
+//
+//        Topic topic = ((TopicAdapter) getListAdapter()).getItem(position);
+//
+//        Intent i = new Intent(getActivity(), RRatingActivity.class);
+//        i.putExtra("by_topic", true);
+//        i.putExtra("topic_id", topic.getId());
+//        i.putExtra(RRatingActivity.EXTRA_NAME_OF_TOPIC, topic.getTitle());
+//
+//        startActivity(i);
     }
 }

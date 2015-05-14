@@ -1,10 +1,8 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
 
 /**
@@ -37,5 +35,5 @@ public class MyFragment extends Fragment {
 
     }
 
-    MyFragmentListener mMyFragmentListenerCallback;
+    public MyFragmentListener mMyFragmentListenerCallback;
 }
