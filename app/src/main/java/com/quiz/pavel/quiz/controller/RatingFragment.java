@@ -1,7 +1,6 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
@@ -9,9 +8,6 @@ import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -192,8 +188,6 @@ public class RatingFragment extends ListFragment {
                         .inflate(R.layout.list_item_ranking, null);
             }
             PlayerRating c = (PlayerRating) getListAdapter().getItem(position);
-
-
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             if(c.getId() == Mine.getInstance(getActivity()).getId()) {

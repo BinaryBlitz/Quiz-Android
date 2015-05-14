@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <item android:id="@+id/action_more_rating"
+          android:title="@string/more_rating"
+          android:orderInCategory="100"
+          android:icon="@android:drawable/ic_menu_info_details"
+          app:showAsAction="ifRoom"/>
+
+</menu>

@@ -51,6 +51,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_main_sliding">MainSlidingActivity</string>
     <string name="challenge">Бросить вызов</string>
+    <string name="more_rating">Показать</string>
 
     <declare-styleable name="food">
         <attr name="state_my_answer" format="boolean" />

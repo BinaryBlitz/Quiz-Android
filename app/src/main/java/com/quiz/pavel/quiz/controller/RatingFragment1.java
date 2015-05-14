@@ -7,12 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,15 +45,15 @@ public class RatingFragment1 extends MyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 
         mTabHost = new FragmentTabHost(getActivity());
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.layout.fragment_main);
 
-        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("За неделю"),
+        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("За все время"),
                 TestFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("contacts").setIndicator("За все время"),
+        mTabHost.addTab(mTabHost.newTabSpec("contacts").setIndicator("За неделю"),
                 TestFragment.class, null);
-
 
         return mTabHost;
     }
@@ -66,7 +70,6 @@ public class RatingFragment1 extends MyFragment {
 
         private ArrayList<PlayerRating> mPlayers;
 
-
         ListView listView;
 
         private String mName = "general";
@@ -79,7 +82,6 @@ public class RatingFragment1 extends MyFragment {
             super.onCreate(savedInstanceState);
             mPlayers = new ArrayList<PlayerRating>();
         }
-
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -179,8 +181,6 @@ public class RatingFragment1 extends MyFragment {
             });
             queue.add(stringRequest);
 
-
-
             return v;
         }
 
@@ -223,7 +223,6 @@ public class RatingFragment1 extends MyFragment {
                     pointsTextView.setText("");
                 }
 
-
                 ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_photo);
 
                 if (c.mUrl == null || c.mUrl.equals("null")){
@@ -243,11 +242,25 @@ public class RatingFragment1 extends MyFragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
+        super.onCreateOptionsMenu(menu, inflator);
+        inflator.inflate(R.menu.menu_rating_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.action_more_rating:
+                Toast.makeText(getActivity(), "push", Toast.LENGTH_LONG).show();
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         mTitle = "Рейтинг";
-
         super.onAttach(activity);
-
         ((MainSlidingActivity) activity).onSectionAttached(2);
     }
 }
