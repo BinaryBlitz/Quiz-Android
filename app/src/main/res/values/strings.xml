@@ -57,5 +57,8 @@
         <attr name="state_my_answer" format="boolean" />
         <attr name="state_opponents_answer" format="boolean" />
     </declare-styleable>
+    <string name="title_activity_more_rating">MoreRatingActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

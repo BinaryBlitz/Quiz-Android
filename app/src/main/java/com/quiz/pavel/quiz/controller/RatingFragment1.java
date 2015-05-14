@@ -1,7 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -40,6 +39,7 @@ import java.util.ArrayList;
  */
 public class RatingFragment1 extends MyFragment {
 
+    private static final String TAG = "RatingFrag,ment1";
     private FragmentTabHost mTabHost;
 
     @Override
@@ -50,9 +50,9 @@ public class RatingFragment1 extends MyFragment {
         mTabHost = new FragmentTabHost(getActivity());
         mTabHost.setup(getActivity(), getChildFragmentManager(), R.layout.fragment_main);
 
-        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("За все время"),
+        mTabHost.addTab(mTabHost.newTabSpec("general").setIndicator("За все время"),
                 TestFragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("contacts").setIndicator("За неделю"),
+        mTabHost.addTab(mTabHost.newTabSpec("weekly").setIndicator("За неделю"),
                 TestFragment.class, null);
 
         return mTabHost;
@@ -72,10 +72,13 @@ public class RatingFragment1 extends MyFragment {
 
         ListView listView;
 
-        private String mName = "general";
+        private String mName;
         private int spec = 0;
         private int mId = 0;
 
+        public void setName(String name) {
+            mName = name;
+        }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -96,15 +99,8 @@ public class RatingFragment1 extends MyFragment {
         }
 
         private String getUrl() {
-            switch (spec){
-                case 0: return Mine.URL + "/rankings/" + mName + "?token="
+                return Mine.URL + "/rankings/" + mName + "?token="
                         + Mine.getInstance(getActivity()).getToken();
-                case 1: return Mine.URL + "/rankings/" + mName + "?token="
-                        + Mine.getInstance(getActivity()).getToken() + "&topic_id=" + mId;
-                case 2: return Mine.URL + "/rankings/" + mName + "?token="
-                        + Mine.getInstance(getActivity()).getToken() + "&category_id=" + mId;
-            }
-            return null;
         }
 
 
@@ -137,14 +133,15 @@ public class RatingFragment1 extends MyFragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
+            if (getFragmentManager().findFragmentByTag("general") != null) {
+                ((TestFragment)getFragmentManager().findFragmentByTag("general")).setName("general");
+            }
+
+            if (getFragmentManager().findFragmentByTag("weekly") != null) {
+                ((TestFragment)getFragmentManager().findFragmentByTag("weekly")).setName("weekly");
+            }
+
             View v = inflater.inflate(R.layout.fragment_rating_list, container, false);
-
-
-//        mTabHost = new FragmentTabHost(getActivity());
-//        mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.containerRating);
-//
-//        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("Simple"),
-//                CategoryListFragment.class, null);
 
             listView = (ListView) v.findViewById(R.id.listView_rating);
             listView.setClickable(false);
@@ -166,9 +163,15 @@ public class RatingFragment1 extends MyFragment {
                             } catch (JSONException e) {
                                 Log.d(TAG, "Error with parsing json response");
                             }
+                            int n = 1;
 
+                            try {
+                                n = response.getInt("position");
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                            TopicAdapter adapter = new TopicAdapter(mPlayers);
+                            TopicAdapter adapter = new TopicAdapter(mPlayers, n);
                             listView.setAdapter(adapter);
 
                         }
@@ -190,8 +193,11 @@ public class RatingFragment1 extends MyFragment {
         }
 
         private class TopicAdapter extends ArrayAdapter<PlayerRating> {
-            public TopicAdapter(ArrayList<PlayerRating> topics) {
+            int myPosition;
+
+            public TopicAdapter(ArrayList<PlayerRating> topics, int pos) {
                 super(getActivity(), 0, topics);
+                myPosition = pos;
             }
 
             @Override
@@ -204,8 +210,8 @@ public class RatingFragment1 extends MyFragment {
                 PlayerRating c = (PlayerRating) mPlayers.get(position);
 
                 TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
-                if(c.getId() == Mine.getInstance(getActivity()).getId()) {
-                    convertView.setBackgroundColor(Color.LTGRAY);
+                if(c.getPosition() == myPosition + 1) {
+//                    convertView.setBackgroundColor(Color.LTGRAY);
                 }
                 titleTextView.setText(c.getName());
 
@@ -251,7 +257,8 @@ public class RatingFragment1 extends MyFragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_more_rating:
-                Toast.makeText(getActivity(), "push", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getActivity(), MoreRatingActivity.class);
+                startActivity(intent);
                 break;
         }
         return true;

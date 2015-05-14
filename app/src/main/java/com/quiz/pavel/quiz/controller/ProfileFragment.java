@@ -257,6 +257,7 @@ public class ProfileFragment extends MyFragment {
                 HttpResponse response;
                 JSONObject responseString = null;
                 try {
+                    Log.d(TAG, "url = " + "?token=" + Mine.getInstance(getActivity()).getToken());
                     response = httpclient.execute(new HttpGet(Mine.URL + "/players/"
                 + mPlayerProfile.getId() + "?token=" + Mine.getInstance(getActivity()).getToken()));
                     StatusLine statusLine = response.getStatusLine();

@@ -31,6 +31,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.quiz.pavel.quiz" />
             </intent-filter>
         </receiver>
@@ -57,7 +58,6 @@
         </activity>
         <activity android:name=".controller.LogInActivity" >
         </activity>
-
         <activity android:name=".controller.RRatingActivity" >
         </activity>
         <activity android:name=".controller.ListFriendRequestsActivity" >
@@ -75,10 +75,13 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
         <activity
             android:name=".controller.MainSlidingActivity"
             android:label="@string/title_activity_main_sliding" >
+        </activity>
+        <activity
+            android:name=".controller.MoreRatingActivity"
+            android:label="@string/title_activity_more_rating" >
         </activity>
     </application>
 
