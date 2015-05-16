@@ -1,16 +1,11 @@
 package com.quiz.pavel.quiz.controller;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Session;
@@ -64,6 +59,7 @@ public class PreGameActivity extends ActionBarActivity {
         BasePreGameFragment fragment = (BasePreGameFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         fragment.closeLobby();
         fragment.onDestroy();
+//        overridePendingTransition(R.anim.exit, R.anim.enter);
     }
 
 }

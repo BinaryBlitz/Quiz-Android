@@ -2,6 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:background="@color/progress_grey">
+
+    <Button
+        android:id="@+id/button_like_item"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:background="@drawable/button_like_item"
+        android:textStyle="bold"
+        android:textSize="19sp"
+        android:textAllCaps="false"
+        android:textColor="#111111"
+        android:text="Рейтинг по данной категории"
+        android:gravity="center_vertical|left"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/progress_grey"
+        android:divider="@null"
+        android:clipToPadding="false"
+        android:scrollbarStyle="outsideOverlay"
+
+        android:id="@+id/listView"
+        />
 
 </LinearLayout>

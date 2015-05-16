@@ -274,8 +274,9 @@ public class RatingFragment1 extends MyFragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_more_rating:
-                Intent intent = new Intent(getActivity(), RatingCatTopicActivity.class);
+                Intent intent = new Intent(getActivity(), RCategoryListActivity.class);
                 startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
                 break;
         }
         return true;

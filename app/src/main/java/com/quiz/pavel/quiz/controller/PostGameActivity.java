@@ -2,12 +2,9 @@ package com.quiz.pavel.quiz.controller;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.quiz.pavel.quiz.R;
 
@@ -38,6 +35,12 @@ public class PostGameActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        overridePendingTransition(R.anim.exit, R.anim.enter);
     }
 
 }

@@ -18,6 +18,8 @@ public class RCategoryListActivity extends ActionBarActivity {
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+
+
         final ActionBar actionBar = getSupportActionBar();
 
         super.onCreate(savedInstanceState);
@@ -28,11 +30,16 @@ public class RCategoryListActivity extends ActionBarActivity {
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
 
         if (fragment == null) {
-            fragment = new RTopicListFragment();
+            fragment = new RCategoryListFragment();
             fm.beginTransaction()
                     .add(R.id.fragmentContainer, fragment)
                     .commit();
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
 }

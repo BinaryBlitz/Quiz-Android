@@ -62,5 +62,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="just_activity">Рейтинги</string>
     <string name="title_activity_rating_cat_topic">RatingCatTopicActivity</string>
+    <string name="title_activity_rating_two_tabs">RatingTwoTabsActivity</string>
 
 </resources>

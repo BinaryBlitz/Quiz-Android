@@ -209,15 +209,15 @@ public class TopicListFragment extends MyFragment {
             }
             Topic c = (Topic) mTopics.get(groupPosition);
 
-            TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
-            titleTextView.setText(c.getTitle());
+                TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
+                titleTextView.setText(c.getTitle());
 
-            ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
-            progress.setArcAngle(360);
+                ArcProgress progress = (ArcProgress) convertView.findViewById(R.id.arc_progress);
+                progress.setArcAngle(360);
 
-            TextView level = (TextView) convertView.findViewById(R.id.item_level);
-            level.setText(String.valueOf(c.getLevel()));
-            progress.setProgress(c.getProgress());
+                TextView level = (TextView) convertView.findViewById(R.id.item_level);
+                level.setText(String.valueOf(c.getLevel()));
+                progress.setProgress(c.getProgress());
 
             return convertView;
 
@@ -243,6 +243,8 @@ public class TopicListFragment extends MyFragment {
                 i.putExtra("category", mNumberOfCategory);
 
                 startActivity(i);
+                getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+
                 }
             });
 

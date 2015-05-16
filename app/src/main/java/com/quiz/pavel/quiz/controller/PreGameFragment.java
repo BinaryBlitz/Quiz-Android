@@ -229,6 +229,8 @@ public class PreGameFragment extends BasePreGameFragment {
                                     public void responseWasGot() {
                                         Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
                                         startActivity(i);
+                                        getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+
                                         sm.online = true;
                                         Log.d(TAG, "launch a game");
                                         closeThis();

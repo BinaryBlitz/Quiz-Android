@@ -1,14 +1,10 @@
 package com.quiz.pavel.quiz.controller;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.quiz.pavel.quiz.R;
 
@@ -51,5 +47,6 @@ public class SingleFragmentActivity extends ActionBarActivity {
         TestFragment fragment = (TestFragment)getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         intent.putExtra(PostGameFragment.EXTRA,  fragment.mSessionManager.amIWinner());
         startActivity(intent);
+//        overridePendingTransition(R.anim.exit, R.anim.enter);
     }
 }

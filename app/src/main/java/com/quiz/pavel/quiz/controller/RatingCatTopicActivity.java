@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,8 +82,6 @@ public class RatingCatTopicActivity extends ActionBarActivity implements ActionB
         }
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -133,7 +130,7 @@ public class RatingCatTopicActivity extends ActionBarActivity implements ActionB
             if(position == 0) {
                 return CategoriesFragment.newInstance(position + 1, position);
             } else {
-                return CategoriesFragment.newInstance(1,1);
+                return CategoriesFragment.newInstance(1, 1);
             }
         }
 
@@ -239,7 +236,6 @@ public class RatingCatTopicActivity extends ActionBarActivity implements ActionB
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
 
         private int mNumber;
         /**

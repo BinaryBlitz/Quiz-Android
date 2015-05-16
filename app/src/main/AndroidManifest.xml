@@ -58,8 +58,6 @@
         </activity>
         <activity android:name=".controller.LogInActivity" >
         </activity>
-        <activity android:name=".controller.RRatingActivity" >
-        </activity>
         <activity android:name=".controller.ListFriendRequestsActivity" >
         </activity>
         <activity
@@ -84,12 +82,24 @@
             android:label="@string/title_activity_more_rating" >
         </activity>
         <activity
-            android:name=".controller.JustActivity"
+            android:name=".controller.RCategoryListActivity"
             android:label="@string/just_activity" >
         </activity>
         <activity
             android:name=".controller.RatingCatTopicActivity"
             android:label="@string/title_activity_rating_cat_topic" >
+        </activity>
+        <activity
+            android:name=".controller.RTopicListActivity"
+            android:label="@string/title_activity_rating_cat_topic" >
+        </activity>
+        <activity
+            android:name=".controller.RatingTwoTabsActivity"
+            android:label="@string/title_activity_rating_two_tabs" >
+        </activity>
+        <activity
+            android:name=".controller.RatingTwoTabsForCatActivity"
+            android:label="@string/title_activity_rating_two_tabs" >
         </activity>
     </application>
 

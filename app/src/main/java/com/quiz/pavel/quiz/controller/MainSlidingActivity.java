@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -85,7 +84,6 @@ public class MainSlidingActivity extends ActionBarActivity
                         Mine.getInstance(this).getName(), Mine.getInstance(this).getAvatar()));
                 break;
             case 3:
-//                fragment = new RatingFragment("general", 1, 1);
                 fragment = new RatingFragment1();
                 break;
             case 4:
