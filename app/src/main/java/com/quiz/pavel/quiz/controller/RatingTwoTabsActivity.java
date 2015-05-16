@@ -2,7 +2,6 @@ package com.quiz.pavel.quiz.controller;
 
 import java.util.Locale;
 
-import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -11,18 +10,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.quiz.pavel.quiz.R;
 
-public class RRatingActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class RatingTwoTabsActivity extends ActionBarActivity implements ActionBar.TabListener {
 
-    private static final String TAG = "RatingFragment";
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -38,19 +37,14 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
      */
     ViewPager mViewPager;
 
-    public static final String EXTRA_NAME_OF_TOPIC = "com.quiz.pavel.quiz.controller.name_of_topic";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rating);
-
-
+        setContentView(R.layout.activity_rating_two_tabs);
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setTitle(getIntent().getCharSequenceExtra(EXTRA_NAME_OF_TOPIC));
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -81,32 +75,13 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
-
-        getIntentFrom();
     }
-
-    private void getIntentFrom() {
-
-
-        if(getIntent().getBooleanExtra("by_topic", false)) {
-            int n = getIntent().getIntExtra("topic_id", 0);
-            mSpec = 1;
-            mId = n;
-        }
-        if(getIntent().getBooleanExtra("by_category", false)) {
-            int n = getIntent().getIntExtra("category_id", 0);
-            mSpec = 1;
-            mId = n;
-        }
-    }
-
-    int mSpec = 0;
-    int mId = 0;
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_rating_two_tabs, menu);
         return true;
     }
 
@@ -115,14 +90,12 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_more) {
-//            Intent intent = new Intent(this, ChoiceCatOrTopicActivity.class);
-//            startActivity(intent);
-//            return true;
-//        }
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -154,27 +127,15 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
 
         @Override
         public Fragment getItem(int position) {
-
-
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            switch (position) {
-                case 0:
-                    return new RatingFragment("general", mSpec, mId);
-                case 1:
-                    return new RatingFragment("weekly", mSpec, mId);
-
-
-            }
-
-
             return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 2;
+            return 3;
         }
 
         @Override
@@ -182,10 +143,11 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.rating_section2).toUpperCase(l);
+                    return getString(R.string.title_section1).toUpperCase(l);
                 case 1:
-                    return getString(R.string.rating_section1).toUpperCase(l);
-
+                    return getString(R.string.title_section2).toUpperCase(l);
+                case 2:
+                    return getString(R.string.title_section3).toUpperCase(l);
             }
             return null;
         }
@@ -219,7 +181,7 @@ public class RRatingActivity extends ActionBarActivity implements ActionBar.TabL
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_rating, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_rating_two_tabs, container, false);
             return rootView;
         }
     }

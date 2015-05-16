@@ -11,7 +11,7 @@ import com.quiz.pavel.quiz.R;
 /**
  * Created by pavel on 14/05/15.
  */
-public class JustActivity extends ActionBarActivity {
+public class RCategoryListActivity extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
