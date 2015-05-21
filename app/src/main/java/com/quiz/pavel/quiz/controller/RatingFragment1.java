@@ -106,8 +106,11 @@ public class RatingFragment1 extends MyFragment {
         }
 
         private String getUrl() {
-                return Mine.URL + "/rankings/" + mName + "?token="
-                        + Mine.getInstance(getActivity()).getToken();
+                if (mName.equals("weekly")) {
+                    return Mine.URL + "/rankings/general?weekly=true&token=" + Mine.getInstance(getActivity()).getToken();
+                } else {
+                    return Mine.URL + "/rankings/general?weekly=false&token=" + Mine.getInstance(getActivity()).getToken();
+                }
         }
 
 
@@ -155,6 +158,7 @@ public class RatingFragment1 extends MyFragment {
             listView.setFocusable(false);
 
             RequestQueue queue = Volley.newRequestQueue(getActivity());
+            Log.d(TAG, "url = " + getUrl());
 
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(),
                     new Response.Listener<JSONObject>() {

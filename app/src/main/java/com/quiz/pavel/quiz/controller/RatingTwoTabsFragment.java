@@ -74,12 +74,16 @@ public class RatingTwoTabsFragment extends Fragment {
         String str;
         if (mIsCategory) {
             if (mName.equals("weekly")) {
-                str = "/rankings/weekly_by_category?category_id=";
+                str = "/rankings/category?weekly=true&category_id=";
             } else {
-                str = "/rankings/general_by_category?category_id=";
+                str = "/rankings/category?weekly=false&category_id=";
             }
         } else {
-            str = "/rankings/" + mName + "?topic_id=";
+            if (mName.equals("weekly")) {
+                str = "/rankings/topic?weekly=true&topic_id=";
+            } else {
+                str = "/rankings/topic?weekly=false&topic_id=";
+            }
         }
 
         return Mine.URL + str + mTopicId + "&token="
@@ -124,7 +128,7 @@ public class RatingTwoTabsFragment extends Fragment {
         listView.setFocusable(false);
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
-
+        Log.d(TAG, "url = " + getUrl());
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(),
                 new Response.Listener<JSONObject>() {
                     @Override

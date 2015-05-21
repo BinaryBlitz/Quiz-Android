@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -121,11 +122,13 @@ public class RTopicListFragment extends Fragment {
 //            }
 //        });
 
+        final LinearLayout mBackground = (LinearLayout)v.findViewById(R.id.background_view);
+
         ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
-                listView.setBackground(drawable);
+                mBackground.setBackground(drawable);
             }
         });
 

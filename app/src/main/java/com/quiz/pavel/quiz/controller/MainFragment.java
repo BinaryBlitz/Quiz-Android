@@ -18,10 +18,12 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Topic;
 import com.quiz.pavel.quiz.model.TopicHeader;
@@ -32,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -46,9 +49,10 @@ public class MainFragment extends MyFragment {
 
     @InjectView(R.id.main_topic_list) ExpandableListView mTopicsView;
 
-    ArrayList<Topic> mFavoriteTopics = new ArrayList<Topic>();
-    ArrayList<Topic> mNewTopics = new ArrayList<Topic>();
-    ArrayList<Topic> mPopularTopics = new ArrayList<Topic>();
+    ArrayList<Topic> mFavoriteTopics;
+    ArrayList<Topic> mNewTopics;
+    ArrayList<Topic> mPopularTopics;
+    ArrayList<Topic> mProposalTopics;
 
     ArrayList<Topic> mTopics = new ArrayList<Topic>();
 
@@ -74,9 +78,12 @@ public class MainFragment extends MyFragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d(TAG, "res = " + response);
                         mFavoriteTopics = new ArrayList<Topic>();
                         mNewTopics = new ArrayList<Topic>();
                         mPopularTopics = new ArrayList<Topic>();
+                        mProposalTopics = new ArrayList<Topic>();
+
 
                         try {
                             writeInTopics(response.getJSONArray("featured_topics"), mNewTopics);
@@ -100,6 +107,7 @@ public class MainFragment extends MyFragment {
         return v;
     }
 
+
     @Override
     public void onAttach(Activity activity) {
         mTitle = "Один на один";
@@ -116,7 +124,7 @@ public class MainFragment extends MyFragment {
     }
 
     private void writeInTopics(JSONArray ar, ArrayList<Topic> topics) throws JSONException {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < ar.length(); i++) {
             topics.add(new Topic(ar.getJSONObject(i)));
         }
     }
@@ -147,6 +155,14 @@ public class MainFragment extends MyFragment {
             topic.setColor(R.color.main_tab_green);
             adapter.addItem(topic);
         }
+
+        adapter.addHeader(4, R.color.main_tab_grey);
+        for (Topic topic : mProposalTopics) {
+            topic.setColor(R.color.main_tab_grey);
+            adapter.addItem(topic);
+        }
+
+
 
         mTopicsView.setAdapter(adapter);
 
@@ -264,7 +280,10 @@ public class MainFragment extends MyFragment {
                         convertView = getActivity().getLayoutInflater().inflate(R.layout.green_header_for_listview, null);
                         break;
                     case 3:
-                        convertView = getActivity().getLayoutInflater().inflate(R.layout.red_header_for_listview, null);
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.yellow_header_for_listview, null);
+                        break;
+                    case 4:
+                        convertView = getActivity().getLayoutInflater().inflate(R.layout.grey_header_for_listview, null);
                         break;
                 }
                 convertView.setOnClickListener(new View.OnClickListener() {

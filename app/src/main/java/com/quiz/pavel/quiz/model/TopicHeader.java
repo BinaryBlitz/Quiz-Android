@@ -5,7 +5,7 @@ package com.quiz.pavel.quiz.model;
  */
 public class TopicHeader extends Topic{
 
-    public int headerNumber;//0 - favorite, 1- poplar, 2- new, 3- challenge
+    public int headerNumber;//0 - favorite, 1- poplar, 2- new, 3- challenge, 4- proposal
     public int color;
 
     public TopicHeader(int n, int c) {
