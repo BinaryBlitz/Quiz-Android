@@ -149,17 +149,10 @@
 
     </LinearLayout>
 
-
-
-
-
-
     <LinearLayout android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_weight="2"
-            >
-
+                  android:layout_weight="2">
 
         <LinearLayout
             android:orientation="vertical"
@@ -214,36 +207,37 @@
                 android:weightSum="2"
                 android:padding="5dp" >
 
-                <RelativeLayout
-                    android:layout_weight="1"
-                    >
+
                     <Button
                         android:id="@+id/variant_a_button"
+                    android:layout_width="0dip"
                         android:text="A"
                         android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
                         android:lines="1"
+                        android:layout_weight="1"
                         style="@style/ButtonVar"
-                        />
-
-                    <View
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="-10dp"
-                        android:layout_alignLeft="@id/variant_a_button"
-                        android:background="@drawable/point"
                         />
 
                     <!--<View-->
                         <!--android:layout_width="20dp"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:background="@drawable/point"-->
+                        <!--android:id="@+id/left_point_button_a"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_alignParentStart="true"/>-->
+
+
+                    <!--<View-->
+                        <!--android:layout_width="20dp"-->
+                        <!--android:id="@+id/right_point_button_a"-->
                         <!--android:layout_height="20dp"-->
                         <!--android:adjustViewBounds="true"-->
                         <!--android:background="@drawable/point"-->
                         <!--android:layout_centerVertical="true"-->
                         <!--android:layout_marginRight="-10dp"-->
                         <!--android:layout_alignRight="@id/variant_a_button"-->
-                        <!--/>-->
-                </RelativeLayout>
+                        />
 
 
 
@@ -253,8 +247,8 @@
                     style="@style/ButtonVar"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
                     android:text="B"
+                    android:layout_width="0dip"
                     android:lines="1"
                     android:id="@+id/variant_b_button"
                     />
@@ -273,8 +267,8 @@
                     android:layout_weight="1"
                     android:lines="1"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
                     android:id="@+id/variant_c_button"
+                    android:layout_width="0dip"
                     android:text="C" />
 
                 <Button
@@ -282,8 +276,8 @@
                     android:layout_weight="1"
                     android:lines="1"
                     android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
                     android:text="D"
+                    android:layout_width="0dip"
                     android:id="@+id/variant_d_button"
                     />
 

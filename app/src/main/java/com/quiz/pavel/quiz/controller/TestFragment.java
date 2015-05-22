@@ -40,6 +40,7 @@ import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -84,6 +85,9 @@ public class TestFragment extends Fragment {
 
     @InjectView(R.id.background_game) LinearLayout mBackground;
 
+//    @InjectView(R.id.left_point_button_a) View mLeftPointA;
+//    @InjectView(R.id.right_point_button_a) View mRightPointA;
+
 
     private ProgressPieView mProgressPieView;
     private static final int SIZE = 96;
@@ -97,6 +101,8 @@ public class TestFragment extends Fragment {
     public SessionManager mSessionManager;
     public Question mCurQuestion;
     private String mDataSession;
+
+    JSONObject json = new JSONObject();
 
 
     public static TestFragment newInstance() {
@@ -240,38 +246,24 @@ public class TestFragment extends Fragment {
             mOpponentsName.setText(opponentName);
         }
 
-//        if (mSessionManager.mSession.mMyAvatarUrl == "null" ||
-//                mSessionManager.mSession.mMyAvatarUrl == null) {
-//            Log.d(TAG,"picasso is doing photo for me");
             Picasso.with(getActivity())
-                    .load(mSessionManager.mSession.mMyAvatarUrl)
+                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
                     .placeholder(R.drawable.catty)
                     .into(mMyImage);
-//        } else {
-//            ImageLoader.getInstance().displayImage(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl, mMyImage, options);
-//
-////            Picasso.with(getActivity())
-////                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
-////                    .fit()
-////                    .into(mMyImage);
-//        }
-
-//        if (mSessionManager.mSession.mOpponentAvatarUrl == "null" ||
-//                mSessionManager.mSession.mOpponentAvatarUrl == null) {
-//            Log.d(TAG,"picasso is doing photo for opponent");
 
             Picasso.with(getActivity())
-                    .load(mSessionManager.mSession.mOpponentAvatarUrl)
+                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
                     .placeholder(R.drawable.catty)
                     .into(mOpponentImage);
-//        } else {
-//            ImageLoader.getInstance().displayImage(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl, mOpponentImage, options);
-//            Log.d(TAG, "we have photo url");
-//            //            Picasso.with(getActivity())
-////                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
-////                    .fit()
-////                    .into(mOpponentImage);
-//        }
+
+        try {
+            json.put("my_url_avatar", mSessionManager.mSession.mMyAvatarUrl);
+            json.put("opponents_url_avatar", mSessionManager.mSession.mOpponentAvatarUrl);
+            json.put("my_username", myname);
+            json.put("opponents_username", opponentName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void beginGame() {
@@ -468,8 +460,6 @@ public class TestFragment extends Fragment {
 
                     }
                 }).playOn(b3);
-
-
     }
 
 
@@ -554,11 +544,18 @@ public class TestFragment extends Fragment {
 
         if (!mSessionManager.mSession.moveCurrentSessionQuestion()) {
             mSessionManager.stopTimer();
+            try {
+                json.put("my_points", mMyPointsTextView.getText());
+                json.put("opponents_points", mOpponentsPointsTextView.getText());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if (getActivity() == null) {
                 return;
             }
             Intent intent = new Intent(getActivity(), PostGameActivity.class);
             intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+            intent.putExtra(PostGameFragment.EXTRA, json.toString());
             sendToCloseGameSession();
             startActivity(intent);
             finish = true;
@@ -623,7 +620,6 @@ public class TestFragment extends Fragment {
     }
 
     private void hideRoundTable() {
-
         mRoundShowerTextView.animate()
                 .alpha(0f)
                 .setStartDelay(200)
@@ -638,7 +634,6 @@ public class TestFragment extends Fragment {
     }
 
     private void showNewQuestion() {
-
         mQuestionTextView.setAlpha(0f);
         mQuestionTextView.setVisibility(View.VISIBLE);
 
@@ -651,8 +646,6 @@ public class TestFragment extends Fragment {
                         showAnswerVariants();
                     }
                 });
-
-
     }
 
     private void showAnswerVariants() {
