@@ -1,7 +1,9 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -223,7 +225,18 @@ public class ProfileFragment extends MyFragment {
             imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Toast.makeText(getActivity(), mAchievements.get(id).getDescription(), Toast.LENGTH_SHORT);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(mAchievements.get(id).getName())
+                        .setMessage(mAchievements.get(id).getDescription())
+                        .setCancelable(false)
+                        .setNegativeButton("ОК",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
                 }
             });
 

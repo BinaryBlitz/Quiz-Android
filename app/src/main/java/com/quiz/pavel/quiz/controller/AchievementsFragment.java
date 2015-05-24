@@ -1,8 +1,11 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +16,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -68,6 +70,8 @@ public class AchievementsFragment extends MyFragment {
         super.onAttach(activity);
     }
 
+    AchievementsAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.achievements_list, parent, false);
@@ -89,7 +93,7 @@ public class AchievementsFragment extends MyFragment {
                                 e.printStackTrace();
                             }
                         }
-                        gridview.setAdapter(new AchievementsAdapter(getActivity()));
+                        gridview.setAdapter(adapter = new AchievementsAdapter(getActivity()));
                     }
                 },
                 new Response.ErrorListener() {
@@ -103,7 +107,18 @@ public class AchievementsFragment extends MyFragment {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), mAchievements.get(position).getDescription(), Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(mAchievements.get(position).getName())
+                        .setMessage(mAchievements.get(position).getDescription())
+                        .setCancelable(false)
+                        .setNegativeButton("ОК",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -152,6 +167,10 @@ public class AchievementsFragment extends MyFragment {
             textView.setText(mAchievements.get(position).getName());
 
             return convertView;
+        }
+
+        public Drawable getDrawable(int pos) {
+            return getView(pos, null, null).findViewById(R.id.imageView_achievement).getBackground();
         }
 
 
