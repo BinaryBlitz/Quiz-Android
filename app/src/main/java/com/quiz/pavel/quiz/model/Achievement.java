@@ -2,6 +2,7 @@ package com.quiz.pavel.quiz.model;
 
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -34,7 +35,6 @@ public class Achievement {
     }
 
     public boolean isAchieved() {
-
         return mAchieved;
     }
 
@@ -66,9 +66,24 @@ public class Achievement {
             mId = json.getInt("id");
             mDescription = json.getString("description");
             mUrl= json.getString("icon_url");
+            mAchieved = json.getBoolean("achieved");
         } catch (Exception e) {
             Log.d(TAG, "Error, JSONException");
         }
+    }
+
+    public JSONObject getJson() {
+        JSONObject json = new JSONObject();
+        try {
+        json.put("name", mName);
+        json.put("id", mId);
+        json.put("description", mDescription);
+        json.put("icon_url", mUrl);
+        json.put("achieved", mAchieved);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
     }
 
 }

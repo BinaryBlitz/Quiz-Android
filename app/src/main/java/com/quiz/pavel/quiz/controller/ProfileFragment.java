@@ -78,13 +78,12 @@ public class ProfileFragment extends MyFragment {
         public void openFriendsListFragment(PlayerProfile p);
         public void openCategoryListChallenge();
         public void setIdForChallenge(int id);
-        public void openAchievementsList(PlayerProfile playerProfile);
+        public void openAchievementsList(PlayerProfile playerProfile, ArrayList<Achievement> ar);
     }
 
     ProfileFragmentListener mCallback;
 
     DisplayImageOptions options;
-
 
     LayoutInflater mInflater;
     LinearLayout mGallery;
@@ -155,7 +154,7 @@ public class ProfileFragment extends MyFragment {
         mNumberOfAchievements.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.openAchievementsList(mPlayerProfile);
+                mCallback.openAchievementsList(mPlayerProfile, mAchievements);
             }
         });
 

@@ -5,6 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Achievement;
 import com.quiz.pavel.quiz.model.Mine;
@@ -45,8 +51,13 @@ public class AchievementsFragment extends MyFragment {
     DisplayImageOptions options;
 
     ArrayList<Achievement> mAchievements = new ArrayList<Achievement>();
+    ArrayList<Achievement> mMyAchievements;
 
     GridView gridview;
+
+    public AchievementsFragment(ArrayList<Achievement> ar) {
+        mMyAchievements = ar;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,9 +91,9 @@ public class AchievementsFragment extends MyFragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL
-                + "/achievements?token=" + Mine.getInstance(getActivity()).getToken(),
-                new Response.Listener<JSONArray>() {
+        String url = Mine.URL + "/achievements?token=" + Mine.getInstance(getActivity()).getToken();
+        Log.d(TAG, "url = " + url);
+        JsonArrayRequest arRequest = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d(TAG, "res= " + response);
@@ -91,6 +102,14 @@ public class AchievementsFragment extends MyFragment {
                                 mAchievements.add(new Achievement(response.getJSONObject(i)));
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }
+                        }
+                        for (int i = 0; i < mAchievements.size(); i++) {
+                            mAchievements.get(i).setAchieved(false);
+                            for (int j = 0; j < mMyAchievements.size(); j++) {
+                                if (mAchievements.get(i).getId() == mMyAchievements.get(j).getId()) {
+                                    mAchievements.get(i).setAchieved(true);
+                                }
                             }
                         }
                         gridview.setAdapter(adapter = new AchievementsAdapter(getActivity()));
@@ -145,12 +164,12 @@ public class AchievementsFragment extends MyFragment {
         }
 
         // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.achievement_item, null);
             }
 
-            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_achievement);
+            final ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_achievement);
 
             if (mAchievements.get(position).getUrl() == null || mAchievements.get(position).getUrl().equals("null")){
                 Picasso.with(getActivity())
@@ -158,10 +177,18 @@ public class AchievementsFragment extends MyFragment {
                         .into(imageView);
             }
 
-            Picasso.with(getActivity())
-                    .load(Mine.URL_photo + mAchievements.get(position).getUrl())
-                    .placeholder(R.drawable.catty)
-                    .into(imageView);
+            ImageLoader.getInstance().loadImage(Mine.URL_photo + mAchievements.get(position).getUrl(),
+                    options, new SimpleImageLoadingListener() {
+                @Override
+                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                    Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                    if (mAchievements.get(position).isAchieved()) {
+                        imageView.setImageBitmap(loadedImage);
+                    } else {
+                        imageView.setImageBitmap(toGrayscale(loadedImage));
+                    }
+                }
+            });
 
             TextView textView = (TextView)convertView.findViewById(R.id.textView_achievement);
             textView.setText(mAchievements.get(position).getName());
@@ -169,10 +196,22 @@ public class AchievementsFragment extends MyFragment {
             return convertView;
         }
 
-        public Drawable getDrawable(int pos) {
-            return getView(pos, null, null).findViewById(R.id.imageView_achievement).getBackground();
-        }
 
+        public Bitmap toGrayscale(Bitmap bmpOriginal) {
+            int width, height;
+            height = bmpOriginal.getHeight();
+            width = bmpOriginal.getWidth();
+
+            Bitmap bmpGrayscale = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(bmpGrayscale);
+            Paint paint = new Paint();
+            ColorMatrix cm = new ColorMatrix();
+            cm.setSaturation(0);
+            ColorMatrixColorFilter f = new ColorMatrixColorFilter(cm);
+            paint.setColorFilter(f);
+            c.drawBitmap(bmpOriginal, 0, 0, paint);
+            return bmpGrayscale;
+        }
 
     }
 

@@ -15,8 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Achievement;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
+
+import java.util.ArrayList;
 
 public class MainSlidingActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, MyFragment.MyFragmentListener,
@@ -265,8 +268,8 @@ public class MainSlidingActivity extends ActionBarActivity
     }
 
     @Override
-    public void openAchievementsList(PlayerProfile playerProfile) {
-        MyFragment fragment = new AchievementsFragment();
+    public void openAchievementsList(PlayerProfile playerProfile, ArrayList<Achievement> array) {
+        MyFragment fragment = new AchievementsFragment(array);
 
         FragmentTransaction fragmentTransaction;
 
