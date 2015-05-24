@@ -220,6 +220,11 @@ public class TestFragment extends Fragment {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
+        try {
+            json.put("url_background", url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override

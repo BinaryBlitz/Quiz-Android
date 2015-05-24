@@ -82,22 +82,7 @@ public class PostGameFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_post_game, parent, false);
         ButterKnife.inject(this, v);
 
-        switch (getActivity().getIntent().getIntExtra(EXTRA, 0)){
-            case 1: mTextView.setText("ПОБЕДА");
-                break;
-            case -1: mTextView.setText("ПОРАЖЕНИЕ");
-                break;
-            case 0: mTextView.setText("НИЧЬЯ");
-                break;
-        }
 
-        setBackground();
-        setAvatarsNames();
-
-        return v;
-    }
-
-    private void setAvatarsNames() {
         try {
             JSONObject json = new JSONObject(getActivity().getIntent().getStringExtra(PostGameFragment.EXTRA));
             Log.d(TAG, json.toString());
@@ -107,9 +92,25 @@ public class PostGameFragment extends Fragment {
             mOpponentsUrl = json.getString("opponents_url_avatar");
             mMyPoints = json.getInt("my_points");
             mOpponentsPoints = json.getInt("opponents_points");
-
+            String urlBackground = json.getString("url_background");
+            setBackground(urlBackground);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        setAvatarsNames();
+
+        return v;
+    }
+
+    private void setAvatarsNames() {
+
+
+        if (mMyPoints > mOpponentsPoints) {
+            mTextView.setText("ПОБЕДА");
+        } else if (mOpponentsPoints > mMyPoints) {
+            mTextView.setText("ПОРАЖЕНИЕ");
+        } else {
+            mTextView.setText("НИЧЬЯ");
         }
 
         String myname = mMyUsername;
@@ -146,9 +147,7 @@ public class PostGameFragment extends Fragment {
         mTextViewPointsOverview.setText(String.valueOf(mMyPoints) + " " + findTextFor(mMyPoints));
     }
 
-    private void setBackground() {
-        String url = Mine.URL_photo + Mine.getInstance(getActivity())
-                .loadCategoryAr(getActivity()).get(0).mBackgroundUrl;
+    private void setBackground(String url) {
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
