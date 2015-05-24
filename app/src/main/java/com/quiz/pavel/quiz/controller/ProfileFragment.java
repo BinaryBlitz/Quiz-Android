@@ -96,7 +96,7 @@ public class ProfileFragment extends MyFragment {
 
 
     @InjectView(R.id.my_photo_imageView) ImageView mPhoto;
-    @InjectView(R.id.name) TextView mTextViewName;
+//    @InjectView(R.id.name) TextView mTextViewName;
     @InjectView(R.id.number_of_friends) TextView mNumberOfFriends;
     @InjectView(R.id.number_of_achievements) TextView mNumberOfAchievements;
     @InjectView(R.id.personal_tab) TextView mPersonalTab;
@@ -159,7 +159,7 @@ public class ProfileFragment extends MyFragment {
         });
 
 
-        mTextViewName.setText(mPlayerProfile.getName() + " id:" + mPlayerProfile.getId());
+//        mTextViewName.setText(mPlayerProfile.getName() + " id:" + mPlayerProfile.getId());
 
         mGallery = (LinearLayout)v.findViewById(R.id.id_gallery);
         mGallery.removeAllViews();

@@ -82,6 +82,23 @@ public class TopicListFragment extends MyFragment {
         }
     }
 
+    int mExpandedGroup = -1;
+    @Override
+    public void onResume() {
+        super.onResume();
+        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+            int previousGroup = mExpandedGroup;
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                if (groupPosition != previousGroup)
+                    listView.collapseGroup(previousGroup);
+                previousGroup = groupPosition;
+                mExpandedGroup = groupPosition;
+            }
+        });
+        setRetainInstance(true);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -97,42 +114,16 @@ public class TopicListFragment extends MyFragment {
         listView.setAdapter(adapter);
 
 
-        setRetainInstance(true);
 
         String url = Mine.URL_photo + Mine.getInstance(getActivity())
                 .loadCategoryAr(getActivity()).get(mNumberOfCategory).mBackgroundUrl;
 
-
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Topic cr = mTopics.get(position);
-//
-//                Intent i = new Intent(getActivity(), PreGameActivity.class);
-//                i.putExtra("topic", mTopics.get(position).getId());
-//                i.putExtra("name", mTopics.get(position).getTitle());
-//                i.putExtra("category", mNumberOfCategory);
-//
-//                startActivity(i);
-//            }
-//        });
 
         ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
                 listView.setBackground(drawable);
-            }
-        });
-
-        listView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-            int previousGroup = -1;
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                if (groupPosition != previousGroup)
-                    listView.collapseGroup(previousGroup);
-                previousGroup = groupPosition;
             }
         });
 
@@ -224,7 +215,7 @@ public class TopicListFragment extends MyFragment {
         }
 
         @Override
-        public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        public View getChildView(final int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater().inflate(R.layout.list_child_item_topic, null);
@@ -244,7 +235,6 @@ public class TopicListFragment extends MyFragment {
 
                 startActivity(i);
                 getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
-
                 }
             });
 
