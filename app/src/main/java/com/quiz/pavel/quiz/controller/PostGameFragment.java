@@ -23,7 +23,6 @@ import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import butterknife.ButterKnife;
@@ -94,8 +93,9 @@ public class PostGameFragment extends Fragment {
             mOpponentsPoints = json.getInt("opponents_points");
             String urlBackground = json.getString("url_background");
             setBackground(urlBackground);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            getActivity().finish();
+            return v;
         }
         setAvatarsNames();
 
