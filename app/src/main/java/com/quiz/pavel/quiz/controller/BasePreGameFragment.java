@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
  */
 public class BasePreGameFragment extends Fragment {
 
-
-
     public void closeLobby() {
     }
 

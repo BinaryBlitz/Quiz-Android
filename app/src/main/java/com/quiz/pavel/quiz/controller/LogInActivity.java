@@ -47,9 +47,6 @@ public class LogInActivity extends Activity {
     @InjectView(R.id.password)
     EditText mPasswordEditText;
 
-
-
-
     /**
      * Called when the activity is first created.
      */

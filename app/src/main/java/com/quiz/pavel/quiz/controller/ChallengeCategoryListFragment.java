@@ -1,6 +1,7 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +19,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
@@ -38,6 +43,8 @@ public class ChallengeCategoryListFragment extends MyFragment {
 
     ListView listView;
 
+    DisplayImageOptions options;
+
     public interface ChallengeCategoryListListener {
         public void onOpenTopicListChallenge(int position);
     }
@@ -46,8 +53,18 @@ public class ChallengeCategoryListFragment extends MyFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+
         mCategories = new ArrayList<Category>();
-        Log.d(TAG, "launch");
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
@@ -84,7 +101,7 @@ public class ChallengeCategoryListFragment extends MyFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "Ошибка сервера", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Плохое соединение", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Error Response, have no data from server");
             }
         });
@@ -126,13 +143,16 @@ public class ChallengeCategoryListFragment extends MyFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_category, null);
             }
             Category c = (Category) mCategories.get(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
+            ImageView image = (ImageView) convertView.findViewById(R.id.myImageView);
+
+            ImageLoader.getInstance().displayImage(Mine.URL_photo + c.mBannerUrl, image, options);
 
             return convertView;
         }

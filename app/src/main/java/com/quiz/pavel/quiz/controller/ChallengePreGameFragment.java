@@ -1,12 +1,16 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -16,6 +20,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
@@ -31,7 +39,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,21 +47,23 @@ import butterknife.InjectView;
  * Created by pavel on 27/03/15.
  */
 public class ChallengePreGameFragment extends BasePreGameFragment {
-
-    private final static String TAG = "ChallengePreGameFr";
-
-    Timer mTimer;
+    private final static String TAG = "ChallengePreGameFragment";
 
     public int mTopicId;
     private int mOpponentId;
+    private int mCategoryId;
 
     private String mId;
 
-    @InjectView(R.id.name_of_topic)
-    TextView mNameOfTopic;
+    @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
-    private int mCategoryId;
+    @InjectView(R.id.background_pre_game) RelativeLayout mBackground;
 
+    DisplayImageOptions options;
+
+    private OnResponse myCallbackOnResponse;
+
+    Timer mTimer;
 
     public static ChallengePreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -73,7 +82,6 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
             public void onConnectionStateChange(ConnectionStateChange change) {
                 System.out.println("GOO State changed to " + change.getCurrentState() +
                         " from " + change.getPreviousState());
-
                 if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
                     createLobby();
                 }
@@ -81,21 +89,42 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
 
             @Override
             public void onError(String message, String code, Exception e) {
-                System.out.println("GOO There was a problem connecting!");
+                System.out.println("There was a problem connecting");
             }
         }, ConnectionState.ALL);
+
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
         mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
         mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
-
         ButterKnife.inject(this, v);
+
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+
+        Log.d(TAG, "url= " + url);
+
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                mBackground.setBackground(drawable);
+            }
+        });
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);
@@ -130,6 +159,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         if (getActivity() == null) {
             return;
         }
+        Log.d(TAG, "CreateLobby()");
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
@@ -137,11 +167,10 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
 
         try {
             JSONObject par = new JSONObject();
+
             par.put("topic_id", mTopicId);
             par.put("opponent_id", mOpponentId);
-
             params.put("lobby", par);
-
             params.put("token", Mine.getInstance(getActivity()).getToken());
 
         } catch (JSONException e) {
@@ -166,13 +195,11 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
 
 //                startTimer();
             }
-        }
-                , new Response.ErrorListener() {
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d(TAG, "Error Response, have no data from server");
             }
-
         }) {
 
             @Override
@@ -222,8 +249,6 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         }
     }
 
-    private OnResponse myCallbackOnResponse;
-
     public interface OnResponse {
         void responseWasGot();
     }
@@ -269,7 +294,6 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                             mTimer.cancel();
                             mTimer.purge();
                         }
-
                     }
                 }
                 , new Response.ErrorListener() {
@@ -315,6 +339,8 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         }
     }
 
+
+    //create a lobby
     @Override
     public void closeLobby() {
         RequestQueue queue = Volley.newRequestQueue(getActivity());

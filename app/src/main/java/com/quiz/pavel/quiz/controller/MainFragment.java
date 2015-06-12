@@ -18,12 +18,10 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.quiz.pavel.quiz.R;
-import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Topic;
 import com.quiz.pavel.quiz.model.TopicHeader;
@@ -34,7 +32,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -89,6 +86,7 @@ public class MainFragment extends MyFragment {
                             writeInTopics(response.getJSONArray("featured_topics"), mNewTopics);
                             writeInTopics(response.getJSONArray("favorite_topics"), mFavoriteTopics);
                             writeInTopics(response.getJSONArray("friends_favorite_topics"), mPopularTopics);
+                            writeInTopics(response.getJSONArray("random_topics"), mProposalTopics);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -262,10 +260,6 @@ public class MainFragment extends MyFragment {
 
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-
-//            if (convertView == null) {
-//                convertView = getActivity().getLayoutInflater().inflate(R.layout.list_item_topic, null);
-//            }
 
             try {
                 TopicHeader th = (TopicHeader)mTopics.get(groupPosition);

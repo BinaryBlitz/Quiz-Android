@@ -65,7 +65,6 @@ public class TopicListFragment extends MyFragment {
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-
     }
 
     @Override
