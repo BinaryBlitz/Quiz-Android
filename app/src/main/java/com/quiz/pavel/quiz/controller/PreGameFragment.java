@@ -255,6 +255,7 @@ public class PreGameFragment extends BasePreGameFragment {
 
     Handler myHandler = new Handler();
 
+
     private void sendReq() {
         if (getActivity() == null) {
             return;
@@ -339,6 +340,7 @@ public class PreGameFragment extends BasePreGameFragment {
 
     @Override
     public void closeLobby() {
+        //queue has been created
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
@@ -346,7 +348,7 @@ public class PreGameFragment extends BasePreGameFragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEB CLOSED");
+                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEN CLOSED");
                     }
                 }
                 , new Response.ErrorListener() {

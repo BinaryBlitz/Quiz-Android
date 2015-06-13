@@ -39,6 +39,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -47,7 +48,7 @@ import butterknife.InjectView;
  * Created by pavel on 27/03/15.
  */
 public class ChallengePreGameFragment extends BasePreGameFragment {
-    private final static String TAG = "ChallengePreGameFragment";
+    private final static String TAG = "ChallengePreGameFr";
 
     public int mTopicId;
     private int mOpponentId;
@@ -77,13 +78,17 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "launch");
         sm = new SessionManager(getActivity());
+
+        //connect via pusher
         sm.mPusher.connect(new ConnectionEventListener() {
             @Override
             public void onConnectionStateChange(ConnectionStateChange change) {
-                System.out.println("GOO State changed to " + change.getCurrentState() +
-                        " from " + change.getPreviousState());
+                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
+                        + change.getPreviousState());
                 if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
+                    //create lobby if connected
                     createLobby();
+                    startTimer();
                 }
             }
 
@@ -97,15 +102,15 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
         mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
 
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
-        ImageLoader.getInstance().init(config);
-
         options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .cacheOnDisk(true)
                 .considerExifParams(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
     }
 
     @Override
@@ -133,27 +138,28 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         return v;
     }
 
-//    int limit;
-//
-//    public void startTimer() {
-//        mTimer = new Timer();
-//        limit = 0;
-//        mTimer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                Log.d(TAG, "executing action from schedule: " + limit);
-//                sendReq();   // Question
-//                limit++;
-//                if (limit >= 12) {
-//                    if (mTimer != null) {
-//                        mTimer.cancel();
-//                        mTimer.purge();
-//                    }
-//                    sm.mPusher.disconnect();
-//                }
-//            }
-//        }, 0, 2000);
-//    }
+    int limit;
+
+    public void startTimer() {
+        mTimer = new Timer();
+        limit = 0;
+        mTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Log.d(TAG, "executing action from schedule: " + limit);
+                sendReq();   // Question
+                limit++;
+                if (limit >= 12) {
+                    if (mTimer != null) {
+                        sendReq();
+                        mTimer.cancel();
+                        mTimer.purge();
+                    }
+                    sm.mPusher.disconnect();
+                }
+            }
+        }, 0, 2000);
+    }
 
     private void createLobby() {
         if (getActivity() == null) {
@@ -201,7 +207,6 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 Log.d(TAG, "Error Response, have no data from server");
             }
         }) {
-
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
@@ -222,14 +227,16 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                     myHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d(TAG, "onEvent has handled");
+                            Log.d(TAG, "onEvent() has been handled");
                             if (flagResponse) {
                                 Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
                                 startActivity(i);
                                 sm.online = true;
 
+                                //close preGame and launch game
                                 Log.d(TAG, "launch a game");
                                 closeThis();
+
                             } else {
                                 myCallbackOnResponse = new OnResponse() {
                                     @Override
@@ -270,7 +277,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "RESPONSE HAS BEEN GOT");
+                        Log.d(TAG, "RESPONSE HAS BEEN GOT!!");
                         flagResponse = true;
 
                         sm.mSession = new Session(getActivity(), response, mCategoryId);
@@ -278,7 +285,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                         try {
                             sm.online = !response.getBoolean("offline");
                         } catch (JSONException e) {
-                            Log.d(TAG, "Problem with parsing json from response");
+                            Log.d(TAG, "Problem with parsing json from response, and problem, it is so...");
                         }
 
 
@@ -299,7 +306,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error Response, have no data from server(Searching...)");
+                Log.d(TAG, "Error Response, searching...");
             }
         });
         queue.add(jsonRequest);
@@ -350,7 +357,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEB CLOSED");
+                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEN CLOSED!");
                     }
                 }
                 , new Response.ErrorListener() {
