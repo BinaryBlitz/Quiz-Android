@@ -86,9 +86,7 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 System.out.println("GOO State changed to " + change.getCurrentState() + " from "
                         + change.getPreviousState());
                 if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
-                    //create lobby if connected
                     createLobby();
-                    startTimer();
                 }
             }
 
@@ -138,28 +136,27 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         return v;
     }
 
-    int limit;
-
-    public void startTimer() {
-        mTimer = new Timer();
-        limit = 0;
-        mTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                Log.d(TAG, "executing action from schedule: " + limit);
-                sendReq();   // Question
-                limit++;
-                if (limit >= 12) {
-                    if (mTimer != null) {
-                        sendReq();
-                        mTimer.cancel();
-                        mTimer.purge();
-                    }
-                    sm.mPusher.disconnect();
-                }
-            }
-        }, 0, 2000);
-    }
+//    int limit;
+//
+//    public void startTimer() {
+//        mTimer = new Timer();
+//        limit = 0;
+//        mTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.d(TAG, "executing action from schedule: " + limit);
+//                sendReq();   // Question
+//                limit++;
+//                if (limit >= 12) {
+//                    if (mTimer != null) {
+//                        mTimer.cancel();
+//                        mTimer.purge();
+//                    }
+//                    sm.mPusher.disconnect();
+//                }
+//            }
+//        }, 0, 2000);
+//    }
 
     private void createLobby() {
         if (getActivity() == null) {
