@@ -39,7 +39,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -80,21 +79,21 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         sm = new SessionManager(getActivity());
 
         //connect via pusher
-        sm.mPusher.connect(new ConnectionEventListener() {
-            @Override
-            public void onConnectionStateChange(ConnectionStateChange change) {
-                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
-                        + change.getPreviousState());
-                if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
-                    createLobby();
-                }
-            }
-
-            @Override
-            public void onError(String message, String code, Exception e) {
-                System.out.println("There was a problem connecting");
-            }
-        }, ConnectionState.ALL);
+//        sm.mPusher.connect(new ConnectionEventListener() {
+//            @Override
+//            public void onConnectionStateChange(ConnectionStateChange change) {
+//                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
+//                        + change.getPreviousState());
+//                if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
+//                    createLobby();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(String message, String code, Exception e) {
+//                System.out.println("There was a problem connecting");
+//            }
+//        }, ConnectionState.ALL);
 
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
         mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
@@ -128,6 +127,47 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
                 mBackground.setBackground(drawable);
             }
         });
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        url =  Mine.URL + "/lobbies/challenge?opponent_id=" + mOpponentId + "&topic_id=" + mTopicId  + "&token=" +
+                Mine.getInstance(getActivity()).getToken();
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "RESPONSE HAS BEEN GOT!! = " + response);
+
+                        //CREATE SESSION MANAGER AND SESSION INSTEAD OF IT
+
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
+
+                        sm.mPusher.connect(new ConnectionEventListener() {
+                            @Override
+                            public void onConnectionStateChange(ConnectionStateChange change) {
+                                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
+                                        + change.getPreviousState());
+    //                            if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
+    //                                createLobby();
+                                launchOfflineGame();
+
+                                //                            }
+                            }
+
+                            @Override
+                            public void onError(String message, String code, Exception e) {
+                                System.out.println("There was a problem connecting");
+                            }
+
+                        }, ConnectionState.ALL);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, searching...");
+            }
+        });
+        queue.add(jsonRequest);
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);
@@ -317,11 +357,11 @@ public class ChallengePreGameFragment extends BasePreGameFragment {
         sm.online = false;
 
         sm.mPusher.disconnect();
-
-        if (mTimer != null) {
-            mTimer.cancel();
-            mTimer.purge();
-        }
+//
+//        if (mTimer != null) {
+//            mTimer.cancel();
+//            mTimer.purge();
+//        }
         closeThis();
     }
 
