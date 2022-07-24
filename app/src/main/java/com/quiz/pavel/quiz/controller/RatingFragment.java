@@ -1,16 +1,13 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,8 +34,9 @@ import java.util.ArrayList;
  * Created by pavelkozemirov on 12.12.14.
  */
 public class RatingFragment extends ListFragment {
-
     private static final String TAG = "RatingFragment";
+
+    private FragmentTabHost mTabHost;
 
     private String mName;
 
@@ -73,6 +71,11 @@ public class RatingFragment extends ListFragment {
         mId = id;
     }
 
+    public RatingFragment() {
+        mName = "general";
+        spec = 0;
+    }
+
     private String getUrl() {
         switch (spec){
             case 0: return Mine.URL + "/rankings/" + mName + "?token="
@@ -83,45 +86,12 @@ public class RatingFragment extends ListFragment {
                     + Mine.getInstance(getActivity()).getToken() + "&category_id=" + mId;
         }
         return null;
-
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-        Log.d(TAG, "url= " + getUrl());
-
-
-
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(),
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        mPlayers = new ArrayList<PlayerRating>();
-
-                        try {
-                            parsingPlayers(response, 10);
-                        } catch (JSONException e) {
-                            Log.d(TAG, "Error with parsing json response");
-                        }
-
-                        TopicAdapter adapter = new TopicAdapter(mPlayers);
-                        setListAdapter(adapter);
-
-                        setRetainInstance(true);
-                    }
-                }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(TAG, "Error Response, have no data from server");
-            }
-        });
-        queue.add(stringRequest);
     }
 
     private void parsingPlayers(JSONObject response, int numberOfTopRating)
@@ -149,14 +119,58 @@ public class RatingFragment extends ListFragment {
         }
     }
 
+    ListView listView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
+//        View v = super.onCreateView(inflater, parent, savedInstanceState);
 
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.INVISIBLE);
+        View v = inflater.inflate(R.layout.fragment_rating_list, parent, false);
+
+
+//        mTabHost = new FragmentTabHost(getActivity());
+//        mTabHost.setup(getActivity(), getChildFragmentManager(), R.id.containerRating);
+//
+//        mTabHost.addTab(mTabHost.newTabSpec("simple").setIndicator("Simple"),
+//                CategoryListFragment.class, null);
+
+        listView = (ListView) v.findViewById(R.id.listView_rating);
         listView.setClickable(false);
         listView.setFocusable(false);
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, getUrl(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Log.d(TAG, "point1");
+
+                        mPlayers = new ArrayList<PlayerRating>();
+
+                        try {
+                            parsingPlayers(response, 10);
+                        } catch (JSONException e) {
+                            Log.d(TAG, "Error with parsing json response");
+                        }
+
+
+                        TopicAdapter adapter = new TopicAdapter(mPlayers);
+                        listView.setAdapter(adapter);
+                        setRetainInstance(true);
+
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, have no data from server");
+            }
+        });
+        queue.add(stringRequest);
+
+
 
         return v;
     }
@@ -211,6 +225,11 @@ public class RatingFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
+//        ((MainSlidingActivity) activity).onSectionAttached(4);
+    }
 
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:ppv="http://schemas.android.com/apk/res-auto"
+              xmlns:app="http://schemas.android.com/tools"
               android:orientation="vertical"
+              android:id="@+id/background_game"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
 
@@ -12,39 +15,59 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-        >
+            android:layout_weight="1"
+            android:layout_marginTop="5dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0.25"
             android:gravity="center"
             android:id="@+id/broad_my_profile"
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+
+            <com.github.siyamed.shapeimageview.CircularImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:id="@+id/my_image_imageView"
-                android:src="@android:drawable/ic_dialog_email"
-                android:background="@android:color/darker_gray"
+                app:siBorderWidth="2dp"
+                app:siBorderColor="#FF000000"
+                app:siSquare="true"
+                android:layout_gravity="center"
                 />
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="myName"
-                android:id="@+id/my_name" />
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/my_points_textView"
                 android:text="0"
-                android:id="@+id/my_points_textView"/>
+                android:background="@drawable/shape_red"
+                android:layout_width="25dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginLeft="-15dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="name"
+                android:id="@+id/my_name"
+                android:autoText="false"
+                android:gravity="center"/>
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -52,140 +75,215 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_weight="2"
+            android:layout_weight="0.5"
+
 
             >
-
-            <TextView
+            <com.filippudak.ProgressPieView.ProgressPieView
+                android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="10"
-                android:id="@+id/timer_textView" />
+                android:layout_weight="1"
+                ppv:ppvBackgroundColor="@color/tabTransparent"
+                android:layout_gravity="center"
+                android:id="@+id/progressPieView"/>
+
+
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0.25"
             android:gravity="center"
             android:id="@+id/broad_opponent_profile"
-
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/layout_for_invalidating"
+                android:orientation="horizontal"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/opponents_image_imageView"
-                android:src="@android:drawable/ic_dialog_dialer"
-                android:background="@android:color/darker_gray"
-                />
+                android:gravity="center">
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/opponents_image_imageView"
+                    app:siBorderWidth="2dp"
+                    app:siBorderColor="#FF000000"
+                    app:siSquare="true"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:text="0"
+                    android:background="@drawable/shape_red"
+                    android:layout_width="25dp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:adjustViewBounds="true"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/opponents_points_textView"
+                    android:gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_alignLeft="@id/opponents_image_imageView"
+                    />
+            </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="opponents name"
-                android:id="@+id/opponents_name" />
+                android:text="name"
+                android:maxLines="1"
+                android:id="@+id/opponents_name"
+                android:gravity="center"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="0"
-                android:id="@+id/opponents_points_textView"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
-
-    <FrameLayout android:orientation="vertical"
+    <LinearLayout android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:layout_weight="2"
-            >
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/question_text_view"
-                android:text="example" />
+                  android:layout_weight="2">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Round "
-            android:layout_gravity="center"
-            android:id="@+id/round_shower"/>
-
-    </FrameLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        >
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttons_broad"
-
+            android:layout_margin="5dp"
+            android:background="@drawable/shape"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
             >
-            <LinearLayout
-                android:orientation="horizontal"
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:id="@+id/question_text_view"
+                    android:text="example"
+                    android:gravity="center"
+                    android:textColor="#ffffff"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Round "
+                android:layout_gravity="center"
+                android:id="@+id/round_shower"
+                android:gravity="center"
+                android:textColor="#ffffff"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            >
+
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:id="@+id/buttons_broad"
+                     android:layout_marginLeft="5dp"
+                     android:layout_marginRight="5dp">
+
+            <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                >
-                <Button
-                    android:id="@+id/variant_a_button"
-                    android:text="A"
-                    android:padding="30dp"
-                    android:background="@color/button_material_light"
-                    android:layout_marginRight="5dp"
-                    style="@style/ButtonVar"
-                    />
-                <Button
-                    android:layout_marginLeft="5dp"
-                    style="@style/ButtonVar"
+                android:layout_height="match_parent"
+                android:weightSum="2"
+                android:padding="5dp" >
 
-                    android:text="B"
-                    android:padding="30dp"
-                    android:id="@+id/variant_b_button"
-                    android:background="@color/button_material_light"
 
-                    />
-            </LinearLayout>
-            <LinearLayout android:orientation="horizontal"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:id="@+id/linearLayout">
-
-                <Button
-                        android:layout_marginRight="5dp"
+                    <Button
+                        android:id="@+id/variant_a_button"
+                    android:layout_width="0dip"
+                        android:text="A"
+                        android:layout_height="wrap_content"
+                        android:lines="1"
+                        android:layout_weight="1"
                         style="@style/ButtonVar"
+                        />
 
-                        android:padding="30dp"
-                        android:id="@+id/variant_c_button"
-                        android:background="@color/button_material_light"
+                    <!--<View-->
+                        <!--android:layout_width="20dp"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:background="@drawable/point"-->
+                        <!--android:id="@+id/left_point_button_a"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_alignParentLeft="true"-->
+                        <!--android:layout_alignParentStart="true"/>-->
 
+
+                    <!--<View-->
+                        <!--android:layout_width="20dp"-->
+                        <!--android:id="@+id/right_point_button_a"-->
+                        <!--android:layout_height="20dp"-->
+                        <!--android:adjustViewBounds="true"-->
+                        <!--android:background="@drawable/point"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginRight="-10dp"-->
+                        <!--android:layout_alignRight="@id/variant_a_button"-->
+                        />
+
+
+
+
+                <!-- Column 2 -->
+                <Button
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:layout_width="0dip"
+                    android:lines="1"
+                    android:id="@+id/variant_b_button"
+                    />
+
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="2"
+
+                android:padding="5dip" >
+
+                <Button
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:lines="1"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/variant_c_button"
+                    android:layout_width="0dip"
                     android:text="C" />
 
                 <Button
-                        android:layout_marginLeft="5dp"
-                        style="@style/ButtonVar"
-
-                        android:text="D"
-                        android:padding="30dp"
-                        android:id="@+id/variant_d_button"
-                        android:background="@color/button_material_light"
-
+                    style="@style/ButtonVar"
+                    android:layout_weight="1"
+                    android:lines="1"
+                    android:layout_height="wrap_content"
+                    android:text="D"
+                    android:layout_width="0dip"
+                    android:id="@+id/variant_d_button"
                     />
-            </LinearLayout>
-        </LinearLayout>
+
+            </TableRow>
+        </TableLayout>
+
     </LinearLayout>
 
 

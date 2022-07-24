@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
     defaultConfig {
-        applicationId "com.quiz.pavel.quiz"
+        applicationId 'com.quiz.pavel.quiz'
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
@@ -17,6 +16,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 
@@ -24,6 +25,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':pusher-java-client-0.3.3-jar-with-dependencies')
     compile project(':vksdk_library')
+    compile project(':universal-image-loader-1.9.3-with-sources')
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.jakewharton:butterknife:6.0.0'
@@ -35,7 +37,9 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.3'
     compile 'com.makeramen:roundedimageview:1.5.0'
     compile 'com.squareup.picasso:picasso:2.5.0'
-    compile 'de.hdodenhof:circleimageview:1.1.0'
+    compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.github.filippudak.progresspieview:library:1.0.+'
+    compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 }

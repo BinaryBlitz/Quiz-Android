@@ -6,8 +6,18 @@
     <color name="tabMedium">#2B2B2B</color>
     <color name="tabDark">#000000</color>
     <color name="tabTransparent">#10ffffff</color>
+    <color name="progress_grey">#4d4d4d</color>
 
 
+
+    <color name="main_tab_red">#FC5658</color>
+    <color name="main_tab_blue">#1EB5D7</color>
+    <color name="main_tab_green">#21D077</color>
+    <color name="main_tab_yellow">#ffff1a</color>
+    <color name="main_tab_grey">#4f4f4f</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
 
 
 </resources>

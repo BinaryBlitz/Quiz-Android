@@ -1,24 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/main_scroll_view"
+    >
+
+
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
+              android:id="@+id/common_info"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="20dp"
     android:background="@color/common_signin_btn_light_text_pressed"
     >
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp">
+        android:layout_height="110dp"
+        style="@style/MyGreyCard"
+        android:weightSum="4"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
             android:layout_weight="1"
             android:layout_gravity="center">
 
@@ -26,8 +37,8 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:id="@+id/my_photo_imageView"
-                app:siBorderWidth="2dp"
                 android:scaleType="centerCrop"
+                app:siBorderWidth="2dp"
                 app:siBorderColor="#FF000000"
                 app:siSquare="true"
                 android:layout_gravity="center"/>
@@ -39,8 +50,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4">
+            android:layout_height="match_parent"
+            android:layout_weight="3">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -50,7 +61,43 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/table1"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:text="@string/friends_word"
+                              style="?android:textViewStyle"
+                              android:gravity="center"
+                              android:textSize="16dp"/>
+
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:text="0"
+                              android:textColor="#333333"
+                              style="?android:textViewStyle"
+                              android:gravity="center"
+                              android:textStyle="bold"
+                              android:id="@+id/number_of_friends"
+                              android:textSize="18dp"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/separator"
+                    >
+                </View>
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:gravity="center">
@@ -68,92 +115,326 @@
                         android:text="@string/points_numder"
                         style="?android:textViewStyle"
                         android:gravity="center"
+                        android:textColor="#333333"
                         android:textStyle="bold"
                         android:textSize="18dp"
                         android:id="@+id/number_of_achievements"/>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <TextView android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:text="@string/friends_word"
-                              style="?android:textViewStyle"
-                              android:gravity="center"
-                              android:textSize="16dp"/>
-
-                    <TextView android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:text="0"
-                              style="?android:textViewStyle"
-                              android:gravity="center"
-                              android:textStyle="bold"
-                              android:id="@+id/number_of_friends"
-                              android:textSize="18dp"/>
-                </LinearLayout>
-
             </LinearLayout>
 
             <Button android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="34dp"
                     android:id="@+id/milti_button"
                     android:text="@string/add_friend"
+                    android:background="@drawable/blue_button"
+                    android:textColor="#ffffff"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
         </LinearLayout>
 
     </LinearLayout>
+    <View
+        android:layout_below="@id/common_info"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_white"
+        >
+    </View>
 
-    <TextView android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/name"
-        android:id="@+id/name"
-        style="?android:textViewStyle"
-        android:textSize="20dp"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:padding="20dp"/>
-
-    <HorizontalScrollView
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:id="@+id/friends_wrapper"
-        android:layout_gravity="center_vertical"
-        android:scrollbars="none" >
+        android:layout_height="110dp"
+        android:weightSum="3"
+        android:id="@+id/games_stat"
+        android:paddingTop="7dp">
 
         <LinearLayout
-            android:id="@+id/id_gallery"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="ПОБЕД"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:layout_gravity="center"
+                android:id="@+id/textView6"/>
+
+            <TextView
+                android:id="@+id/profile_wins"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/green_circle"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="НИЧЬИХ"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#111111"
+                android:layout_gravity="center"
+                android:id="@+id/textView7"/>
+
+            <TextView
+                android:id="@+id/profile_dead_heats"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/orange_circle"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="ПОРАЖЕНИЙ"
+                android:textStyle="bold"
+                android:textSize="11sp"
+                android:textColor="#111111"
+                android:layout_gravity="center"
+                android:id="@+id/textView8"/>
+
+            <TextView
+                android:id="@+id/profile_losses"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/red_circle"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#333333"
+                android:textStyle="bold"
+                android:textSize="25sp" />
+        </LinearLayout>
+
+
+
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:id="@+id/friends_card"
+        style="@style/MyGreyCard"
+        android:layout_height="fill_parent">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Друзья:"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:id="@+id/textView9"
+            android:textColor="#000000"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/friends_wrapper"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal" >
-        </LinearLayout>
-    </HorizontalScrollView>
+            android:scrollbars="none" >
 
+            <LinearLayout
+                android:id="@+id/id_gallery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal" >
+            </LinearLayout>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <View
+        android:layout_below="@id/friends_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_grey_to_white"
+        >
+    </View>
 
-    <Button android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:id="@+id/achievements_card"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/open_list"
-            android:text="@string/open_list_view"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Достижения:"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:id="@+id/textView10"
+            android:textColor="#000000"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:id="@+id/horizontalScrollView"
+            android:layout_gravity="center_vertical"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/id_gallery_achievements"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"/>
+        </HorizontalScrollView>
+    </LinearLayout>
+    <View
+        android:layout_below="@id/achievements_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_grey"
+        >
+    </View>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#333333"
+        android:id="@+id/list_topics_card"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:paddingTop="10dp"
+            android:paddingLeft="15dp"
+            android:text="Коронные темы:"
+            android:textColor="#ffffff"
+            android:id="@+id/textView11"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:id="@+id/profile_favorite_topics_listview"
+            />
+    </LinearLayout>
+    <View
+        android:layout_below="@id/list_topics_card"
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_lightgrey"
+        >
+    </View>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#4D4D4D"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="ЛИЧНЫЙ СЧЕТ:"
+                android:id="@+id/personal_tab_textView"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:padding="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="0-0"
+                android:id="@+id/personal_tab"
+                android:textSize="62sp"
+                android:textStyle="bold"
+                android:textColor="#FECD2F"
+                android:layout_gravity="center"
+                android:paddingBottom="20dp"/>
+
+        </LinearLayout>
+
+
+
+        <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logout"
+            android:background="@drawable/blue_button"
+            android:textColor="#ffffff"
+            android:layout_margin="10dp"
+            android:text="@string/logout"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-        />
+            />
 
-    <Button android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/logout"
-        android:text="@string/logout"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        />
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/challenge"
+                android:layout_margin="10dp"
+                android:text="@string/challenge"
+                android:background="@drawable/blue_button"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+            />
+
+
+    </LinearLayout>
 
 
 </LinearLayout>
+
+</ScrollView>

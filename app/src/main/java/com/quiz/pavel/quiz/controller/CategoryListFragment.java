@@ -1,6 +1,8 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -12,7 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,34 +27,39 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Category;
 import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.PlayerProfile;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by pavelkozemirov on 12.12.14.
  */
-public class CategoryListFragment extends ListFragment {
+public class CategoryListFragment extends MyFragment {
     private static final String TAG = "CategoryListFragment";
 
     private ArrayList<Category> mCategories;
 
-    OnEventCategoriListListener mCallback;
+    CategoryListListener mCallback;
 
-    public static CategoryListFragment newInstance() {
-        Bundle args = new Bundle();
-        CategoryListFragment fragment = new CategoryListFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    ListView listView;
 
-    public interface OnEventCategoriListListener {
-        public void onCategorySelected(int position);
+    DisplayImageOptions options;
+
+    public interface CategoryListListener {
+        public void onOpenTopicList(int position);
     }
 
     @Override
@@ -57,8 +67,22 @@ public class CategoryListFragment extends ListFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        mCategories = new ArrayList<Category>();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
 
+        mCategories = new ArrayList<Category>();
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_categories, parent, false);
+        listView = (ListView) v.findViewById(R.id.listView);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonArrayRequest stringRequest = new JsonArrayRequest(Mine.URL + "/categories" + "?token=" +
@@ -67,6 +91,10 @@ public class CategoryListFragment extends ListFragment {
                     @Override
                     public void onResponse(JSONArray response) {
 
+                        if(getActivity() == null) {
+                            return;
+                        }
+                        mCategories.clear();
                         Mine.getInstance(getActivity()).saveCatTopicJsonAr(getActivity(), response);
                         for (int i = 0; i < response.length(); i++) {
                             try {
@@ -76,56 +104,25 @@ public class CategoryListFragment extends ListFragment {
                             }
                         }
 
-                        TopicAdapter adapter = new TopicAdapter(mCategories);
-                        setListAdapter(adapter);
-
+                        TopicAdapter arrayAdapter = new TopicAdapter(mCategories);
+                        listView.setAdapter(arrayAdapter);
                         setRetainInstance(true);
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity(), "Ошибка сервера", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Плохое соединение", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Error Response, have no data from server");
             }
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-        //TODO: save downloaded topics and categories
-    }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
-
-        ListView listView = (ListView) v.findViewById(android.R.id.list);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-        listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
-            }
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mCallback.onOpenTopicList(position);
             }
         });
 
@@ -136,8 +133,11 @@ public class CategoryListFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
+        ((MainSlidingActivity) activity).onSectionAttached(2);
+        mTitle = "Категории";
+
         try {
-            mCallback = (OnEventCategoriListListener) activity;
+            mCallback = (CategoryListListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -154,37 +154,19 @@ public class CategoryListFragment extends ListFragment {
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_category, null);
             }
-            Category c = (Category) getListAdapter().getItem(position);
+            Category c = (Category) mCategories.get(position);
 
             TextView titleTextView = (TextView) convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getTitle());
 
+            ImageView image = (ImageView) convertView.findViewById(R.id.myImageView);
+
+            ImageLoader.getInstance().displayImage(Mine.URL_photo + c.mBannerUrl, image, options);
 
             return convertView;
         }
-    }
-
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-//        mCallback.onCategorySelected(mCategories.get(position).getId());
-        //TODO: important moment
-        mCallback.onCategorySelected(position);
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
-        super.onCreateOptionsMenu(menu, inflator);
-//        inflator.inflate(R.menu.menu_profile_fragment, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-
-        return true;
     }
 
 }

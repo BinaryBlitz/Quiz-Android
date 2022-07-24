@@ -47,9 +47,6 @@ public class LogInActivity extends Activity {
     @InjectView(R.id.password)
     EditText mPasswordEditText;
 
-
-
-
     /**
      * Called when the activity is first created.
      */
@@ -106,7 +103,7 @@ public class LogInActivity extends Activity {
                             }
 
                             Intent intent = new Intent(LogInActivity.this,
-                                    MainTabsActivity.class);
+                                    MainSlidingActivity.class);
                             startActivity(intent);
                             finish();
                         }

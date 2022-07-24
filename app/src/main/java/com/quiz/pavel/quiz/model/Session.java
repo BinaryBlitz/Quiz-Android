@@ -3,7 +3,6 @@ package com.quiz.pavel.quiz.model;
 import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -13,14 +12,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
@@ -32,17 +27,9 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Random;
-import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 13.12.14.
@@ -54,11 +41,19 @@ public class Session {
     public int pointsMine;
     public int pointsOpponent;
 
+    public int mCategoryId;
+
     public SessionQuestion mCurrentSessionQuestion;
 
     private String mMyName = "Я";
     private String mOpponentsName = "Оппонент";
 
+    public String mMyAvatarUrl;
+    public String mOpponentAvatarUrl;
+
+    public int mId;
+
+    public String mBackgroundUrl;
 
 
     public LinkedList<SessionQuestion> mSessionQuestions;
@@ -71,22 +66,40 @@ public class Session {
     }
 
 
-    public Session(Context c, JSONObject response) {
+    public Session(Context c, JSONObject response, int cat) {
+
+        mCategoryId = cat;
         mSessionQuestions = new LinkedList<SessionQuestion>();
 
+        Log.d(TAG, "response = " + response);
+
         try {
-            int host_id = response.getInt("host_id");
+            mId = response.getInt("id");
+
+            JSONObject objHost = response.getJSONObject("host");
+            JSONObject objOpponent = response.getJSONObject("opponent");
+
+            int host_id = objHost.getInt("id");
+
             if(host_id == Mine.getInstance(c).getId()) {
-                mMyName = response.getString("host_name");
-                mOpponentsName = response.getString("opponent_name");
+                mMyName = objHost.getString("username");
+                mOpponentsName = objOpponent.getString("username");
+                mMyAvatarUrl = objHost.getString("avatar_url");
+                mOpponentAvatarUrl = objOpponent.getString("avatar_url");
+
             } else {
-                mMyName = response.getString("opponent_name");
-                mOpponentsName = response.getString("host_name");
+
+                mMyName = objOpponent.getString("username");
+                mOpponentsName = objHost.getString("username");
+                mMyAvatarUrl = objOpponent.getString("avatar_url");
+                mOpponentAvatarUrl = objHost.getString("avatar_url");
             }
 
         } catch (JSONException ex) {
 
         }
+
+        Log.d(TAG, "url= " +  mMyAvatarUrl);
 
         try {
             JSONArray sqs = response.getJSONArray("game_session_questions");

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_tab_blue"
+    android:orientation="vertical">
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_blue"
+        >
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingTop="10dp"
+        android:text="ПОПУЛЯРНОЕ У ДРУЗЕЙ"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:paddingBottom="10dp"/>
+
+</LinearLayout>

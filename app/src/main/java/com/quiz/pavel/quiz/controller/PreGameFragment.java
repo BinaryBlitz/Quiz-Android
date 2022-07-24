@@ -1,24 +1,29 @@
 package com.quiz.pavel.quiz.controller;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.pusher.client.channel.SubscriptionEventListener;
 import com.pusher.client.connection.ConnectionEventListener;
 import com.pusher.client.connection.ConnectionState;
@@ -42,17 +47,19 @@ import butterknife.InjectView;
 /**
  * Created by pavelkozemirov on 14.02.15.
  */
-public class PreGameFragment extends Fragment {
-
+public class PreGameFragment extends BasePreGameFragment {
     private static String TAG = "PreGameFragment";
 
     Timer mTimer;
 
     public int mTopicId;
+    public int mCategoryId;
     private String mId;
+    DisplayImageOptions options;
 
     @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
     @InjectView(R.id.interesting_fact) TextView mInterestingFact;
+    @InjectView(R.id.background_pre_game) RelativeLayout mBackground;
 
     public static PreGameFragment newInstance() {
         Bundle args = new Bundle();
@@ -81,14 +88,38 @@ public class PreGameFragment extends Fragment {
                 System.out.println("GOO There was a problem connecting!");
             }
         }, ConnectionState.ALL);
+
         mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
+        mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
-
         ButterKnife.inject(this, v);
+
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+
+        Log.d(TAG, "url= " + url);
+
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                mBackground.setBackground(drawable);
+            }
+        });
 
         String name = getActivity().getIntent().getStringExtra("name");
         mNameOfTopic.setText(name);
@@ -198,6 +229,8 @@ public class PreGameFragment extends Fragment {
                                     public void responseWasGot() {
                                         Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
                                         startActivity(i);
+                                        getActivity().overridePendingTransition(R.anim.enter, R.anim.exit);
+
                                         sm.online = true;
                                         Log.d(TAG, "launch a game");
                                         closeThis();
@@ -222,6 +255,7 @@ public class PreGameFragment extends Fragment {
 
     Handler myHandler = new Handler();
 
+
     private void sendReq() {
         if (getActivity() == null) {
             return;
@@ -237,7 +271,7 @@ public class PreGameFragment extends Fragment {
                         Log.d(TAG, "RESPONSE HAS BEEN GOT");
                         flagResponse = true;
 
-                        sm.mSession = new Session(getActivity(), response);
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
 
                         try {
                             sm.online = !response.getBoolean("offline");
@@ -304,7 +338,9 @@ public class PreGameFragment extends Fragment {
         }
     }
 
+    @Override
     public void closeLobby() {
+        //queue has been created
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
@@ -312,7 +348,7 @@ public class PreGameFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEB CLOSED");
+                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEN CLOSED");
                     }
                 }
                 , new Response.ErrorListener() {

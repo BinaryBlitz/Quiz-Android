@@ -1,85 +1,99 @@
 package com.quiz.pavel.quiz.controller;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.*;
-import android.widget.*;
+import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.quiz.pavel.quiz.R;
 import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.PlayerProfile;
-import com.quiz.pavel.quiz.model.PlayerRating;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
 
 /**
  * Created by pavelkozemirov on 11.11.14.
  */
-public class ListFriendRequestsFragment extends ListFragment {
-
+public class ListFriendRequestsFragment extends MyFragment {
 
     private final static String TAG = "ListFriendRequestsFragment";
     private ArrayList<String> mInts;
     private View mItem;
     private int mIconNumber;
 
+    ListView listView;
+    PlayerProfile mPlayerProfile;
 
     ArrayList<PlayerProfile> list = new ArrayList<PlayerProfile>();
+
+    public ListFriendRequestsFragment(PlayerProfile p) {
+        mPlayerProfile = p;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        setRetainInstance(true);
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        mTitle = mPlayerProfile.getName();
+        super.onAttach(activity);
+    }
 
+        @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_friend_list, parent, false);
+
+        listView = (ListView)v.findViewById(R.id.list_friends);
+        listView.setFooterDividersEnabled(true);
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
+        list.clear();
         JsonArrayRequest arRequest = new JsonArrayRequest(Mine.URL
-                + "/friendships/requests" + "?token="
+                + "/players/" + mPlayerProfile.getId() + "/friends?token="
                 + Mine.getInstance(getActivity()).getToken(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
 
-
-
-
-
                         for (int i = 0; i < response.length(); i++) {
-
                             int id  = 0;
                             String name = "";
+                            String url = "";
                             try {
                                 id = response.getJSONObject(i).getInt("id");
-                                name = response.getJSONObject(i).getString("name");
+                                name = response.getJSONObject(i).getString("username");
+                                url = response.getJSONObject(i).getString("avatar_url");
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            list.add(new PlayerProfile(getActivity(), id, name));
-
-                            MyAdapter adapter = new MyAdapter(list);
-                            setListAdapter(adapter);
+                            list.add(new PlayerProfile(getActivity(), id, name, url));
                         }
+
+                        MyAdapter arrayAdapter = new MyAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+                        listView.setAdapter(arrayAdapter);
                     }
                 },
                 new Response.ErrorListener() {
@@ -90,165 +104,52 @@ public class ListFriendRequestsFragment extends ListFragment {
                 });
         queue.add(arRequest);
 
-
-
-
-        setRetainInstance(true);
-
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
-        View v = super.onCreateView(inflater, parent, savedInstanceState);
-
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mMyFragmentListenerCallback.openProfileFragment(list.get(position));
+            }
+        });
 
         return v;
     }
 
 
+    private class MyAdapter extends ArrayAdapter<PlayerProfile> {
 
-
-
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id){
-
-
-        RequestQueue queue = Volley.newRequestQueue(getActivity());
-
-//        JSONObject params = new JSONObject();
-//
-//        try {
-//            JSONObject par = new JSONObject();
-//            par.put("topic_id", mTopicId);
-//
-//            params.put("lobby", par);
-//
-//            params.put("token", Mine.getInstance(getActivity()).getToken());
-//
-//        } catch (JSONException e) {
-//            Log.d(TAG,"Problem with parsing json(Intent)");
-//        }
-
-        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL +
-                "/friendships?friend_id=" + list.get(position).getId() + "&token=" +
-                Mine.getInstance(getActivity()).getToken(),
-                new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Toast.makeText(getActivity(), "added", Toast.LENGTH_SHORT).show();
-            }
+        public MyAdapter(FragmentActivity activity, int simple_list_item_1, ArrayList<PlayerProfile> crimes){
+            super(getActivity(), 0, crimes);
         }
-                , new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-            }
 
-        }) {
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("Content-Type", "application/json");
-                params.put("Accept", "application/json");
-                return params;
-            }
-        };
-
-        queue.add(stringRequest);
-
-        getActivity().finish();
-
-//        Intent i = new Intent(getActivity(), CrimeActivity.class);
-//
-//        Intent i = new Intent(getActivity(), CrimePagerActivity.class);
-//
-//        i.putExtra(CrimeFragment.EXTRA_CRIME_ID, cr.getId());
-//        startActivity(i);
-
-    }
-
-    private class MyAdapter extends ArrayAdapter<PlayerProfile>{
-        public MyAdapter(ArrayList<PlayerProfile> crimes){
-            super(getActivity(),0,crimes);
-        }
         @Override
         public View getView(int position, View convertView, ViewGroup parent){
 
             if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
-                        .inflate(R.layout.list_item_topic, null);
+                        .inflate(R.layout.list_item_user, null);
             }
-            PlayerProfile c = (PlayerProfile)getListAdapter().getItem(position);
+
+            PlayerProfile c = (PlayerProfile)list.get(position);
 
             TextView titleTextView = (TextView)convertView.findViewById(R.id.list_item_titleTextView);
             titleTextView.setText(c.getName());
 
-//            TextView dateTextView = (TextView)convertView.findViewById(R.id.crime_list_item_dateTextView);
-//            dateTextView.setText(c.getDate().toString());
-//
-//            CheckBox solvedCheckBox = (CheckBox)convertView.findViewById(R.id.crime_list_item_solvedCheckBox);
-//            solvedCheckBox.setChecked(c.isSolved());
+            ImageView imageView = (ImageView)convertView.findViewById(R.id.imageView_photo);
 
+            if (list.get(position).getAvatarUrl() == null || list.get(position).getAvatarUrl().equals("null")){
+                Picasso.with(getActivity())
+                        .load(R.drawable.catty)
+                        .into(imageView);
+            }
+
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + list.get(position).getAvatarUrl())
+                    .placeholder(R.drawable.catty)
+                    .into(imageView);
 
             return convertView;
         }
     }
 
-
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator){
-//        super.onCreateOptionsMenu(menu, inflator);
-//        inflator.inflate(R.menu.fragment_crime_list, menu);
-//        MenuItem itemIc = menu.findItem(R.id.menu_item_show_subtitle);
-//        if ( (mIconNumber != 0)) {
-//            itemIc.setIcon(mIconNumber);
-//        }
-//    }
-
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item){
-//        switch (item.getItemId()){
-//            case R.id.menu_item_new_crime:
-//                Crime cr = new Crime();
-//                CrimeLab.get(getActivity()).addCrime(cr);
-//                Intent i = new Intent(getActivity(),CrimePagerActivity.class);
-//                i.putExtra(CrimeFragment.EXTRA_CRIME_ID, cr.getId());
-//                startActivityForResult(i, 0);
-//                return true;
-//            case R.id.menu_item_show_subtitle:
-//                mIconNumber = getRandomIcon(mIconNumber);
-//                item.setIcon(mIconNumber);
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
-//
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-//        getActivity().getMenuInflater().inflate(R.menu.crime_list_item_context, menu);
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item){
-//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
-//        int position = info.position;
-//        CrimeAdapter adapter = (CrimeAdapter)getListAdapter();
-//        Crime c = adapter.getItem(position);
-//
-//        switch (item.getItemId()){
-//            case R.id.menu_item_delete_crime:
-//                CrimeLab.get(getActivity()).deleteCrime(c);
-//                adapter.notifyDataSetChanged();
-//                return true;
-//        }
-//        return super.onContextItemSelected(item);
-//    }
 
 }

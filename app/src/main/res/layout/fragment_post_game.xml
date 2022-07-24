@@ -1,14 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:id="@+id/background_post_game"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:background="#66111111">
+
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:id="@+id/broad_my_profile"
+            >
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/my_image_imageView"
+                    app:siBorderColor="#FF000000"
+                    app:siSquare="true"
+                    android:layout_gravity="center"
+                    />
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/my_points_textView"
+                    android:text="0"
+                    android:background="@drawable/shape_red"
+                    android:layout_width="25dp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginLeft="-15dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="name"
+                android:id="@+id/my_name_post"
+                android:autoText="false"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="0.5"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="vs."
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#111111"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:id="@+id/broad_opponent_profile"
+            >
+
+            <RelativeLayout
+                android:id="@+id/layout_for_invalidating"
+                android:orientation="horizontal"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/opponents_image_imageView"
+                    app:siBorderColor="#FF000000"
+                    app:siSquare="true"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:text="0"
+                    android:background="@drawable/shape_red"
+                    android:layout_width="25dp"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold"
+                    android:adjustViewBounds="true"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:id="@+id/opponents_points_textView"
+                    android:gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_alignLeft="@id/opponents_image_imageView"
+                    />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="name"
+                android:maxLines="1"
+                android:id="@+id/opponents_name_post"
+                android:gravity="center"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
+        android:layout_weight="1"
         android:id="@+id/textView"
-        />
+        android:textSize="56sp"
+        android:textStyle="bold"
+        android:textColor="#ffffff"/>
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="2"
+                  android:gravity="center">
+
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Сыграть еще раз"
+            android:textColor="#ffffff"
+            android:background="@drawable/shape"
+            android:id="@+id/button_play_again"/>
+
+        <Button
+            android:layout_marginTop="20dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="Выбрать другую тему"
+            android:textColor="#ffffff"
+            android:background="@drawable/shape"
+            android:id="@+id/choose_topic"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:background="#4D4D4D"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="0"
+                    android:textSize="38sp"
+                    android:id="@+id/textView_points_count"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="очков"
+                    android:id="@+id/textView_points"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/profile_wins"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/blue_circle"
+            android:gravity="center"
+            android:text="x2"
+            android:textColor="#1EB5D7"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:textIsSelectable="false"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="7dip"
+        android:background="@drawable/drop_shadow_black_to_grey"
+        >
+    </View>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:background="#333333"
+        android:layout_height="100dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="0 очков"
+            android:id="@+id/textView_points_overview"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#FC5659"
+            android:textStyle="bold"
+            android:textSize="58sp"/>
+    </LinearLayout>
+
 </LinearLayout>
+

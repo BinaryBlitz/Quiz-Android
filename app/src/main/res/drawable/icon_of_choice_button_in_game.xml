@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          >
+
+    <!--<item android:drawableLeft="@drawable/point" android:state_mine="true"-->
+        <!--/>-->
+    <!--<item android:drawableRight="@drawable/point" android:state_opponents="true"-->
+        <!--/>-->
+    <item android:drawableRight="@drawable/point_invisible"
+          android:drawableLeft="@drawable/point_invisible">
+
+    </item>
+
+</selector>

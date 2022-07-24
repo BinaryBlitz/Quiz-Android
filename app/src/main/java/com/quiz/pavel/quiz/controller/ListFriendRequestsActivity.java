@@ -21,13 +21,13 @@ public class ListFriendRequestsActivity extends FragmentActivity {
         FragmentManager fm = getSupportFragmentManager();
 
         Fragment fragment = fm.findFragmentById(R.id.fragmentContainer);
-
-        if (fragment == null) {
-            fragment = new ListFriendRequestsFragment();
-            fm.beginTransaction()
-                    .add(R.id.fragmentContainer, fragment)
-                    .commit();
-        }
+//
+//        if (fragment == null) {
+//            fragment = new ListFriendRequestsFragment();
+//            fm.beginTransaction()
+//                    .add(R.id.fragmentContainer, fragment)
+//                    .commit();
+//        }
 
 
     }

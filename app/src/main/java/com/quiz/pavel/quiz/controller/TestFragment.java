@@ -2,27 +2,49 @@ package com.quiz.pavel.quiz.controller;
 
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.filippudak.ProgressPieView.ProgressPieView;
 import com.nineoldandroids.animation.Animator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Mine;
 import com.quiz.pavel.quiz.model.Question;
 import com.quiz.pavel.quiz.model.Session;
 import com.quiz.pavel.quiz.model.SessionManager;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,12 +65,12 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.variant_d_button) Button mVariantD;
 
     @InjectView(R.id.question_text_view) TextView mQuestionTextView;
-    @InjectView(R.id.timer_textView) TextView mTimerTextView;
+//    @InjectView(R.id.timer_textView) TextView mTimerTextView;
 
     @InjectView(R.id.my_points_textView) TextView mMyPointsTextView;
     @InjectView(R.id.opponents_points_textView) TextView mOpponentsPointsTextView;
 
-    @InjectView(R.id.buttons_broad) LinearLayout mButtonsBroad;
+    @InjectView(R.id.buttons_broad) TableLayout mButtonsBroad;
 
     @InjectView(R.id.broad_my_profile) LinearLayout mMyProfileBroad;
     @InjectView(R.id.broad_opponent_profile) LinearLayout mOpponentProfileBroad;
@@ -58,6 +80,20 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.my_name) TextView mMyName;
     @InjectView(R.id.opponents_name) TextView mOpponentsName;
 
+    @InjectView(R.id.opponents_image_imageView) ImageView mOpponentImage;
+    @InjectView(R.id.my_image_imageView) ImageView mMyImage;
+
+    @InjectView(R.id.background_game) LinearLayout mBackground;
+
+//    @InjectView(R.id.left_point_button_a) View mLeftPointA;
+//    @InjectView(R.id.right_point_button_a) View mRightPointA;
+
+
+    private ProgressPieView mProgressPieView;
+    private static final int SIZE = 96;
+    private static final int MARGIN = 8;
+
+    DisplayImageOptions options;
 
     private Button mLastPushedButton; //TODO: delete this line
 
@@ -65,6 +101,8 @@ public class TestFragment extends Fragment {
     public SessionManager mSessionManager;
     public Question mCurQuestion;
     private String mDataSession;
+
+    JSONObject json = new JSONObject();
 
 
     public static TestFragment newInstance() {
@@ -77,19 +115,19 @@ public class TestFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-
         View v = inflater.inflate(R.layout.fragment_test, parent, false);
         ButterKnife.inject(this, v);
-
 
         mSessionManager = SessionManager.getInstance(getActivity());
         mQuestionTextView.setVisibility(View.GONE);
         mRoundShowerTextView.setVisibility(View.GONE);
         mButtonsBroad.setAlpha(0f);
+        setBackground();
 
         mSessionManager.mSession.callback = new Session.MyCallback() {
 
@@ -100,7 +138,7 @@ public class TestFragment extends Fragment {
 
             @Override
             public void callbackCallOpponent(int i) {
-                    mOpponentsPointsTextView.setText(String.valueOf(i));
+                mOpponentsPointsTextView.setText(String.valueOf(i));
             }
 
         };
@@ -109,7 +147,9 @@ public class TestFragment extends Fragment {
 
             @Override
             public void updateTimer(int i) {
-                mTimerTextView.setText(String.valueOf(10 - i));
+//                mTimerTextView.setText(String.valueOf(10 - i));
+                mProgressPieView.setProgress(i * 10);
+                mProgressPieView.setText(String.valueOf(10 - i));
             }
 
             @Override
@@ -132,8 +172,8 @@ public class TestFragment extends Fragment {
 
         mSessionManager.listenEvent();
 
-        mMyName.setText(mSessionManager.mSession.getMyName());
-        mOpponentsName.setText(mSessionManager.mSession.getOpponentsName());
+        setAvatarsNames();
+
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable(){
@@ -143,11 +183,95 @@ public class TestFragment extends Fragment {
             }
         }, 1000);
 
+        float density = getResources().getDisplayMetrics().density;
+        int size = (int) (density * SIZE);
+        int margin = (int) (density * MARGIN);
+
+        // Default version
+        mProgressPieView = (ProgressPieView) v.findViewById(R.id.progressPieView);
+        mProgressPieView.setOnProgressListener(new ProgressPieView.OnProgressListener() {
+            @Override
+            public void onProgressChanged(int progress, int max) {
+                if (!mProgressPieView.isTextShowing()) {
+                    mProgressPieView.setShowText(true);
+                    mProgressPieView.setShowImage(false);
+                }
+            }
+
+            @Override
+            public void onProgressCompleted() {
+                if (!mProgressPieView.isImageShowing()) {
+                    mProgressPieView.setShowImage(true);
+                }
+                mProgressPieView.setShowText(false);
+//                mProgressPieView.setImageResource(R.drawable.ic_action_accept);
+            }
+        });
+
         return v;
     }
 
-    private void beginGame() {
+    private void setBackground() {
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mSessionManager.mSession.mCategoryId).mBackgroundUrl;
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+        try {
+            json.put("url_background", url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                mBackground.setBackground(drawable);
+            }
+        });
+    }
+
+    private void setAvatarsNames() {
+        String myname = mSessionManager.mSession.getMyName();
+        String opponentName = mSessionManager.mSession.getOpponentsName();
+
+        if (myname.length() > 10) {
+            mMyName.setText(myname.substring(0, 8) + "...");
+        } else {
+            mMyName.setText(myname);
+        }
+
+        if (opponentName.length() > 10) {
+            mOpponentsName.setText(opponentName.substring(0, 8) + "...");
+        } else {
+            mOpponentsName.setText(opponentName);
+        }
+
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + mSessionManager.mSession.mMyAvatarUrl)
+                    .placeholder(R.drawable.catty)
+                    .into(mMyImage);
+
+            Picasso.with(getActivity())
+                    .load(Mine.URL_photo + mSessionManager.mSession.mOpponentAvatarUrl)
+                    .placeholder(R.drawable.catty)
+                    .into(mOpponentImage);
+
+        try {
+            json.put("my_url_avatar", mSessionManager.mSession.mMyAvatarUrl);
+            json.put("opponents_url_avatar", mSessionManager.mSession.mOpponentAvatarUrl);
+            json.put("my_username", myname);
+            json.put("opponents_username", opponentName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void beginGame() {
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
         updateGUI();
     }
@@ -160,19 +284,62 @@ public class TestFragment extends Fragment {
         Log.d(TAG, "onCloseRound, mOpponentAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mOpponentAnswer) {
             case 0:
-                mVariantA.setTextColor(Color.RED);
+
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds( 0, 0, 60, 60 );
+                    if(mVariantA.getCompoundDrawables()[0] != null) {
+                        mVariantA.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantA.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 1:
-                mVariantB.setTextColor(Color.RED);
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds(0, 0, 60, 60);
+                    if(mVariantB.getCompoundDrawables()[0] != null) {
+                        mVariantB.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantB.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 2:
-                mVariantC.setTextColor(Color.RED);
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds(0, 0, 60, 60);
+                    if(mVariantC.getCompoundDrawables()[0] != null) {
+                        mVariantC.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantC.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
+
+                }
                 break;
             case 3:
-                mVariantD.setTextColor(Color.RED);
-                break;
+                try {
+                    Drawable img = getResources().getDrawable( R.drawable.point );
+                    img.setBounds(0, 0, 60, 60);
+                    if(mVariantD.getCompoundDrawables()[0] != null) {
+                        mVariantD.setCompoundDrawables(img, null, img, null);
+                    } else {
+                        mVariantD.setCompoundDrawables(null, null, img, null);
+                    }
+                } catch (Exception ex) {
 
+                }
+                break;
         }
+
+
+
         Log.d(TAG, "onCloseRound, mCorrectAnswer = " + mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer);
         switch (mSessionManager.mSession.mCurrentSessionQuestion.mCorrectAnswer) {
             case 0:
@@ -298,8 +465,6 @@ public class TestFragment extends Fragment {
 
                     }
                 }).playOn(b3);
-
-
     }
 
 
@@ -384,11 +549,19 @@ public class TestFragment extends Fragment {
 
         if (!mSessionManager.mSession.moveCurrentSessionQuestion()) {
             mSessionManager.stopTimer();
+            try {
+                json.put("my_points", mMyPointsTextView.getText());
+                json.put("opponents_points", mOpponentsPointsTextView.getText());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if (getActivity() == null) {
                 return;
             }
             Intent intent = new Intent(getActivity(), PostGameActivity.class);
             intent.putExtra(PostGameFragment.EXTRA, mSessionManager.amIWinner());
+            intent.putExtra(PostGameFragment.EXTRA, json.toString());
+            sendToCloseGameSession();
             startActivity(intent);
             finish = true;
 
@@ -396,7 +569,36 @@ public class TestFragment extends Fragment {
             return;
         }
         mCurQuestion = mSessionManager.mSession.mCurrentSessionQuestion.getQuestion();
+    }
 
+    private void sendToCloseGameSession() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PATCH,
+                Mine.URL + "/game_sessions/" + mSessionManager.mSession.mId + "/close?token=" +
+                Mine.getInstance(getActivity()).getToken(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "PATCH on close game session HAS SEND, response: " + response.toString());
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "Patch request on close session has not be send, error");
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
     }
 
     boolean finish = false;
@@ -408,6 +610,7 @@ public class TestFragment extends Fragment {
 
         mRoundShowerTextView.setAlpha(0f);
         mRoundShowerTextView.setVisibility(View.VISIBLE);
+        mQuestionTextView.setVisibility(View.GONE);
 
         mRoundShowerTextView.animate()
                 .alpha(1f)
@@ -422,7 +625,6 @@ public class TestFragment extends Fragment {
     }
 
     private void hideRoundTable() {
-
         mRoundShowerTextView.animate()
                 .alpha(0f)
                 .setStartDelay(200)
@@ -437,7 +639,6 @@ public class TestFragment extends Fragment {
     }
 
     private void showNewQuestion() {
-
         mQuestionTextView.setAlpha(0f);
         mQuestionTextView.setVisibility(View.VISIBLE);
 
@@ -450,8 +651,6 @@ public class TestFragment extends Fragment {
                         showAnswerVariants();
                     }
                 });
-
-
     }
 
     private void showAnswerVariants() {
@@ -567,8 +766,6 @@ public class TestFragment extends Fragment {
     }
 
     private void updateGUI() {
-
-
         mRoundShowerTextView.setText("Round " + mSessionManager.mSession.getNumberOfRound());
         showRoundTable();
         blockOfButtons = false;
@@ -580,11 +777,24 @@ public class TestFragment extends Fragment {
         mVariantB.setText(vars[1]);
         mVariantC.setText(vars[2]);
         mVariantD.setText(vars[3]);
-        mVariantA.setTextColor(Color.BLACK);
-        mVariantB.setTextColor(Color.BLACK);
-        mVariantC.setTextColor(Color.BLACK);
-        mVariantD.setTextColor(Color.BLACK);
+        mVariantA.setTextColor(Color.WHITE);
+        mVariantB.setTextColor(Color.WHITE);
+        mVariantC.setTextColor(Color.WHITE);
+        mVariantD.setTextColor(Color.WHITE);
+
+        mVariantA.setBackgroundResource(R.drawable.shape);
+        mVariantB.setBackgroundResource(R.drawable.shape);
+        mVariantC.setBackgroundResource(R.drawable.shape);
+        mVariantD.setBackgroundResource(R.drawable.shape);
+
+        mVariantA.setCompoundDrawables(null, null, null, null);
+        mVariantB.setCompoundDrawables(null, null, null, null);
+        mVariantC.setCompoundDrawables(null, null, null, null);
+        mVariantD.setCompoundDrawables(null, null, null, null);
+
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -654,6 +864,14 @@ public class TestFragment extends Fragment {
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantA);
 
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+
+            mVariantA.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
+
+        }
 
         blockOfButtons = true;
         mLastPushedButton = mVariantA;
@@ -671,6 +889,13 @@ public class TestFragment extends Fragment {
             return;
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantB);
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantB.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
+
+        }
 
 
         blockOfButtons = true;
@@ -692,6 +917,13 @@ public class TestFragment extends Fragment {
         }
         YoYo.with(Techniques.Swing).duration(700).playOn(mVariantC);
 
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantC.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
+
+        }
 
         blockOfButtons = true;
 
@@ -713,8 +945,14 @@ public class TestFragment extends Fragment {
             return;
         }
 
-        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
+        try {
+            Drawable img = getResources().getDrawable( R.drawable.point );
+            img.setBounds( 0, 0, 60, 60 );
+            mVariantD.setCompoundDrawables(img, null, null, null);
+        } catch (Exception ex) {
 
+        }
+        YoYo.with(Techniques.Swing).duration(700).playOn(mVariantD);
 
         blockOfButtons = true;
 
@@ -727,11 +965,7 @@ public class TestFragment extends Fragment {
         } else {
             mVariantD.setTextColor(Color.RED);
         }
-
-
     }
-
-
 
 
 }

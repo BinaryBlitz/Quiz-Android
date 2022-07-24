@@ -1,12 +1,9 @@
 package com.quiz.pavel.quiz.model;
 
-import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.UUID;
 
 /**
  * Created by pavelkozemirov on 17.02.15.
@@ -19,13 +16,15 @@ public class PlayerRating {
     private String mName;
     private int mPoints;
     private int mPosition;
+    public String mUrl;
 
     public PlayerRating(JSONObject json, int i) {
         try {
             mId = json.getInt("id");
-            mName = json.getString("name");
+            mName = json.getString("username");
             mPoints = json.getInt("points");
             mPosition = i;
+            mUrl = json.getString("avatar_url");
         } catch (JSONException e) {
             Log.d(TAG, "Error with parsing json in UserRating constructor");
         }

@@ -58,18 +58,6 @@
         </activity>
         <activity android:name=".controller.LogInActivity" >
         </activity>
-        <activity android:name=".controller.ProfileActivity" >
-        </activity>
-        <activity android:name=".controller.ListsActivity" >
-        </activity>
-        <activity
-            android:name=".controller.RatingActivity"
-            android:label="@string/title_activity_rating" >
-        </activity>
-        <activity android:name=".controller.RRatingActivity" >
-        </activity>
-        <activity android:name=".controller.MainTabsActivity" >
-        </activity>
         <activity android:name=".controller.ListFriendRequestsActivity" >
         </activity>
         <activity
@@ -86,8 +74,32 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity2"
-            android:label="@string/title_activity_main_activity2" >
+            android:name=".controller.MainSlidingActivity"
+            android:label="@string/title_activity_main_sliding" >
+        </activity>
+        <activity
+            android:name=".controller.MoreRatingActivity"
+            android:label="@string/title_activity_more_rating" >
+        </activity>
+        <activity
+            android:name=".controller.RCategoryListActivity"
+            android:label="@string/just_activity" >
+        </activity>
+        <activity
+            android:name=".controller.RatingCatTopicActivity"
+            android:label="@string/title_activity_rating_cat_topic" >
+        </activity>
+        <activity
+            android:name=".controller.RTopicListActivity"
+            android:label="@string/title_activity_rating_cat_topic" >
+        </activity>
+        <activity
+            android:name=".controller.RatingTwoTabsActivity"
+            android:label="@string/title_activity_rating_two_tabs" >
+        </activity>
+        <activity
+            android:name=".controller.RatingTwoTabsForCatActivity"
+            android:label="@string/title_activity_rating_two_tabs" >
         </activity>
     </application>
 

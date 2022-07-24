@@ -22,9 +22,6 @@ import com.quiz.pavel.quiz.model.Mine;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,56 +74,50 @@ public class SignUpActivity extends Activity {
                     Toast.LENGTH_LONG).show();
 
         } else {
-
-
             RequestQueue queue = Volley.newRequestQueue(this);
 
 
             JSONObject params = new JSONObject();
+            JSONObject json = new JSONObject();
             try {
-                params.put("name", usernametxt);
-                params.put("email", mailtxt);
-                params.put("password_digest", md5(passwordtxt));
+                json.put("username", usernametxt);
+                json.put("name", "nothing");
+                json.put("password", passwordtxt);
 
+                params.put("player", json);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Log.d(TAG, "SIGNUP,pass = " + md5(passwordtxt));
 
-            // Request a string response from the provided URL.
+            Log.d(TAG, "params = " + params);
+
             JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/players", params,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-
-
                             try {
                                 Mine.newInstance(getBaseContext(), response);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
 
-                            Intent intent = new Intent(SignUpActivity.this,
-                                    MainTabsActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this, MainSlidingActivity.class);
                             startActivity(intent);
                             finish();
-
                         }
                     }
                     , new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d(TAG, "Sign up Error Response, have no data from server");
                     NetworkResponse response = error.networkResponse;
                     if (response != null && response.data != null) {
                         switch (response.statusCode) {
                             case 422:
+                                Log.d(TAG, "reponse data" + response.data);
                                 Toast.makeText(getApplicationContext(), "Error: такой существует", Toast.LENGTH_SHORT).show();
                                 break;
                         }
-                        //Additional cases
                     }
-
                 }
             }) {
 
@@ -140,36 +131,32 @@ public class SignUpActivity extends Activity {
             };
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
-
-
         }
-
-
     }
-
-    public static String md5(String input) {
-
-        String md5 = null;
-
-        if (null == input) return null;
-
-        try {
-
-            //Create MessageDigest object for MD5
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-
-            //Update input string in message digest
-            digest.update(input.getBytes(), 0, input.length());
-
-            //Converts message digest value in base 16 (hex)
-            md5 = new BigInteger(1, digest.digest()).toString(16);
-
-        } catch (NoSuchAlgorithmException e) {
-
-            e.printStackTrace();
-        }
-        return md5;
-    }
+//
+//    public static String md5(String input) {
+//
+//        String md5 = null;
+//
+//        if (null == input) return null;
+//
+//        try {
+//
+//            //Create MessageDigest object for MD5
+//            MessageDigest digest = MessageDigest.getInstance("MD5");
+//
+//            //Update input string in message digest
+//            digest.update(input.getBytes(), 0, input.length());
+//
+//            //Converts message digest value in base 16 (hex)
+//            md5 = new BigInteger(1, digest.digest()).toString(16);
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//            e.printStackTrace();
+//        }
+//        return md5;
+//    }
 
 
 }

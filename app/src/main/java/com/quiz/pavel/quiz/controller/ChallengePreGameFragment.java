@@ -1,0 +1,423 @@
+package com.quiz.pavel.quiz.controller;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.pusher.client.channel.SubscriptionEventListener;
+import com.pusher.client.connection.ConnectionEventListener;
+import com.pusher.client.connection.ConnectionState;
+import com.pusher.client.connection.ConnectionStateChange;
+import com.quiz.pavel.quiz.R;
+import com.quiz.pavel.quiz.model.Mine;
+import com.quiz.pavel.quiz.model.Session;
+import com.quiz.pavel.quiz.model.SessionManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+/**
+ * Created by pavel on 27/03/15.
+ */
+public class ChallengePreGameFragment extends BasePreGameFragment {
+    private final static String TAG = "ChallengePreGameFr";
+
+    public int mTopicId;
+    private int mOpponentId;
+    private int mCategoryId;
+
+    private String mId;
+
+    @InjectView(R.id.name_of_topic) TextView mNameOfTopic;
+    @InjectView(R.id.interesting_fact) TextView mInterestingFact;
+    @InjectView(R.id.background_pre_game) RelativeLayout mBackground;
+
+    DisplayImageOptions options;
+
+    private OnResponse myCallbackOnResponse;
+
+    Timer mTimer;
+
+    public static ChallengePreGameFragment newInstance() {
+        Bundle args = new Bundle();
+        ChallengePreGameFragment fragment = new ChallengePreGameFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(TAG, "launch");
+        sm = new SessionManager(getActivity());
+
+        //connect via pusher
+//        sm.mPusher.connect(new ConnectionEventListener() {
+//            @Override
+//            public void onConnectionStateChange(ConnectionStateChange change) {
+//                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
+//                        + change.getPreviousState());
+//                if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
+//                    createLobby();
+//                }
+//            }
+//
+//            @Override
+//            public void onError(String message, String code, Exception e) {
+//                System.out.println("There was a problem connecting");
+//            }
+//        }, ConnectionState.ALL);
+
+        mTopicId = getActivity().getIntent().getIntExtra("topic", 0);
+        mOpponentId = getActivity().getIntent().getIntExtra("opponent_id", 0);
+        mCategoryId = getActivity().getIntent().getIntExtra("category", 0);
+
+        options = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                .bitmapConfig(Bitmap.Config.RGB_565)
+                .build();
+
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity()).build();
+        ImageLoader.getInstance().init(config);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_pre_game1, parent, false);
+        ButterKnife.inject(this, v);
+
+        String url = Mine.URL_photo + Mine.getInstance(getActivity())
+                .loadCategoryAr(getActivity()).get(mCategoryId).mBackgroundUrl;
+
+        Log.d(TAG, "url= " + url);
+
+        ImageLoader.getInstance().loadImage(url, options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                Drawable drawable = new BitmapDrawable(getResources(), loadedImage);
+                mBackground.setBackground(drawable);
+            }
+        });
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        url =  Mine.URL + "/lobbies/challenge?opponent_id=" + mOpponentId + "&topic_id=" + mTopicId  + "&token=" +
+                Mine.getInstance(getActivity()).getToken();
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, url,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "RESPONSE HAS BEEN GOT!! = " + response);
+
+                        //CREATE SESSION MANAGER AND SESSION INSTEAD OF IT
+
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
+
+                        sm.mPusher.connect(new ConnectionEventListener() {
+                            @Override
+                            public void onConnectionStateChange(ConnectionStateChange change) {
+                                System.out.println("GOO State changed to " + change.getCurrentState() + " from "
+                                        + change.getPreviousState());
+    //                            if (String.valueOf(change.getCurrentState()) == "CONNECTED") {
+    //                                createLobby();
+                                launchOfflineGame();
+
+                                //                            }
+                            }
+
+                            @Override
+                            public void onError(String message, String code, Exception e) {
+                                System.out.println("There was a problem connecting");
+                            }
+
+                        }, ConnectionState.ALL);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, searching...");
+            }
+        });
+        queue.add(jsonRequest);
+
+        String name = getActivity().getIntent().getStringExtra("name");
+        mNameOfTopic.setText(name);
+        mInterestingFact.setText("Интересный факт...");
+
+        return v;
+    }
+
+//    int limit;
+//
+//    public void startTimer() {
+//        mTimer = new Timer();
+//        limit = 0;
+//        mTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                Log.d(TAG, "executing action from schedule: " + limit);
+//                sendReq();   // Question
+//                limit++;
+//                if (limit >= 12) {
+//                    if (mTimer != null) {
+//                        mTimer.cancel();
+//                        mTimer.purge();
+//                    }
+//                    sm.mPusher.disconnect();
+//                }
+//            }
+//        }, 0, 2000);
+//    }
+
+    private void createLobby() {
+        if (getActivity() == null) {
+            return;
+        }
+        Log.d(TAG, "CreateLobby()");
+
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JSONObject params = new JSONObject();
+
+        try {
+            JSONObject par = new JSONObject();
+
+            par.put("topic_id", mTopicId);
+            par.put("opponent_id", mOpponentId);
+            params.put("lobby", par);
+            params.put("token", Mine.getInstance(getActivity()).getToken());
+
+        } catch (JSONException e) {
+            Log.d(TAG, "Problem with parsing json(Intent)");
+        }
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, Mine.URL + "/lobbies/challenge?topic_id="
+                + mTopicId + "&opponent_id=" + mOpponentId, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.d(TAG, "LOBBY HAS BEEN CREATED, response = " + response);
+                sm.mSession = new Session(getActivity(), response, mCategoryId);
+
+//                try {
+//                    mId = response.getString("id");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+
+                listenEventChannel();
+
+//                startTimer();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, have no data from server");
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    private void listenEventChannel() {
+        if (sm.mPusher.getConnection().getState() == ConnectionState.CONNECTED) {
+            sm.mChannel.bind("game-start", new SubscriptionEventListener() {
+                @Override
+                public void onEvent(String channel, String event, String data) {
+                    Log.d(TAG, "EVENT HAS BEEN SEND!!!");
+                    myHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Log.d(TAG, "onEvent() has been handled");
+                            if (flagResponse) {
+                                Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                startActivity(i);
+                                sm.online = true;
+
+                                //close preGame and launch game
+                                Log.d(TAG, "launch a game");
+                                closeThis();
+
+                            } else {
+                                myCallbackOnResponse = new OnResponse() {
+                                    @Override
+                                    public void responseWasGot() {
+                                        Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+                                        startActivity(i);
+                                        sm.online = true;
+                                        Log.d(TAG, "launch a game");
+                                        closeThis();
+                                    }
+                                };
+                            }
+                        }
+                    }, 1000);
+                }
+            });
+        }
+    }
+
+    public interface OnResponse {
+        void responseWasGot();
+    }
+
+    SessionManager sm;
+    boolean flagResponse;
+
+    Handler myHandler = new Handler();
+
+    private void sendReq() {
+        if (getActivity() == null) {
+            return;
+        }
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET,
+                Mine.URL + "/lobbies/" + mId + "/find?token=" + Mine.getInstance(getActivity())
+                        .getToken(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "RESPONSE HAS BEEN GOT!!");
+                        flagResponse = true;
+
+                        sm.mSession = new Session(getActivity(), response, mCategoryId);
+
+                        try {
+                            sm.online = !response.getBoolean("offline");
+                        } catch (JSONException e) {
+                            Log.d(TAG, "Problem with parsing json from response, and problem, it is so...");
+                        }
+
+
+                        if (!sm.online) {
+                            launchOfflineGame();
+                        }
+
+                        if (myCallbackOnResponse != null) {
+                            myCallbackOnResponse.responseWasGot();
+                        }
+
+                        if (mTimer != null) {
+                            mTimer.cancel();
+                            mTimer.purge();
+                        }
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error Response, searching...");
+            }
+        });
+        queue.add(jsonRequest);
+    }
+
+    private void launchOfflineGame() {
+        Intent i = new Intent(getActivity(), SingleFragmentActivity.class);
+        startActivity(i);
+
+        sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+        sm.online = false;
+
+        sm.mPusher.disconnect();
+//
+//        if (mTimer != null) {
+//            mTimer.cancel();
+//            mTimer.purge();
+//        }
+        closeThis();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sm.stopTimer();
+
+        if (!sm.online) {
+            if (sm.mPusher != null) {
+                sm.mPusher.unsubscribe("player-session-" + Mine.getInstance(getActivity()).getId());
+                sm.mPusher.disconnect();
+            }
+        }
+
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer.purge();
+        }
+    }
+
+
+    //create a lobby
+    @Override
+    public void closeLobby() {
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.PUT,
+                Mine.URL + "/lobbies/" + mId,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, "PATCH HAS BEEN SEND, and LOBBY HAS BEEN CLOSED!");
+                    }
+                }
+                , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "closing lobby request - error, perhaps");
+            }
+        }) {
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json");
+                params.put("Accept", "application/json");
+                return params;
+            }
+        };
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    private void closeThis() {
+        getActivity().finish();
+    }
+
+}

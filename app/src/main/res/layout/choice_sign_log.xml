@@ -3,33 +3,104 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
-                android:padding="10dip"
-                android:gravity="center">
+                android:id="@+id/background_initial"
+                android:background="@drawable/main_image"
+                android:weightSum="1">
 
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout3"
+        android:gravity="center_horizontal">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Один на один"
+            android:id="@+id/textView3"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:longClickable="false"
+            android:layout_marginTop="150dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="center"
+        android:weightSum="3"
+        android:background="#55111111"
+        android:layout_alignParentBottom="true"
         >
 
         <Button
-            android:id="@+id/login_choice"
-            android:layout_width="wrap_content"
+            android:id="@+id/vk_sighin"
+            android:layout_weight="1"
+            android:background="#00111111"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/loginBtn" />
+            android:text="@string/signupVkBtn"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:paddingRight="10dp"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
+            android:drawableRight="@drawable/icon_vk"
+            />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/separator_initial"
+            >
+        </View>
+
+        <Button
+            android:id="@+id/login_choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:background="#00111111"
+            android:text="@string/loginBtn"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:drawableRight="@drawable/icon_login"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_height="1dp"
+            android:background="@drawable/separator_initial"
+            >
+        </View>
 
         <Button
             android:id="@+id/signup_choice"
-            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:paddingRight="10dp"
+            android:background="#00111111"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signupBtn" />
+            android:text="@string/signupBtn"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:drawableRight="@drawable/icon_register"
+            android:gravity="center_vertical|left"
+            android:paddingLeft="20dp"/>
 
-        <Button
-            android:id="@+id/vk_sighin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/signupVkBtn" />
 
     </LinearLayout>
 

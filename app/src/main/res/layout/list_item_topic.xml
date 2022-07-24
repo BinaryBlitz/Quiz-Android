@@ -1,18 +1,91 @@
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="70dp"
+    android:gravity="center"
+    android:padding="10dp"
+    android:paddingRight="20dp"
+    android:paddingLeft="20dp"
     android:background="@drawable/background_activated"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Crime Title"
-        android:id="@+id/list_item_titleTextView"
-        android:textStyle="bold"
-        android:paddingLeft="10dp"
-        android:paddingRight="4dp"
-        android:paddingTop="10dp"
-        />
 
-</RelativeLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:background="@drawable/item_topic"
+        android:layout_height="55dp">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="55dp"
+            android:layout_height="fill_parent"
+            >
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/imageView2"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/item_topic_icon"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/list_item_titleTextView"
+                android:textStyle="bold"
+                android:textSize="19sp"
+                android:text="Example topic"
+                android:layout_gravity="center_vertical"
+                android:maxLines="1"
+                android:textColor="#111111"/>
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent">
+
+            <com.github.lzyzsd.circleprogress.ArcProgress
+                android:id="@+id/arc_progress"
+                android:layout_width="46dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                custom:arc_progress="50"
+                custom:arc_suffix_text=" "
+                custom:arc_text_size="0sp"
+                custom:arc_text_color="#ffffff"
+                custom:arc_unfinished_color="#4d4d4d"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="0"
+                android:layout_height="wrap_content"
+                android:textColor="#4d4d4d"
+                android:id="@+id/item_level"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
