@@ -1,2 +1,1 @@
-# Java project.
-## Quiz
+# 1 vs 1 Android
